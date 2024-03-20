@@ -1,0 +1,52 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 sidebar">
+      <ul>
+        <strong
+          class="bd-links-heading d-flex w-100 align-items-center fw-semibold mt-3"
+          >DEPO TAKİP UYGULAMASI</strong
+        >
+        <li class="bd-links-group py-4">
+          <ul class="list-unstyled fw-normal pb-2 small">
+            <li class="bd-links-group py-2">
+              <a
+                [routerLink]="['./product-list']"
+                [relativeTo]="route"
+                [routerLinkActive]="'active'"
+                class="bd-links-group py-2"
+                >Ürünler</a
+              >
+            </li>
+
+            <li class="bd-links-group py-2">
+              <a
+                [routerLink]="['./employee-list']"
+                [relativeTo]="route"
+                [routerLinkActive]="'active'"
+                >Personeller</a
+              >
+            </li>
+            <li class="bd-links-group py-2">
+              <a
+                [routerLink]="['./shelf-list']"
+                [relativeTo]="route"
+                [routerLinkActive]="'active'"
+                >Raflar</a
+              >
+            </li>
+            <li class="bd-links-group py-2">
+              <a href="/menu" [routerLinkActive]="'active'">Ayarlar</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <!-- <div class="d-grid my-5">
+        <button class="btn btn-danger btn-lg" type="button" (click)="logout()">Logout</button>
+      </div> -->
+    </div>
+
+    <div class="col-md-10" style="padding: 0px">
+      <router-outlet />
+    </div>
+  </div>
+</div>

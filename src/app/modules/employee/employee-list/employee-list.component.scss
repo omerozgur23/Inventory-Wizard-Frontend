@@ -1,0 +1,46 @@
+ table {
+   border-collapse: collapse;
+   margin: auto;
+ }
+
+ td {
+   border: 1px solid #dddddd;
+   background-color: #F8F9FC;
+   vertical-align: middle;
+ }
+
+ th {
+   border: 1px solid #dddddd;
+ }
+
+ tr {
+   border-bottom: 1px solid #dddddd;
+ }
+
+ button:hover {
+   background-color: #cdcdcd;
+   border-radius: 5px;
+ }
+ button:active {
+  background-color: #cdcdcd;
+  border-radius: 5px;
+}
+  button{
+    border: none;
+  }
+  
+  .nb-btn-span{
+    vertical-align: middle;
+  }
+
+  .nb-search-span{
+    float: left;
+    background-color: white;
+  }
+  .nb-search-input{
+    border: none;
+  }
+  .nb-search-input:active{
+    border: none;
+    
+  }

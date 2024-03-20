@@ -1,0 +1,69 @@
+<div class="sayfa">
+  <form [formGroup]="productForm" (ngSubmit)="submit()">
+    <div class="mb-3">
+      <label for="txtProductName" class="form-label">Ürün Adı</label>
+      <input
+        formControlName="productName"
+        type="text"
+        class="form-control"
+        id="txtProductName"
+        aria-describedby="productName"
+      />
+    </div>
+
+    <label for="">Kategori Seçiniz</label>
+    <select formControlName="categoryId" class="form-select my-2 mb-3">
+      <option>
+        <!-- *ngFor="let category of categoryList" [value]="category.id" -->
+        Kategori
+      </option>
+    </select>
+
+    <div class="mb-3">
+      <label for="txtCostPrice" class="form-label">Alış Fiyatı</label>
+      <input
+        formControlName="costPrice"
+        type="number"
+        class="form-control"
+        id="txtCostPrice"
+        aria-describedby="unitPrice"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="txtUnitPrice" class="form-label">Satış Fiyatı</label>
+      <input
+        formControlName="unitPrice"
+        type="number"
+        class="form-control"
+        id="txtUnitPrice"
+        aria-describedby="unitPrice"
+      />
+    </div>
+
+    <!-- <div class="mb-3">
+        <label for="txtPurchasePrice" class="form-label">Kritik Stok</label>
+        <input
+          formControlName="salePrice"
+          type="number"
+          class="form-control"
+          id="txtPurchasePrice"
+          aria-describedby="purchasePrice"
+        />
+      </div> -->
+
+    <div class="mb-3">
+      <label for="txtQuantity" class="form-label">Stok Adedi</label>
+      <input
+        formControlName="quantity"
+        type="number"
+        class="form-control"
+        id="txtQuantity"
+        aria-describedby="quantity"
+      />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Güncelle</button>
+    <button class="btn btn-warning ms-2" [routerLink]="['..']">Geri</button>
+  </form>
+</div>
