@@ -21,6 +21,10 @@ export class ShelfListComponent {
     private route: ActivatedRoute,
   ){}
 
+  navigateCreateShelf(){
+    this.router.navigate(['./shelf-create'], { relativeTo: this.route });
+  }
+
   getShelfs(){
     this.shelfService.getShelf().subscribe({
       next: (result) => {
