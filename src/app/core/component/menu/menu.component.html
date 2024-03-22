@@ -35,6 +35,14 @@
               >
             </li>
             <li class="bd-links-group py-2">
+              <a
+                [routerLink]="['./category-list']"
+                [relativeTo]="route"
+                [routerLinkActive]="'active'"
+                >Kategoriler</a
+              >
+            </li>
+            <li class="bd-links-group py-2">
               <a href="/menu" [routerLinkActive]="'active'">Ayarlar</a>
             </li>
           </ul>

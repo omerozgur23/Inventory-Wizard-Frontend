@@ -12,6 +12,7 @@ import { forkJoin } from 'rxjs';
   styleUrl: './employee-list.component.scss'
 })
 export class EmployeeListComponent {
+
   employeeList: Employee[] = [];
 
   constructor(
@@ -31,6 +32,20 @@ export class EmployeeListComponent {
       },
       (error) => {
         console.error(error);
+      }
+    );
+  }
+
+  deleteEmployee(id: any) {
+    this.employeeService.deleteEmployee(id).subscribe(
+      {
+        next: (id) => {
+          this.toastr.success("Personel silinmiştir");
+          this.ngOnInit();
+        },
+        error: (id) => {
+          this.toastr.error("Hata oluştu");
+        }
       }
     );
   }
