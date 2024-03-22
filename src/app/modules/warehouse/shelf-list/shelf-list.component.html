@@ -9,6 +9,10 @@
         <img src="../../../../assets/img/createIcon.png" title="Ekle" />
         <span class="nb-btn-span"> Ekle </span>
       </button>
+      <button class="btn btn primary img-button" (click)="navigateAcceptProduct()">
+        <img src="../../../../assets/img/acceptProduct.png" title="acceptProduct" />
+        <span class="nb-btn-span"> Ürün Girişi </span>
+      </button>
       <span class="mt-1 me-3 nb-search-span">
         <img src="../../../../assets/img/searchIcon.png" alt="" />
         <input type="text" class="nb-search-input" placeholder="Ara" />
@@ -21,9 +25,10 @@
       <thead>
         <tr>
           <th scope="col" style="width: 10px"></th>
+          <th scope="col">Ürün Adı</th>
           <th scope="col">Ürün Adedi</th>
           <th scope="col">Kapasite</th>
-          <th scope="col">Ürün Adı</th>
+          <th scope="col" style="width: 10px"></th>
         </tr>
       </thead>
       <tbody>
@@ -31,13 +36,19 @@
         <tr>
           <td scope="row">
             <button class="btn btn primary img-button">
-              <img src="../../../../assets/img/editIcon.png" title="Düzenle" />
+              <img style="width: 24px;" src="../../../../assets/img/Pencil.png" title="Düzenle" />
             </button>
           </td>
 
+          <td>{{ shelf.productName }}</td>
           <td>{{ shelf.count }}</td>
           <td>{{ shelf.capacity }}</td>
-          <td>{{ shelf.productName }}</td>
+
+          <td scope="row">
+            <button class="btn btn primary img-button" (click)="deleteShelf(shelf.id)">
+              <img src="../../../../assets/img/deleteIcon.png" title="Delete" />
+            </button>
+          </td>
         </tr>
         }
       </tbody>
