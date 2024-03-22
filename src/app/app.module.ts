@@ -12,6 +12,7 @@ import { APP_CONFIG } from './app.config';
 import { environment } from './environments/environment';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 
 
@@ -37,6 +38,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       provide: APP_CONFIG,
       useValue: environment,
     },
+    provideAnimationsAsync(),
   ],
   bootstrap: [AppComponent]
 })

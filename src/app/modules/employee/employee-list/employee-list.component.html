@@ -25,6 +25,7 @@
           <th scope="col">Soyadı</th>
           <th scope="col">Email</th>
           <th scope="col">Rolleri</th>
+          <th scope="col" style="width: 10px"></th>
         </tr>
       </thead>
       <tbody>
@@ -40,6 +41,12 @@
           <td>{{ employee.lastName }}</td>
           <td>{{ employee.email }}</td>
           <td>{{ employee.role }}</td>
+
+          <td scope="row">
+            <button class="btn btn primary img-button" (click)="deleteEmployee(employee.id)">
+              <img src="../../../../assets/img/deleteIcon.png" title="Delete" />
+            </button>
+          </td>
         </tr>
         }
       </tbody>
