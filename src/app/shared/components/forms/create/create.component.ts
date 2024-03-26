@@ -10,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class CreateComponent {
   @Input() form: FormGroup = new FormGroup({});
   @Input() buttonText: string = 'Submit';
-  @Output() submit = new EventEmitter();
+  @Output() submitForm = new EventEmitter();
   @Output() backEvent = new EventEmitter();
 
   constructor(
@@ -19,8 +19,8 @@ export class CreateComponent {
     private route: ActivatedRoute,
   ) {}
 
-  submitForm() {
-    this.submit.emit();
+  submit() {
+    this.submitForm.emit();
   }
 
   back(){
