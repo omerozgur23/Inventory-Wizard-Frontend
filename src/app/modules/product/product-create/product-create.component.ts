@@ -1,12 +1,13 @@
+import { SupplierService } from './../../supplier/service/supplier.service';
 import { Component, OnInit  } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoginService } from '../../../core/service/login.service';
-import { Observable, forkJoin } from 'rxjs';
-import { Category } from '../dto/category';
-import { Supplier } from '../dto/supplier';
+import { forkJoin } from 'rxjs';
+import { Category } from '../../category/dto/category';
+import { Supplier } from '../../supplier/dto/supplier';
+import { CategoryService } from '../../category/service/category.service';
 
 @Component({
   selector: 'app-product-create',
@@ -30,13 +31,28 @@ export class ProductCreateComponent {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private productService: ProductService,
+    private categoryService: CategoryService,
+    private supplierService: SupplierService,
     private router: Router,
     private route: ActivatedRoute,
-    private loginService: LoginService,
   ) {}
 
+  ngOnInit(): void{
+    forkJoin({
+      categories: this.categoryService.getCategory(),
+      suppliers: this.supplierService.getSupplier()
+    }).subscribe({
+      next: (resp => {
+        this.categoryList = resp.categories;
+        this.supplierList = resp.suppliers;
+      }),
+      error: (err => {
+        console.log(err);
+      })
+    })
+  }
+
   submit() {
-    
     this.productService.createProduct(this.productForm.value ).subscribe({
       next: (resp) => {
         this.toastr.success('Ürün Oluşturulmuştur');
@@ -48,22 +64,4 @@ export class ProductCreateComponent {
       }
     });
   }
-  
-  
-  ngOnInit(): void{
-    forkJoin({
-      categories: this.productService.getCategories(),
-      suppliers: this.productService.getSuppliers()
-    }).subscribe({
-      next: (resp => {
-        this.categoryList = resp.categories;
-        this.supplierList = resp.suppliers;
-      }),
-      error: (err => {
-        console.log(err);
-        
-      })
-    })
-  }
-  
 }

@@ -6,6 +6,10 @@ $container-max-widths: (
   xxl: 1320px
 );
 
+strong {
+  cursor: pointer;
+}
+
 .sidebar {
   height: 100vh; 
   background-color: #b1b1b14b;
@@ -39,4 +43,5 @@ $container-max-widths: (
   border-radius: 10px;
   padding: 5px ; 
 }
+
 

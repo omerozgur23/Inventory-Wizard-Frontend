@@ -1,0 +1,85 @@
+<app-table
+  [tableData]="tableData"
+  [columns]="columns"
+  (navigateCreateEvent)="navigateCreate()"
+  (deleteEvent)="deleteSupplier($event.id)"
+  (refreshEvent)="ngOnInit()"
+></app-table>
+
+<!-- <div>
+  <div class="pt-2 pb-2" style="background-color: #f8f9fc">
+    <div class="ps-4 pe-4">
+      <button class="btn primary img-button" (click)="ngOnInit()">
+        <img src="../../../../assets/img/refreshIcon.png" title="Yenile" />
+        <span class="nb-btn-span"> Yenile </span>
+      </button>
+      <button
+        class="btn btn primary img-button"
+        (click)="navigateCreateSupplier()"
+      >
+        <img src="../../../../assets/img/createIcon.png" title="Ekle" />
+        <span class="nb-btn-span"> Ekle </span>
+      </button>
+      <span class="mt-1 me-3 nb-search-span">
+        <img src="../../../../assets/img/searchIcon.png" alt="" />
+        <input type="text" class="nb-search-input" placeholder="Ara" />
+      </span>
+    </div>
+  </div>
+
+  <div class="pe-4 ps-4 py-4">
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 10px"></th>
+          <th scope="col">Fimra Ünvanı</th>
+          <th scope="col">Yetkili Kişi</th>
+          <th scope="col">Yetkili Telefon</th>
+          <th scope="col">Vergi No</th>
+          <th scope="col">Adres</th>
+          <th scope="col" style="width: 10px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (supplier of supplierList; track $index) {
+        <tr>
+          <td scope="row">
+            <button class="btn btn primary img-button">
+              <img src="../../../../assets/img/editIcon.png" title="Düzenle" />
+            </button>
+          </td>
+
+          <td>{{ supplier.companyName }}</td>
+          <td>{{ supplier.contactName }}</td>
+          <td>{{ supplier.contactPhone }}</td>
+          <td>{{ supplier.taxNumber }}</td>
+          <td>{{ supplier.address }}</td>
+          <td scope="row">
+            <button
+              class="btn btn primary img-button"
+              (click)="deleteSupplier(supplier.id)"
+            >
+              <img src="../../../../assets/img/deleteIcon.png" title="Delete" />
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+          >Previous</a
+        >
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav>
+</div> -->
