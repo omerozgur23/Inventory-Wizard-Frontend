@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { Category } from '../../product/dto/category';
-import { FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService } from '../service/category.service';
+import { TableColumn } from '../../../shared/components/table/dto/table';
 
 @Component({
   selector: 'app-category-list',
@@ -11,34 +10,49 @@ import { CategoryService } from '../service/category.service';
   styleUrl: './category-list.component.scss'
 })
 export class CategoryListComponent {
-  categoryList: Category[] = [];
+  // categoryList: Category[] = [];
+  tableData: any[] = [];
+  columns: TableColumn[] = [
+    { label: 'Kategori Adı', field: 'name' },
+  ];
 
   constructor(
-    private fb: FormBuilder,
     private toastr: ToastrService,
     private categoryService: CategoryService,
     private router: Router,
     private route: ActivatedRoute,
   ){}
 
-  navigateCreateCategory(){
-    this.router.navigate(['./category-create'], { relativeTo: this.route });
-  }
-
-  getCategory(){
-    this.categoryService.getCategory().subscribe({
-      next: (result) => {
-        this.categoryList = result;
-      },
-      error: (err) => {
-        console.log(err);
-        
-      }
-    });
-  }
   ngOnInit(): void {
     this.getCategory();
   }
+
+  getCategory() {
+    this.categoryService.getCategory().subscribe((categories: any[]) => {
+      this.tableData = categories;
+    });
+  }
+
+  navigateCreate(){
+    this.router.navigate(['./category-create'], { relativeTo: this.route });
+  }
+
+  // navigateCreateCategory(){
+  //   this.router.navigate(['./category-create'], { relativeTo: this.route });
+  // }
+ 
+  // getCategory(){
+  //   this.categoryService.getCategory().subscribe({
+  //     next: (result) => {
+  //       this.categoryList = result;
+  //     },
+  //     error: (err) => {
+  //       console.log(err);
+        
+  //     }
+  //   });
+  // }
+  
 
   deleteCategory(id: any){
     this.categoryService.deleteCategory(id).subscribe(

@@ -6,11 +6,12 @@ import { ProductCreateComponent } from './product-create/product-create.componen
 import { ProductListComponent } from './product-list/product-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductUpdateComponent } from './product-update/product-update.component';
+import { SharedModule } from '../../shared/shared.module';
+
 
 
 @NgModule({
   declarations: [
-
     ProductCreateComponent,
     ProductListComponent,
     ProductUpdateComponent
@@ -19,6 +20,7 @@ import { ProductUpdateComponent } from './product-update/product-update.componen
     CommonModule,
     ProductRoutingModule,
     ReactiveFormsModule,
+    SharedModule,
   ]
 })
 export class ProductModule { }
