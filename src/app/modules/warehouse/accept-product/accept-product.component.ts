@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { ShelfService } from '../../service/shelf.service';
+import { ShelfService } from '../service/shelf.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Product } from '../../../product/dto/product';
+import { Product } from '../../product/dto/product';
 import { forkJoin } from 'rxjs';
+import { ProductService } from '../../product/service/product.service';
 
 @Component({
   selector: 'app-accept-product',
@@ -13,21 +14,22 @@ import { forkJoin } from 'rxjs';
 })
 export class AcceptProductComponent {
   productList: Product[] = [];
+
   acceptProductForm = this.fb.group({
     productId: '',
+    count: 0,
   });
-
 
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
     private shelfService: ShelfService,
+    private productService: ProductService,
     private router: Router,
     private route: ActivatedRoute,
   ) {}
 
   submit() {
-    
     this.shelfService.acceptProduct(this.acceptProductForm.value ).subscribe({
       next: (resp) => {
         this.toastr.success('Ürün Oluşturulmuştur');
@@ -43,7 +45,7 @@ export class AcceptProductComponent {
   
   ngOnInit(): void{
     forkJoin({
-      products: this.shelfService.getProducts(),
+      products: this.productService.getProducts(),
     }).subscribe({
       next: (resp => {
         this.productList = resp.products;

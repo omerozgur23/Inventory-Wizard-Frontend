@@ -1,16 +1,33 @@
-<div>
+<app-table
+  [tableData]="tableData"
+  [columns]="columns"
+  (navigateCreateEvent)="navigateCreate()"
+  (deleteEvent)="deleteShelf($event.id)"
+  (refreshEvent)="ngOnInit()"
+></app-table>
+
+<!-- <div>
   <div class="pt-2 pb-2" style="background-color: #f8f9fc">
     <div class="ps-4 pe-4">
       <button class="btn primary img-button">
         <img src="../../../../assets/img/refreshIcon.png" title="Yenile" />
         <span class="nb-btn-span"> Yenile </span>
       </button>
-      <button class="btn btn primary img-button" (click)="navigateCreateShelf()">
+      <button
+        class="btn btn primary img-button"
+        (click)="navigateCreateShelf()"
+      >
         <img src="../../../../assets/img/createIcon.png" title="Ekle" />
-        <span class="nb-btn-span"> Ekle </span>
+        <span class="nb-btn-span"> Raf Ekle </span>
       </button>
-      <button class="btn btn primary img-button" (click)="navigateAcceptProduct()">
-        <img src="../../../../assets/img/acceptProduct.png" title="acceptProduct" />
+      <button
+        class="btn btn primary img-button"
+        (click)="navigateAcceptProduct()"
+      >
+        <img
+          src="../../../../assets/img/acceptProduct.png"
+          title="acceptProduct"
+        />
         <span class="nb-btn-span"> Ürün Girişi </span>
       </button>
       <span class="mt-1 me-3 nb-search-span">
@@ -36,7 +53,11 @@
         <tr>
           <td scope="row">
             <button class="btn btn primary img-button">
-              <img style="width: 24px;" src="../../../../assets/img/Pencil.png" title="Düzenle" />
+              <img
+                style="width: 24px"
+                src="../../../../assets/img/Pencil.png"
+                title="Düzenle"
+              />
             </button>
           </td>
 
@@ -45,7 +66,10 @@
           <td>{{ shelf.capacity }}</td>
 
           <td scope="row">
-            <button class="btn btn primary img-button" (click)="deleteShelf(shelf.id)">
+            <button
+              class="btn btn primary img-button"
+              (click)="deleteShelf(shelf.id)"
+            >
               <img src="../../../../assets/img/deleteIcon.png" title="Delete" />
             </button>
           </td>
@@ -69,4 +93,4 @@
       </li>
     </ul>
   </nav>
-</div>
+</div> -->
