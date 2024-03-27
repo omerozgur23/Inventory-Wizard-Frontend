@@ -1,12 +1,12 @@
-<app-table
+<!-- <app-table
   [tableData]="tableData"
   [columns]="columns"
   (navigateCreateEvent)="navigateCreate()"
   (deleteEvent)="deleteShelf($event.id)"
   (refreshEvent)="ngOnInit()"
-></app-table>
+></app-table> -->
 
-<!-- <div>
+<div>
   <div class="pt-2 pb-2" style="background-color: #f8f9fc">
     <div class="ps-4 pe-4">
       <button class="btn primary img-button">
@@ -15,7 +15,7 @@
       </button>
       <button
         class="btn btn primary img-button"
-        (click)="navigateCreateShelf()"
+        (click)="navigateCreate()"
       >
         <img src="../../../../assets/img/createIcon.png" title="Ekle" />
         <span class="nb-btn-span"> Raf Ekle </span>
@@ -93,4 +93,4 @@
       </li>
     </ul>
   </nav>
-</div> -->
+</div>
