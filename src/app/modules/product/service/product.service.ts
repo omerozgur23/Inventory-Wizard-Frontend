@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { Category } from '../dto/category';
+import { Category } from '../../category/dto/category';
 import { Product } from '../dto/product';
-import { Supplier } from '../dto/supplier';
+import { Supplier } from '../../supplier/dto/supplier';
 import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
@@ -23,23 +23,22 @@ export class ProductService {
     return this.httpClient.post<any>('/product/update', update);
   }
 
-  getCategories():Observable<Category[]> {
-    return this.httpClient.get<Category[]>('/category/getall');
-  }
-
   getProducts():Observable<Product[]> {
-    return this.httpClient.get<Product[]>('/product/getall');
+    return this.httpClient.get<Product[]>('/product/getallByPage');
   }
 
-  getSuppliers():Observable<Supplier[]> {
-    return this.httpClient.get<Supplier[]>('/supplier/getall');
+  getAllProductsByPage(pageNo: number, pageSize: number): Observable<Product[]> {
+    return this.httpClient.get<Product[]>(`/product/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
+  
 
   deleteProduct(id: string):Observable<any> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.httpClient.post('/product/delete', JSON.stringify(id), { headers });
   }
 
+  search(name: string): Observable<Product[]> {
+    return this.httpClient.get<Product[]>('/product/getByProductNameStartsWith', { params: { productName: name } });
+  }
   
-
 }

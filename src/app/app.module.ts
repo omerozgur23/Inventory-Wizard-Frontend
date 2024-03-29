@@ -12,6 +12,8 @@ import { APP_CONFIG } from './app.config';
 import { environment } from './environments/environment';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 
@@ -30,6 +32,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HttpClientModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
+    NgxPaginationModule,
   ],
   providers: [
     provideHttpClient(withInterceptors([urlInterceptor])),
@@ -37,6 +40,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       provide: APP_CONFIG,
       useValue: environment,
     },
+    provideAnimationsAsync(),
   ],
   bootstrap: [AppComponent]
 })

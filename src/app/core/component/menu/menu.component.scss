@@ -1,10 +1,14 @@
-$container-max-widths: (
+$container-fluid-max-widths: (
   sm: 540px,
   md: 720px,
   lg: 960px,
   xl: 1140px,
   xxl: 1320px
 );
+
+strong {
+  cursor: pointer;
+}
 
 .sidebar {
   height: 100vh; 
@@ -39,4 +43,5 @@ $container-max-widths: (
   border-radius: 10px;
   padding: 5px ; 
 }
+
 

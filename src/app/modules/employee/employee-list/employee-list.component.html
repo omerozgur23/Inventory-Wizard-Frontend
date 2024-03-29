@@ -1,4 +1,11 @@
-<div>
+<app-table
+  [tableData]="tableData"
+  [columns]="columns"
+  (navigateCreateEvent)="navigateCreate()"
+  (deleteEvent)="deleteEmployee($event.id)"
+  (refreshEvent)="ngOnInit()"
+></app-table>
+<!-- <div>
   <div class="pt-2 pb-2" style="background-color: #f8f9fc">
     <div class="ps-4 pe-4">
       <button class="btn primary img-button">
@@ -25,6 +32,7 @@
           <th scope="col">Soyadı</th>
           <th scope="col">Email</th>
           <th scope="col">Rolleri</th>
+          <th scope="col" style="width: 10px"></th>
         </tr>
       </thead>
       <tbody>
@@ -40,6 +48,12 @@
           <td>{{ employee.lastName }}</td>
           <td>{{ employee.email }}</td>
           <td>{{ employee.role }}</td>
+
+          <td scope="row">
+            <button class="btn btn primary img-button" (click)="deleteEmployee(employee.id)">
+              <img src="../../../../assets/img/deleteIcon.png" title="Delete" />
+            </button>
+          </td>
         </tr>
         }
       </tbody>
@@ -60,4 +74,4 @@
       </li>
     </ul>
   </nav>
-</div>
+</div> -->
