@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TableColumn } from '../../../shared/components/table/dto/table';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerService } from '../service/customer.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,6 +13,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 export class CustomerCreateComponent {
   customerForm: FormGroup;
+
+  fieldLabels = {
+    companyName: 'Firma Ünvanı',
+    contactName: 'Firma Yetkilisi',
+    email: 'Yetkili E-Mail',
+    contactPhone: 'Yetkili Telefon',
+    taxNumber: 'Vergi No',
+    address: 'Adres'
+  };
 
   constructor(
     private fb: FormBuilder,

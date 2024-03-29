@@ -93,11 +93,12 @@ export class ProductListComponent {
     );
   }
 
-  // shortenUUID(uuid: string): string {
-  //   return uuid.split('-')[0];
-  // }
+  name: string = '';
+  search() {
+    this.productService.search(this.name).subscribe(products => {
+      this.productList = products;  
+    });
+  }
+  
 
-  // convertToOrdinal(index: number): string {
-  //   return (index + 1).toString();
-  // }
 } 

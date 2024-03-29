@@ -36,4 +36,9 @@ export class ProductService {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.httpClient.post('/product/delete', JSON.stringify(id), { headers });
   }
+
+  search(name: string): Observable<Product[]> {
+    return this.httpClient.get<Product[]>('/product/getByProductNameStartsWith', { params: { productName: name } });
+  }
+  
 }
