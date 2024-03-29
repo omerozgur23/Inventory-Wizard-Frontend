@@ -14,7 +14,7 @@ export class CustomerListComponent {
 
   tableData: any[] = [];
   columns: TableColumn[] = [
-    { label: 'Company Name', field: 'companyName' },
+    { label: 'Firma Ünvanı', field: 'companyName' },
     { label: 'Firma Yetkilisi', field: 'contactName' },
     { label: 'Yetkili E-Mail', field: 'email' },
     { label: 'Yetkili Telefon', field: 'contactPhone' },

@@ -1,8 +1,9 @@
 <div class="sayfa">
   <form [formGroup]="form" (ngSubmit)="submit()">
-    <div class="mb-3" *ngFor="let controlName of form.controls | keyvalue">
+    @for (controlName of form.controls | keyvalue; track $index) {
+    <div class="mb-3">
       <label [for]="controlName.key" class="form-label">{{
-        controlName.key
+        getLabel(controlName.key)
       }}</label>
       <input
         [formControlName]="controlName.key"
@@ -11,7 +12,7 @@
         [id]="controlName.key"
       />
     </div>
-
+    }
     <button class="btn btn-primary" type="submit">{{ buttonText }}</button>
     <button class="btn btn-warning ms-2" (click)="back()">Geri</button>
   </form>

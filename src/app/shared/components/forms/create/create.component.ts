@@ -12,9 +12,9 @@ export class CreateComponent {
   @Input() buttonText: string = 'Submit';
   @Output() submitForm = new EventEmitter();
   @Output() backEvent = new EventEmitter();
+  @Input() fieldLabels: {[key: string]: string} = {};
 
   constructor(
-    // private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
   ) {}
@@ -26,5 +26,9 @@ export class CreateComponent {
   back(){
     this.backEvent.emit();
     this.router.navigate(['..'], {relativeTo: this.route});
+  }
+
+  getLabel(key: string): string {
+    return this.fieldLabels[key] || key;
   }
 }

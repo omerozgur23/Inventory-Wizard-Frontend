@@ -14,7 +14,15 @@ export class TableComponent {
   @Output() deleteEvent = new EventEmitter<any>();
   @Output() refreshEvent = new EventEmitter();
 
+  currentPage: number = 1;
+  totalPages: number = 10;
+
   constructor() {}
+
+  onPageChange(pageNo: number) {
+    this.currentPage = pageNo;
+    // this.loadProducts();
+  }
 
   refresh(){
     this.refreshEvent.emit();

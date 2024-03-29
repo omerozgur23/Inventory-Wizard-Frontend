@@ -18,8 +18,17 @@
         <span class="nb-btn-span"> Ekle </span>
       </button>
       <span class="mt-1 me-3 nb-search-span">
-        <img src="../../../../assets/img/searchIcon.png" alt="" />
-        <input type="text" class="nb-search-input" placeholder="Ara" />
+        <img
+          src="../../../../assets/img/searchIcon.png"
+          alt=""
+          (click)="search()"
+        />
+        <input
+          type="text"
+          class="nb-search-input"
+          placeholder="Ara"
+          [(ngModel)]="name"
+        />
       </span>
     </div>
   </div>
@@ -71,7 +80,7 @@
       </tbody>
     </table>
   </div>
-  <nav aria-label="Page navigation example">
+  <nav aria-label="Page navigation example" style="cursor: pointer">
     <ul class="pagination justify-content-center">
       <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
         <a
