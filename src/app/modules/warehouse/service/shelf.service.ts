@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Shelf } from '../dto/shelf';
 import { Observable } from 'rxjs';
-import { Product } from '../../product/dto/product';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +14,6 @@ export class ShelfService {
 
   getShelf():Observable<Shelf[]> {
     return this.httpClient.get<Shelf[]>('/shelf/getall');
-  }
-
-  getProducts():Observable<Product[]> {
-    return this.httpClient.get<Product[]>('/product/getall');
   }
 
   acceptProduct(create: any):Observable<any> {

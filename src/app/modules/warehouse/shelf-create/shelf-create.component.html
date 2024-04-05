@@ -1,29 +1,26 @@
 <div class="sayfa">
-    <form [formGroup]="shelfForm" (ngSubmit)="submit()">
-      <div class="mb-3">
-        <label for="txtCapacity" class="form-label">Kapasite</label>
-        <input
-          formControlName="capacity"
-          type="number"
-          class="form-control"
-          id="txtCapasity"
-          aria-describedby="capacity"
-        />
+  <form [formGroup]="shelfForm" (ngSubmit)="submit()">
+    <div class="mb-3">
+      <label for="txtCapacity" class="form-label">Kapasite</label>
+      <input
+        formControlName="capacity"
+        type="number"
+        class="form-control"
+        id="txtCapasity"
+        aria-describedby="capacity"
+      />
 
-        <label for="txtCount" class="form-label">Adet</label>
-        <input
-          formControlName="count"
-          type="number"
-          class="form-control"
-          id="txtCount"
-          aria-describedby="count"
-        />
-      </div>
-  
-     
-  
-      <button class="btn btn-primary" type="submit">Shelf Oluştur</button>
-      <button class="btn btn-warning ms-2" [routerLink]="['..']">Geri</button>
-    </form>
-  </div>
-  
+      <label for="txtCount" class="form-label">Adet</label>
+      <input
+        formControlName="count"
+        type="number"
+        class="form-control"
+        id="txtCount"
+        aria-describedby="count"
+      />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Shelf Oluştur</button>
+    <button class="btn btn-warning ms-2" [routerLink]="['..']">Geri</button>
+  </form>
+</div>

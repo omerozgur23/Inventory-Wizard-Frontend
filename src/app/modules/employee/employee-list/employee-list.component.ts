@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { Employee } from '../dto/employee';
-import { FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { EmployeeService } from '../service/employee.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { TableColumn } from '../../../shared/components/table/dto/table';
 
 @Component({
   selector: 'app-employee-list',
@@ -12,29 +10,49 @@ import { forkJoin } from 'rxjs';
   styleUrl: './employee-list.component.scss'
 })
 export class EmployeeListComponent {
-
-  employeeList: Employee[] = [];
+  // employeeList: Employee[] = [];
+  tableData: any[] = [];
+  columns: TableColumn[] = [
+    { label: 'Adı', field: 'firstName' },
+    { label: 'Soyadı', field: 'lastName'},
+    { label: 'E-Mail', field: 'email'},
+    { label: 'Roller', field: 'role'},
+  ]
 
   constructor(
-    private fb: FormBuilder,
+    // private fb: FormBuilder,
     private toastr: ToastrService,
     private employeeService: EmployeeService,
     private router: Router,
     private route: ActivatedRoute,
   ){}
 
-  ngOnInit(): void{
-    forkJoin({
-      employees: this.employeeService.getEmployee()
-    }).subscribe(
-      (response) => {
-        this.employeeList = response.employees;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+  ngOnInit(): void {
+    this.getEmployee();
   }
+
+  navigateCreate(){
+    this.router.navigate(['./employee-create'], { relativeTo: this.route });
+  }
+
+  getEmployee() {
+    this.employeeService.getEmployee().subscribe((employees: any[]) => {
+      this.tableData = employees;
+    });
+  }
+ 
+  // ngOnInit(): void{
+  //   forkJoin({
+  //     employees: this.employeeService.getEmployee()
+  //   }).subscribe(
+  //     (response) => {
+  //       this.employeeList = response.employees;
+  //     },
+  //     (error) => {
+  //       console.error(error);
+  //     }
+  //   );
+  // }
 
   deleteEmployee(id: any) {
     this.employeeService.deleteEmployee(id).subscribe(

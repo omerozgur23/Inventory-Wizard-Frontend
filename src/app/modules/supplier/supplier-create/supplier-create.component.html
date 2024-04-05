@@ -1,0 +1,61 @@
+<div class="sayfa">
+  <form [formGroup]="supplierForm" (ngSubmit)="submit()">
+    <div class="mb-3">
+      <label for="txtCompanyName" class="form-label">Firma Ünvanı</label>
+      <input
+        formControlName="companyName"
+        type="text"
+        class="form-control"
+        id="txtCompanyName"
+        aria-describedby="companyName"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="txtContactName" class="form-label">Firma Yetkilisi</label>
+      <input
+        formControlName="contactName"
+        type="text"
+        class="form-control"
+        id="txtContactName"
+        aria-describedby="contactName"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="txtContactPhone" class="form-label">Yetkili Telefon</label>
+      <input
+        formControlName="contactPhone"
+        type="text"
+        class="form-control"
+        id="txtContactPhone"
+        aria-describedby="contactPhone"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="txtTaxNumber" class="form-label">Vergi No</label>
+      <input
+        formControlName="taxNumber"
+        type="text"
+        class="form-control"
+        id="txtTaxNumber"
+        aria-describedby="taxNumber"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="txtAddress" class="form-label">Adres</label>
+      <input
+        formControlName="address"
+        type="text"
+        class="form-control"
+        id="txtAddress"
+        aria-describedby="address"
+      />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Tedarikçi Oluştur</button>
+    <button class="btn btn-warning ms-2" [routerLink]="['..']">Geri</button>
+  </form>
+</div>

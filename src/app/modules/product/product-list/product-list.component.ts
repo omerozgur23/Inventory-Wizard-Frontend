@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
-import { Observable, forkJoin } from 'rxjs';
 import { Product } from '../dto/product';
-import { Category } from '../dto/category';
-import { Supplier } from '../dto/supplier';
+import { TableColumn } from '../../../shared/components/table/dto/table';
 
 @Component({
   selector: 'app-product-list',
@@ -15,23 +12,70 @@ import { Supplier } from '../dto/supplier';
 })
 export class ProductListComponent {
   productList: Product[] = [];
-
-  categoryList: Category[] = [];
-  supplierList: Supplier[] = [];
+  currentPage: number = 1;
+  totalPages: number = 10;
+  // tableData: any[] = [];
+  // columns: TableColumn[] = [
+  //   { label: 'Ürün Adı', field: 'productName' },
+  //   { label: 'Kategori', field: 'categoryName' },
+  //   { label: 'Tedarikçi', field: 'supplierCompanyName' },
+  //   { label: 'Alış Fiyatı', field: 'purchasePrice' },
+  //   { label: 'Satış Fiyatı', field: 'unitPrice' },
+  //   { label: 'Kritik Stok', field: '' },
+  //   { label: 'Stok Adedi', field: 'quantity' },
+  // ];
 
   constructor(
-    private fb: FormBuilder,
     private toastr: ToastrService,
     private productService: ProductService,
     private router: Router,
     private route: ActivatedRoute,
   ){}
 
-  navigateCreateProduct(){
+  // ngOnInit(): void {
+  //   this.getProducts();
+  // }
+
+  // getProducts() {
+  //   this.productService.getProducts().subscribe((customers: any[]) => {
+  //     this.tableData = customers;
+  //   });
+  // }
+
+  ngOnInit(): void{
+    // this.productService.getProducts().subscribe({
+    //   next: (result) => {
+    //     this.productList = result;
+    //   },
+    //   error: (err) => {
+    //     console.log(err);
+    //   }
+    // });
+
+    // this.productService.getProducts().subscribe(products => {
+    //   this.productList = products;  
+    // });
+    this.loadProducts();
+  }
+ 
+  loadProducts() {
+    this.productService.getAllProductsByPage(this.currentPage, 2).subscribe(response => {
+      this.productList = response;
+      // Bu kısımda toplam sayfa sayısını alarak UI'da göstermek için gerekli işlemleri yapabilirsiniz
+      // Örneğin: this.totalPages = response.totalPages;
+    });
+  }
+
+  onPageChange(pageNo: number) {
+    this.currentPage = pageNo;
+    this.loadProducts();
+  }
+
+  navigateCreate(){
     this.router.navigate(['./product-create'], { relativeTo: this.route });
   }
 
-  navigateUpdateProduct(){
+  navigateUpdate(){
     this.router.navigate(['./product-update'], { relativeTo: this.route });
   }
 
@@ -49,28 +93,12 @@ export class ProductListComponent {
     );
   }
 
-  ngOnInit(): void{
-    forkJoin({
-      products: this.productService.getProducts(),
-      categories: this.productService.getCategories(),
-      suppliers: this.productService.getSuppliers()
-    }).subscribe(
-      (response) => {
-        this.productList = response.products;
-        this.categoryList = response.categories;
-        this.supplierList = response.suppliers;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+  name: string = '';
+  search() {
+    this.productService.search(this.name).subscribe(products => {
+      this.productList = products;  
+    });
   }
+  
 
-  // shortenUUID(uuid: string): string {
-  //   return uuid.split('-')[0];
-  // }
-
-  // convertToOrdinal(index: number): string {
-  //   return (index + 1).toString();
-  // }
 } 

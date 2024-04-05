@@ -3,7 +3,6 @@ import { FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ShelfService } from '../service/shelf.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoginService } from '../../../core/service/login.service';
 
 @Component({
   selector: 'app-shelf-create',
@@ -24,7 +23,6 @@ export class ShelfCreateComponent {
     private shelfService: ShelfService,
     private router: Router,
     private route: ActivatedRoute,
-    private loginService: LoginService,
   ) {}
 
 

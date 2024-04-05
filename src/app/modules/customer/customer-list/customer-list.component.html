@@ -1,0 +1,7 @@
+<app-table
+  [tableData]="tableData"
+  [columns]="columns"
+  (navigateCreateEvent)="navigateCreate()"
+  (deleteEvent)="deleteCustomer($event.id)"
+  (refreshEvent)="ngOnInit()"
+></app-table>
