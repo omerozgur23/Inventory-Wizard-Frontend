@@ -65,4 +65,10 @@ export class SupplierListComponent {
       }
     })
   }
+
+  selectedSupplierId: string = '';
+
+  setSelectedSupplierForDelete(supplierId: string) {
+    this.selectedSupplierId = supplierId;
+  }
 }

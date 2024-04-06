@@ -2,9 +2,10 @@
   [tableData]="tableData"
   [columns]="columns"
   (navigateCreateEvent)="navigateCreate()"
-  (deleteEvent)="deleteSupplier($event.id)"
+  (deleteEvent)="setSelectedSupplierForDelete($event.id)"
   (refreshEvent)="ngOnInit()"
 ></app-table>
+<app-delete-modal (deleteEvent)="deleteSupplier(selectedSupplierId)"></app-delete-modal>
 
 <!-- <div>
   <div class="pt-2 pb-2" style="background-color: #f8f9fc">
