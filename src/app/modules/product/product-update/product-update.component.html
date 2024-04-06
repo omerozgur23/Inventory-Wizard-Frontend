@@ -1,4 +1,6 @@
-<div class="sayfa">
+
+
+<!-- <div class="sayfa">
   <form [formGroup]="productForm" (ngSubmit)="submit()">
     <div class="mb-3">
       <label for="txtProductName" class="form-label">Ürün Adı</label>
@@ -14,7 +16,7 @@
     <label for="">Kategori Seçiniz</label>
     <select formControlName="categoryId" class="form-select my-2 mb-3">
       <option>
-        <!-- *ngFor="let category of categoryList" [value]="category.id" -->
+        *ngFor="let category of categoryList" [value]="category.id"
         Kategori
       </option>
     </select>
@@ -41,17 +43,6 @@
       />
     </div>
 
-    <!-- <div class="mb-3">
-        <label for="txtPurchasePrice" class="form-label">Kritik Stok</label>
-        <input
-          formControlName="salePrice"
-          type="number"
-          class="form-control"
-          id="txtPurchasePrice"
-          aria-describedby="purchasePrice"
-        />
-      </div> -->
-
     <div class="mb-3">
       <label for="txtQuantity" class="form-label">Stok Adedi</label>
       <input
@@ -66,4 +57,4 @@
     <button class="btn btn-primary" type="submit">Güncelle</button>
     <button class="btn btn-warning ms-2" [routerLink]="['..']">Geri</button>
   </form>
-</div>
+</div> -->

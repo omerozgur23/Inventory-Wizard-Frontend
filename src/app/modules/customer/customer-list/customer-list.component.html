@@ -2,6 +2,7 @@
   [tableData]="tableData"
   [columns]="columns"
   (navigateCreateEvent)="navigateCreate()"
-  (deleteEvent)="deleteCustomer($event.id)"
+  (deleteEvent)="setSelectedCustomerForDelete($event.id)"
   (refreshEvent)="ngOnInit()"
 ></app-table>
+<app-delete-modal (deleteEvent)="deleteCustomer(selectedCustomerId)"></app-delete-modal>

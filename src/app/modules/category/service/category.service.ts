@@ -20,6 +20,10 @@ export class CategoryService {
     return this.httpClient.post<Category>('/category/create', category)
   }
 
+  updateCategory(id:any, category:any):Observable<any> {
+    return this.httpClient.post<Category>('/category/update', id, category)
+  }
+
   deleteCategory(id: string):Observable<any> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.httpClient.post('/category/delete', JSON.stringify(id), { headers });

@@ -56,4 +56,10 @@ export class CustomerListComponent {
       }
     );
   }
+
+  selectedCustomerId: string = '';
+
+  setSelectedCustomerForDelete(customerId: string) {
+    this.selectedCustomerId = customerId;
+  }
 }

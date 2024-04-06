@@ -36,7 +36,20 @@
               >
             </li>
             <li class="bd-links-group py-2">
-              <a [routerLinkActive]="'active'">Siparişler</a>
+              <a
+                [routerLink]="['./product-sale']"
+                [relativeTo]="route"
+                [routerLinkActive]="'active'"
+                class="bd-links-group py-2"
+                >Ürün Satışı</a
+              >
+            </li>
+            <li class="bd-links-group py-2">
+              <a 
+              [routerLink]="['./order-list']"
+              [relativeTo]="route"
+              [routerLinkActive]="'active'"
+              >Siparişler</a>
             </li>
             <li class="bd-links-group py-2">
               <a
@@ -63,7 +76,11 @@
               >
             </li>
             <li class="bd-links-group py-2">
-              <a [routerLinkActive]="'active'">Raporlar</a>
+              <a 
+                [routerLink]="['./report']"
+                [relativeTo]="route"
+                [routerLinkActive]="'active'"
+                >Raporlar</a>
             </li>
           </ul>
         </li>
