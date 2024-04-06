@@ -100,5 +100,11 @@ export class ProductListComponent {
     });
   }
   
+  selectedProductId: string = '';
+
+setSelectedProductForDelete(productId: string) {
+  this.selectedProductId = productId;
+}
+
 
 } 
