@@ -12,24 +12,6 @@
           <ul class="list-unstyled fw-normal pb-2 small">
             <li class="bd-links-group py-2">
               <a
-                [routerLink]="['./product-list']"
-                [relativeTo]="route"
-                [routerLinkActive]="'active'"
-                class="bd-links-group py-2"
-                >Ürünler</a
-              >
-            </li>
-
-            <li class="bd-links-group py-2">
-              <a
-                [routerLink]="['./employee-list']"
-                [relativeTo]="route"
-                [routerLinkActive]="'active'"
-                >Personeller</a
-              >
-            </li>
-            <li class="bd-links-group py-2">
-              <a
                 [routerLink]="['./shelf-list']"
                 [relativeTo]="route"
                 [routerLinkActive]="'active'"
@@ -46,11 +28,15 @@
             </li>
             <li class="bd-links-group py-2">
               <a
-                [routerLink]="['./supplier-list']"
+                [routerLink]="['./product-list']"
                 [relativeTo]="route"
                 [routerLinkActive]="'active'"
-                >Tedarikçiler</a
+                class="bd-links-group py-2"
+                >Ürünler</a
               >
+            </li>
+            <li class="bd-links-group py-2">
+              <a [routerLinkActive]="'active'">Siparişler</a>
             </li>
             <li class="bd-links-group py-2">
               <a
@@ -61,7 +47,23 @@
               >
             </li>
             <li class="bd-links-group py-2">
-              <a href="/menu" [routerLinkActive]="'active'">Ayarlar</a>
+              <a
+                [routerLink]="['./supplier-list']"
+                [relativeTo]="route"
+                [routerLinkActive]="'active'"
+                >Tedarikçiler</a
+              >
+            </li>
+            <li class="bd-links-group py-2">
+              <a
+                [routerLink]="['./employee-list']"
+                [relativeTo]="route"
+                [routerLinkActive]="'active'"
+                >Personeller</a
+              >
+            </li>
+            <li class="bd-links-group py-2">
+              <a [routerLinkActive]="'active'">Raporlar</a>
             </li>
           </ul>
         </li>
