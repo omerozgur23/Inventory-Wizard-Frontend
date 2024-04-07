@@ -13,13 +13,13 @@ import { TableColumn } from '../../../shared/components/table/dto/table';
   styleUrl: './shelf-list.component.scss'
 })
 export class ShelfListComponent {
-  shelfList: Shelf[] = [];
-  // tableData: any[] = [];
-  // columns: TableColumn[] = [
-  //   { label: 'Ürün Adı', field: 'productName' },
-  //   { label: 'Ürün Adedi', field: 'count' },
-  //   { label: 'Kapasite', field: 'capacity' },
-  // ];
+  // shelfList: Shelf[] = [];
+  tableData: any[] = [];
+  columns: TableColumn[] = [
+    { label: 'Ürün Adı', field: 'productName' },
+    { label: 'Ürün Adedi', field: 'count' },
+    { label: 'Kapasite', field: 'capacity' },
+  ];
 
   constructor(
     private toastr: ToastrService,
@@ -50,7 +50,7 @@ export class ShelfListComponent {
   getShelfs(){
     this.shelfService.getShelf().subscribe({
       next: (result) => {
-        this.shelfList = result;
+        this.tableData = result;
       },
       error: (err) => {
         console.log(err);
@@ -74,6 +74,12 @@ export class ShelfListComponent {
         }
       }
     );
+  }
+
+  selectedShelfId: string = '';
+
+  setSelectedShelfForDelete(shelfId: string) {
+    this.selectedShelfId = shelfId;
   }
 
   // deleteShelfButtonClicked(id: any) {

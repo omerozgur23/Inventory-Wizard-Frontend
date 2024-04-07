@@ -80,6 +80,7 @@ export class ProductListComponent {
   }
 
   deleteProduct(id: any){
+    this.selectedProductId = id;
     this.productService.deleteProduct(id).subscribe(
       {
         next: (id) =>{
@@ -100,5 +101,15 @@ export class ProductListComponent {
     });
   }
   
+  selectedProductId: string = '';
+
+setSelectedProductForDelete(productId: string) {
+  this.selectedProductId = productId;
+}
+
+selectedProductName: string = '';
+test(productName: string) {
+  this.selectedProductName = productName;
+}
 
 } 
