@@ -67,4 +67,10 @@ export class EmployeeListComponent {
       }
     );
   }
+
+  selectedEmployeeId: string = '';
+
+  setSelectedEmployeeForDelete(employeeId: string) {
+    this.selectedEmployeeId = employeeId;
+  }
 }

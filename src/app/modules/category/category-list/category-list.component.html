@@ -2,9 +2,11 @@
   [tableData]="tableData"
   [columns]="columns"
   (navigateCreateEvent)="navigateCreate()"
-  (deleteEvent)="deleteCategory($event.id)"
+  (deleteEvent)="setSelectedCategoryForDelete($event.id)"
   (refreshEvent)="ngOnInit()"
 ></app-table>
+<app-delete-modal (deleteEvent)="deleteCategory(selectedCategoryId)"></app-delete-modal>
+<app-update-modal (updateEvent)="updateCategory(selectedCategoryId)" (submitEvent)="updateCategory(selectedCategoryId)"></app-update-modal>
 
 <!-- <div>
     <div class="pt-2 pb-2" style="background-color: #f8f9fc">

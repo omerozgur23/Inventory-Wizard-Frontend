@@ -31,7 +31,7 @@
       <tbody>
         <tr *ngFor="let item of tableData">
           <td scope="row">
-            <button class="btn btn primary img-button">
+            <button class="btn btn primary img-button" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
               <img
                 style="width: 24px"
                 src="../../../../assets/img/Pencil.png"
@@ -44,7 +44,7 @@
           </td>
           <td scope="row">
             <button
-              class="btn btn primary img-button"
+              class="btn btn primary img-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
               (click)="deleteData(item)"
             >
               <img src="../../../../assets/img/deleteIcon.png" title="Delete" />
