@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { LoginService } from '../../service/login.service';
 
 @Component({
@@ -13,6 +13,7 @@ export class MenuComponent {
   @Input() isExpanded: boolean = false;
   @Output() toggleSidebar: EventEmitter<boolean> = new EventEmitter<boolean>();
   
+  
 
   constructor(
     private loginService: LoginService,
@@ -25,5 +26,11 @@ export class MenuComponent {
   logout(){
     this.loginService.logout();
     this.router.navigate(["/"]);
+  }
+
+  isExpandedd: boolean = false;
+
+  toggleSidebarr() {
+    this.isExpanded = !this.isExpanded;
   }
 }

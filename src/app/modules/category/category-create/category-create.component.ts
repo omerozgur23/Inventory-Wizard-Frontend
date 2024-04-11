@@ -23,15 +23,15 @@ export class CategoryCreateComponent {
   ) {}
 
   submit(){
-    this.categoryService.createCategory(this.categoryForm.value).subscribe({
-      next: (resp) => {
-        this.toastr.success('Kategori Oluşturulmuştur');
-        this.router.navigate(['..'], {relativeTo: this.route});
-      },
-      error: (err) => {
-        console.log(err);
-        this.toastr.error("Hata oluştu");
-      }
-    })
+    // this.categoryService.createCategory(this.categoryForm.value).subscribe({
+    //   next: (resp) => {
+    //     this.toastr.success('Kategori Oluşturulmuştur');
+    //     this.router.navigate(['..'], {relativeTo: this.route});
+    //   },
+    //   error: (err) => {
+    //     console.log(err);
+    //     this.toastr.error("Hata oluştu");
+    //   }
+    // })
   }
 }

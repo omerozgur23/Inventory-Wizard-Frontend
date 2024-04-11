@@ -1,12 +1,112 @@
 <app-table
   [tableData]="tableData"
   [columns]="columns"
-  (navigateCreateEvent)="navigateCreate()"
-  (deleteEvent)="setSelectedShelfForDelete($event.id)"
+  (deleteEvent)="setSelectedShelf($event.id)"
+  (updateEvent)="update($event)"
   (refreshEvent)="ngOnInit()"
 ></app-table>
-<app-delete-modal (deleteEvent)="deleteShelf(selectedShelfId)"></app-delete-modal>
 
+<!-- PAGINATION -->
+<nav aria-label="Page navigation example" style="cursor: pointer">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+      <a
+        class="page-link"
+        (click)="onPageChange(currentPage - 1)"
+        tabindex="-1"
+        aria-disabled="true"
+        >Previous</a
+      >
+    </li>
+    <li
+      class="page-item"
+      *ngFor="let page of [1, 2, 3, 4, 5]"
+      [class.active]="currentPage === page"
+    >
+      <a class="page-link" (click)="onPageChange(page)">{{ page }}</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" (click)="onPageChange(currentPage + 1)">Next</a>
+    </li>
+  </ul>
+</nav>
+
+<!-- ACCEPT PRODUCT BUTTON -->
+<button class="btn btn primary img-button" (click)="navigateAcceptProduct()">
+  <img src="../../../../assets/img/acceptProduct.png" title="acceptProduct" />
+  <span class="nb-btn-span"> Ürün Girişi </span>
+</button>
+
+<!-- DELETE MODAL -->
+<app-delete-modal (deleteEvent)="deleteShelf(id)"></app-delete-modal>
+
+<!-- CREATE MODAL -->
+<div
+  class="modal fade"
+  id="createModal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Raf Ekle</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="shelfForm">
+          <div class="formBox">
+            <div class="inputBox w100">
+              <input
+                type="number"
+                formControlName="capacity"
+                id="txtCapasity"
+                aria-describedby="capacity"
+                required
+              />
+              <label for="txtCapacity" class="form-label">Kapasite</label>
+            </div>
+
+            <div class="inputBox w100">
+              <input
+                type="number"
+                formControlName="count"
+                id="txtCount"
+                aria-describedby="count"
+                required
+              />
+              <label for="txtCount" class="form-label">Adet</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Vazgeç
+        </button>
+        <button
+          data-bs-dismiss="modal"
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="submit()"
+        >
+          Ekle
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- <div>
   <div class="pt-2 pb-2" style="background-color: #f8f9fc">

@@ -1,12 +1,37 @@
-<!-- <app-table
+<app-table
   [tableData]="tableData"
   [columns]="columns"
   (navigateCreateEvent)="navigateCreate()"
-  (deleteEvent)="deleteProduct($event.id)"
+  (deleteEvent)="setSelectedProduct($event.id)"
+  (updateEvent)="update($event)"
   (refreshEvent)="ngOnInit()"
-></app-table> -->
+></app-table>
 
-<div>
+<nav aria-label="Page navigation example" style="cursor: pointer">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+      <a
+        class="page-link"
+        (click)="onPageChange(currentPage - 1)"
+        tabindex="-1"
+        aria-disabled="true"
+        >Previous</a
+      >
+    </li>
+    <li
+      class="page-item"
+      *ngFor="let page of [1, 2, 3, 4, 5]"
+      [class.active]="currentPage === page"
+    >
+      <a class="page-link" (click)="onPageChange(page)">{{ page }}</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" (click)="onPageChange(currentPage + 1)">Next</a>
+    </li>
+  </ul>
+</nav>
+
+<!-- <div>
   <div class="pt-2 pb-2" style="background-color: #f8f9fc">
     <div class="ps-4 pe-4">
       <button class="btn primary img-button" (click)="ngOnInit()">
@@ -54,7 +79,9 @@
           <td scope="row">
             <button
               class="btn btn primary img-button"
-              (click)="navigateUpdate()"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              data-bs-whatever="@mdo"
             >
               <img src="../../../../assets/img/editIcon.png" title="Düzenle" />
             </button>
@@ -69,32 +96,14 @@
           <td>{{ product.quantity }} Adet</td>
           <td scope="row">
             <button
-            type="button" class="btn img-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="setSelectedProductForDelete(product.id)" (click)="test(product.productName)"
-
+              type="button"
+              class="btn img-button"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+              (click)="setSelectedProductForDelete(product.id)"
             >
               <img src="../../../../assets/img/deleteIcon.png" title="Delete" />
             </button>
-            <!-- Button trigger modal -->
-            <app-delete-modal (deleteEvent)="deleteProduct(selectedProductId)"></app-delete-modal>
-
-<!-- Modal -->
-<!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        {{selectedProductName}} ürününü silmek istiyor musunuz? <br>
-        Bu işlem geri alınamaz!
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
-        <button class="btn btn-danger img-button" data-bs-dismiss="modal" (click)="deleteProduct(selectedProductId)">Sil</button>
-      </div>
-    </div>
-  </div>
-</div> -->
           </td>
         </tr>
         }
@@ -124,4 +133,7 @@
       </li>
     </ul>
   </nav>
-</div>
+</div> -->
+
+<!-- Button trigger modal -->
+<app-delete-modal (deleteEvent)="deleteProduct(id)"></app-delete-modal>

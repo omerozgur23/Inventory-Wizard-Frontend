@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>{{ title }}</h2>
 <mat-dialog-content class="mat-typography">
   <!-- <h5 class="modal-title" id="updateModalLabel">{{ title }}</h5> -->
-  <form [formGroup]="updateForm">
+  <form [formGroup]="createForm">
     <div class="formBox form-group" formArrayName="values">
       <div
         class="inputBox w100"
@@ -20,12 +20,12 @@
       Vazgeç
     </button>
     <button
-      (click)="update()"
+      (click)="create()"
       type="submit"
       class="btn btn-outline-primary"
-      [disabled]="updateForm.invalid"
+      [disabled]="createForm.invalid"
     >
-      Kaydet
+      Ekle
     </button>
   </div>
 </mat-dialog-actions>

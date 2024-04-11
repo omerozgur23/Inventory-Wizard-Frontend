@@ -44,3 +44,66 @@ table {
      border: none;
      
    }
+
+
+
+   .modal-body .formBox {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-top: 10px;
+}
+
+.modal-body .formBox .inputBox {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.modal-body .formBox .inputBox.w50 {
+    width: 47%;
+}
+
+.modal-body .formBox .inputBox.w100 {
+    width: 100%;
+}
+
+.modal-body .formBox .inputBox input,
+.modal-body .formBox .inputBox textarea {
+  width: 100%;
+  resize: none;
+  padding: 5px 0;
+  font-size: 18px;
+  font-weight: 300;
+  color: #000;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #777;
+  background-color: #fff;
+}
+
+.modal-body .formBox .inputBox textarea {
+    height: 120px;
+}
+
+.modal-body .formBox .inputBox label {
+  position: absolute;
+  left: 0;
+  padding: 5px 0;
+  pointer-events: none;
+  font-size: 18px;
+  font-weight: 300;
+  transition: 0.3s;
+}
+  
+.modal-body .formBox .inputBox input:focus ~ label,
+.modal-body .formBox .inputBox input:valid ~ label,
+.modal-body .formBox .inputBox textarea:focus ~ label,
+.modal-body .formBox .inputBox textarea:valid ~ label {
+  transform: translateY(-20px);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: #000;
+  font-weight: 500;
+}
