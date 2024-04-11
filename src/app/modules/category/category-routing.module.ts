@@ -3,9 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { CategoryListComponent } from './category-list/category-list.component';
 import { CategoryCreateComponent } from './category-create/category-create.component';
 
+
 const routes: Routes = [
-  { path: '', component: CategoryListComponent, pathMatch: 'full'},
-  { path: 'category-create', component: CategoryCreateComponent},
+  { path: '', component: CategoryListComponent, pathMatch: 'full', },
+  { path: 'create', component: CategoryCreateComponent},
 ];
 
 @NgModule({

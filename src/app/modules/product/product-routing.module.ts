@@ -8,9 +8,9 @@ import { ProductSaleComponent } from './product-sale/product-sale.component';
 
 const routes: Routes = [
   { path: '', component: ProductListComponent, pathMatch: 'full'},
-  { path: 'product-create', component: ProductCreateComponent},
-  { path: 'product-update', component: ProductUpdateComponent},
-  { path: 'product-sale', component: ProductSaleComponent, pathMatch:'full'},
+  { path: 'create', component: ProductCreateComponent},
+  { path: 'update', component: ProductUpdateComponent},
+  { path: 'sale', component: ProductSaleComponent, pathMatch:'full'},
 ];
 
 @NgModule({

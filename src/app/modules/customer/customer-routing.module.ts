@@ -5,7 +5,7 @@ import { CustomerCreateComponent } from './customer-create/customer-create.compo
 
 const routes: Routes = [
   { path: '', component: CustomerListComponent, pathMatch: 'full' },
-  { path: 'customer-create', component: CustomerCreateComponent },
+  { path: 'create', component: CustomerCreateComponent },
 ];
 
 @NgModule({

@@ -1,7 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Category } from '../dto/category';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
+import { UpdateCategory } from '../dto/UpdateCategoryRequest';
+import { CreateCategoryRequest } from '../dto/createCategoryDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +18,19 @@ export class CategoryService {
     return this.httpClient.get<Category[]>('/category/getall');
   }
 
-  createCategory(category:any):Observable<any> {
-    return this.httpClient.post<Category>('/category/create', category)
+  getAllCategoriesByPage(pageNo: number, pageSize: number): Observable<Category[]> {
+    return this.httpClient.get<Category[]>(`/category/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
-  updateCategory(id:any, category:any):Observable<any> {
-    return this.httpClient.post<Category>('/category/update', id, category)
+  createCategory(categoryName: string): Observable<any> {
+    const request = new CreateCategoryRequest(categoryName); // CreateCategoryRequest nesnesini oluştur
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.httpClient.post<any>('/category/create', request, { headers });
+  }
+
+  updateCategory(id: string, categoryName: string): Observable<any> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.httpClient.put<any>('/category/update', {id,categoryName}, { headers })
   }
 
   deleteCategory(id: string):Observable<any> {

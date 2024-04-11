@@ -2,6 +2,11 @@ table {
     border-collapse: collapse;
     margin: auto;
   }
+
+.tbodyDiv{
+  max-height: clamp(5em,70vh,450px);
+  overflow: auto;
+}
  
   td {
     border: 1px solid #dddddd;

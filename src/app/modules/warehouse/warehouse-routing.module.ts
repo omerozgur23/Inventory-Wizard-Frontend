@@ -6,7 +6,7 @@ import { AcceptProductComponent } from './accept-product/accept-product.componen
 
 const routes: Routes = [
   { path: '', component: ShelfListComponent, pathMatch: 'full'},
-  { path: 'shelf-create', component: ShelfCreateComponent, },
+  { path: 'create', component: ShelfCreateComponent, },
   { path: 'accept-product', component: AcceptProductComponent, },
 ];
 

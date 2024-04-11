@@ -12,16 +12,28 @@ export class TableComponent {
   @Input() columns: TableColumn[] = [];
   @Output() navigateCreateEvent = new EventEmitter();
   @Output() deleteEvent = new EventEmitter<any>();
+  @Output() updateEvent = new EventEmitter<any>();
   @Output() refreshEvent = new EventEmitter();
-
-  currentPage: number = 1;
-  totalPages: number = 10;
+  
 
   constructor() {}
 
+  ngOnInit() {
+    // this.calculateTotalPages();
+  }
+
+  calculateTotalPages() {
+    // if (this.tableData && this.tableData.length > 0) {
+    //   this.totalPages = Math.ceil(this.tableData.length / this.pageSize);
+    // }
+  }
+
   onPageChange(pageNo: number) {
-    this.currentPage = pageNo;
-    // this.loadProducts();
+    // this.onPageChangeEvent.emit();
+    // if (pageNo >= 1 && pageNo <= this.totalPages) {
+    //   this.currentPage = pageNo;
+    //   this.onPageChangeEvent.emit(pageNo);
+    // }
   }
 
   refresh(){
@@ -33,6 +45,11 @@ export class TableComponent {
   }
 
   deleteData(id: any){
-    this.deleteEvent.emit(id);
+    this.deleteEvent.emit(id);    
+  }
+
+  updateData(item: any){
+    this.updateEvent.emit(item);
+    console.log(item);
   }
 }

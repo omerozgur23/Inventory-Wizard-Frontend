@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { EmployeeRoutingModule } from './employee-routing.module';
 import { SharedModule } from '../../shared/shared.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -13,7 +15,10 @@ import { SharedModule } from '../../shared/shared.module';
   imports: [
     CommonModule,
     EmployeeRoutingModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatDialogModule,
   ]
 })
 export class EmployeeModule { }

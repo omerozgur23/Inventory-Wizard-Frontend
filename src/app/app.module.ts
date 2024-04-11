@@ -1,3 +1,4 @@
+import { MatDialogModule } from '@angular/material/dialog';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -33,6 +34,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
     NgxPaginationModule,
+    MatDialogModule,
   ],
   providers: [
     provideHttpClient(withInterceptors([urlInterceptor])),

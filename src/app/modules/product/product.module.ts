@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductUpdateComponent } from './product-update/product-update.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ProductSaleComponent } from './product-sale/product-sale.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -23,7 +24,8 @@ import { ProductSaleComponent } from './product-sale/product-sale.component';
     ProductRoutingModule,
     ReactiveFormsModule,
     SharedModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule,
   ]
 })
 export class ProductModule { }

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { LoginService } from '../../service/login.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -40,5 +40,4 @@ export class LoginComponent {
       }
     );
   }
-
 }

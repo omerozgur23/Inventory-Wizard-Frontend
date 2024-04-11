@@ -41,16 +41,16 @@ export class CustomerCreateComponent {
   }
 
   submit() {
-    this.customerService.createCustomer(this.customerForm.value).subscribe({
-      next: (resp) => {
-        this.toastr.success('Müşteri Oluşturulmuştur');
-        this.router.navigate(['..'], {relativeTo: this.route});
-      },
-      error: (err) => {
-        console.log(err);
-        this.toastr.error("Hata oluştu");
-      }
-    });
+    // this.customerService.createCustomer(this.customerForm.value).subscribe({
+    //   next: (resp) => {
+    //     this.toastr.success('Müşteri Oluşturulmuştur');
+    //     this.router.navigate(['..'], {relativeTo: this.route});
+    //   },
+    //   error: (err) => {
+    //     console.log(err);
+    //     this.toastr.error("Hata oluştu");
+    //   }
+    // });
   }
 
   back() {
