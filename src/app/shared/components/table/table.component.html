@@ -6,7 +6,7 @@
         <img src="../../../../assets/img/refreshIcon.png" title="Yenile" />
         <span class="nb-btn-span"> Yenile </span>
       </button>
-      <button class="btn btn primary img-button" (click)="navigateCreate()">
+      <button (click)="navigateCreate()" class="btn btn primary img-button">
         <img src="../../../../assets/img/createIcon.png" title="Ekle" />
         <span class="nb-btn-span"> Ekle </span>
       </button>
@@ -18,45 +18,57 @@
   </div>
 
   <div class="pe-4 ps-4 py-4">
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th scope="col" style="width: 10px"></th>
-          <th scope="col" *ngFor="let column of columns">
-            {{ column.label }}
-          </th>
-          <th scope="col" style="width: 10px"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of tableData">
-          <td scope="row">
-            <button class="btn btn primary img-button" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
-              <img
-                style="width: 24px"
-                src="../../../../assets/img/Pencil.png"
-                title="Düzenle"
-              />
-            </button>
-          </td>
-          <td *ngFor="let column of columns">
-            {{ item[column.field] }}
-          </td>
-          <td scope="row">
-            <button
-              class="btn btn primary img-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-              (click)="deleteData(item)"
-            >
-              <img src="../../../../assets/img/deleteIcon.png" title="Delete" />
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive tbodyDiv">
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr class="align-middle">
+            <th scope="col" style="width: 10px"></th>
+            <th scope="col" *ngFor="let column of columns">
+              {{ column.label }}
+            </th>
+            <th scope="col" style="width: 10px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of tableData; track $index) {
+          <tr>
+            <td scope="row">
+              <button
+                (click)="updateData(item)"
+                class="btn btn primary img-button"
+              >
+                <!-- <img
+                    style="width: 24px"
+                    src="../../../../assets/img/Pencil.png"
+                    title="Düzenle"
+                  /> -->
+                <i class="lni lni-pencil" title="Düzenle"></i>
+              </button>
+            </td>
+            @for (column of columns; track $index) {
+            <td>
+              {{ item[column.field] }}
+            </td>
+            }
+            <td scope="row">
+              <button
+                class="btn btn primary img-button"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteModal"
+                (click)="deleteData(item)"
+              >
+                <img src="../../../../assets/img/deleteIcon.png" title="Sil" />
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <!-- Sayfalama -->
-  <nav aria-label="Page navigation example" style="cursor: pointer">
+  <!-- <nav aria-label="Page navigation example" style="cursor: pointer">
     <ul class="pagination justify-content-center">
       <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
         <a
@@ -76,21 +88,6 @@
       </li>
       <li class="page-item">
         <a class="page-link" (click)="onPageChange(currentPage + 1)">Next</a>
-      </li>
-    </ul>
-  </nav>
-  <!-- <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-      <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
-          >Previous</a
-        >
-      </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#">Next</a>
       </li>
     </ul>
   </nav> -->

@@ -9,18 +9,22 @@ import { OrderService } from '../service/order.service';
 })
 export class OrderListComponent {
   tableData: any[] = [];
+  
   columns: TableColumn[] = [
-    { label: 'Müşteri Ünvanı', field: 'companyName' },
-    { label: 'Sipariş Oluşturan', field: 'firstName' },
+    { label: 'Müşteri Ünvanı', field: 'customerCompanyName' },
+    { label: 'Sipariş Oluşturan', field: 'employeeFirstName' },
     { label: 'Sipariş Tarihi', field: 'orderDate' },
   ];
+
+  currentPage: number = 1;
+  totalPages: number = 10;
 
   constructor(
     private orderService: OrderService,
   ) {}
 
   ngOnInit(): void {
-    this.getOrders();
+    this.loadOrder();
   }
 
   getOrders() {
@@ -28,4 +32,16 @@ export class OrderListComponent {
       this.tableData = orders;
     });
   }
+
+  onPageChange(pageNo: number) {
+    this.currentPage = pageNo;
+    this.loadOrder();
+  }
+
+  loadOrder() {
+    this.orderService.getAllOrdersByPage(this.currentPage, 2).subscribe(response => {
+      this.tableData = response;
+    });
+  }
+  
 }

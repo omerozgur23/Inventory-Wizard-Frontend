@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<!-- <div class="container-fluid">
   <div class="row">
     <div class="col-md-2 sidebar">
       <ul>
@@ -12,7 +12,7 @@
           <ul class="list-unstyled fw-normal pb-2 small">
             <li class="bd-links-group py-2">
               <a
-                [routerLink]="['./shelf-list']"
+                [routerLink]="['./shelf']"
                 [relativeTo]="route"
                 [routerLinkActive]="'active'"
                 >Raflar</a
@@ -20,7 +20,7 @@
             </li>
             <li class="bd-links-group py-2">
               <a
-                [routerLink]="['./category-list']"
+                [routerLink]="['./category']"
                 [relativeTo]="route"
                 [routerLinkActive]="'active'"
                 >Kategoriler</a
@@ -28,7 +28,7 @@
             </li>
             <li class="bd-links-group py-2">
               <a
-                [routerLink]="['./product-list']"
+                [routerLink]="['./product']"
                 [relativeTo]="route"
                 [routerLinkActive]="'active'"
                 class="bd-links-group py-2"
@@ -45,15 +45,16 @@
               >
             </li>
             <li class="bd-links-group py-2">
-              <a 
-              [routerLink]="['./order-list']"
-              [relativeTo]="route"
-              [routerLinkActive]="'active'"
-              >Siparişler</a>
+              <a
+                [routerLink]="['./order']"
+                [relativeTo]="route"
+                [routerLinkActive]="'active'"
+                >Siparişler</a
+              >
             </li>
             <li class="bd-links-group py-2">
               <a
-                [routerLink]="['./customer-list']"
+                [routerLink]="['./customer']"
                 [relativeTo]="route"
                 [routerLinkActive]="'active'"
                 >Müşteriler</a
@@ -61,7 +62,7 @@
             </li>
             <li class="bd-links-group py-2">
               <a
-                [routerLink]="['./supplier-list']"
+                [routerLink]="['./supplier']"
                 [relativeTo]="route"
                 [routerLinkActive]="'active'"
                 >Tedarikçiler</a
@@ -69,18 +70,19 @@
             </li>
             <li class="bd-links-group py-2">
               <a
-                [routerLink]="['./employee-list']"
+                [routerLink]="['./employee']"
                 [relativeTo]="route"
                 [routerLinkActive]="'active'"
                 >Personeller</a
               >
             </li>
             <li class="bd-links-group py-2">
-              <a 
+              <a
                 [routerLink]="['./report']"
                 [relativeTo]="route"
                 [routerLinkActive]="'active'"
-                >Raporlar</a>
+                >Raporlar</a
+              >
             </li>
           </ul>
         </li>
@@ -104,5 +106,254 @@
     <div class="col-md-10" style="padding: 0px">
       <router-outlet />
     </div>
+  </div>
+</div> -->
+
+<div class="wrapper">
+  <aside id="sidebar" [ngClass]="{ expand: isExpanded }">
+    <div class="d-flex">
+      <button class="toggle-btn" type="button" (click)="toggleSidebarr()">
+        <i class="lni lni-grid-alt"></i>
+      </button>
+      <div class="sidebar-logo">
+        <a [routerLink]="['../menu']" [relativeTo]="route">InventoryWizard</a>
+      </div>
+    </div>
+    <ul class="sidebar-nav">
+      <li class="sidebar-item">
+        <a class="sidebar-link">
+          <i class="lni lni-user"></i>
+          <span>Profil</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link"
+          [routerLink]="['./shelf']"
+          [relativeTo]="route"
+          [routerLinkActive]="'active'"
+        >
+          <i class="lni lni-layers"></i>
+          <span>Raflar</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link"
+          [routerLink]="['./category']"
+          [relativeTo]="route"
+          [routerLinkActive]="'active'"
+        >
+          <i class="lni lni-grid-alt"></i>
+          <span>Kategoriler</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link"
+          [routerLink]="['./product']"
+          [relativeTo]="route"
+          [routerLinkActive]="'active'"
+        >
+          <i class="lni lni-tag"></i>
+          <span>Ürünler</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link"
+          [routerLink]="['./product-sale']"
+          [relativeTo]="route"
+          [routerLinkActive]="'active'"
+        >
+          <i class="lni lni-dollar"></i>
+          <span>Ürün Satışı</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link"
+          [routerLink]="['./order']"
+          [relativeTo]="route"
+          [routerLinkActive]="'active'"
+        >
+          <i class="lni lni-popup"></i>
+          <span>Siparişler</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link"
+          [routerLink]="['./customer']"
+          [relativeTo]="route"
+          [routerLinkActive]="'active'"
+        >
+          <i class="lni lni-customer"></i>
+          <span>Müşteriler</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link"
+          [routerLink]="['./supplier']"
+          [relativeTo]="route"
+          [routerLinkActive]="'active'"
+        >
+          <i class="lni lni-handshake"></i>
+          <span>Tedarikçiler</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link"
+          [routerLink]="['./employee']"
+          [relativeTo]="route"
+          [routerLinkActive]="'active'"
+        >
+          <i class="lni lni-users"></i>
+          <span>Personeller</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link"
+          [routerLink]="['./report']"
+          [relativeTo]="route"
+          [routerLinkActive]="'active'"
+        >
+          <i class="lni lni-stats-up"></i>
+          <span>Raporlar</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <a class="sidebar-link">
+          <i class="lni lni-cog"></i>
+          <span>Ayarlar</span>
+        </a>
+      </li>
+    </ul>
+    <div class="sidebar-footer" (click)="logout()">
+      <a class="sidebar-link">
+        <i class="lni lni-exit"></i>
+        <span>Çıkış</span>
+      </a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <router-outlet />
+    <!-- <nav class="navbar navbar-expand px-4 py-3">
+      <form action="#" class="d-none d-sm-inline-block"></form>
+      <div class="navbar-collapse collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
+              <img src="/account.png" class="avatar img-fluid" alt="" />
+            </a>
+            <div class="dropdown-menu dropdown-menu-end rounded"></div>
+          </li>
+        </ul>
+      </div>
+    </nav> -->
+
+    <!-- <main class="content px-3 py-4">
+      <div class="container-fluid">
+        <div class="mb-3">
+          <h3 class="fw-bold fs-4 mb-3">Admin Dashboard</h3>
+          <div class="row">
+            <div class="col-12 col-md-4">
+              <div class="card border-0">
+                <div class="card-body py-4">
+                  <h5 class="mb-2 fw-bold">Memebers Progress</h5>
+                  <p class="mb-2 fw-bold">$72,540</p>
+                  <div class="mb-0">
+                    <span class="badge text-success me-2"> +9.0% </span>
+                    <span class="fw-bold"> Since Last Month </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="card border-0">
+                <div class="card-body py-4">
+                  <h5 class="mb-2 fw-bold">Memebers Progress</h5>
+                  <p class="mb-2 fw-bold">$72,540</p>
+                  <div class="mb-0">
+                    <span class="badge text-success me-2"> +9.0% </span>
+                    <span class="fw-bold"> Since Last Month </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="card border-0">
+                <div class="card-body py-4">
+                  <h5 class="mb-2 fw-bold">Memebers Progress</h5>
+                  <p class="mb-2 fw-bold">$72,540</p>
+                  <div class="mb-0">
+                    <span class="badge text-success me-2"> +9.0% </span>
+                    <span class="fw-bold"> Since Last Month </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="fw-bold fs-4 my-3">Avg. Agent Earnings</h3>
+          <div class="row">
+            <div class="col-12">
+              <table class="table table-striped">
+                <thead>
+                  <tr class="highlight">
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>mdo</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>fat</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td colspan="2">Larry the Bird</td>
+                    <td>twitter</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main> -->
+
+    <!-- <footer class="footer fixed-bottom">
+      <div class="container-fluid">
+        <div class="row text-body-secondary">
+          <div class="text-center" style="margin-bottom: 10px">
+            <strong class="text-body-secondary"
+              >Copyright ©2024 All rights reserved</strong
+            >
+          </div>
+        </div>
+      </div>
+    </footer> -->
   </div>
 </div>

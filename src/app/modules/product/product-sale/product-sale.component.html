@@ -1,1 +1,39 @@
-<p>product-sale works!</p>
+<div class="sayfa">
+  <form [formGroup]="saleForm" (ngSubmit)="submit()">
+    <label for="">Ürün Seçiniz</label>
+    <select formControlName="productId" class="form-select my-2 mb-3">
+      @for (item of productList; track $index) {
+      <option [value]="item.id">{{ item.productName }}</option>
+      }
+    </select>
+
+    <label for="">Müşteri Seçiniz</label>
+    <select formControlName="customerId" class="form-select my-2 mb-3">
+      @for (item of customerList; track $index) {
+      <option [value]="item.id">{{ item.companyName }}</option>
+      }
+    </select>
+
+    <label for="">Personel Seçiniz</label>
+    <select formControlName="userId" class="form-select my-2 mb-3">
+      @for (item of employeeList; track $index) {
+      <option [value]="item.id">
+        {{ item.firstName + " " + item.lastName }}
+      </option>
+      }
+    </select>
+
+    <div class="mb-3">
+      <label for="txtCount" class="form-label">Adet</label>
+      <input
+        formControlName="count"
+        type="number"
+        class="form-control"
+        id="txtCount"
+        aria-describedby="count"
+      />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Satışı Tamamla</button>
+  </form>
+</div>

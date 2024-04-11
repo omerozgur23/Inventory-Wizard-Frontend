@@ -1,46 +1,109 @@
-table {
-    border-collapse: collapse;
-    margin: auto;
-  }
+// table {
+//     border-collapse: collapse;
+//     margin: auto;
+//   }
  
-  td {
-    border: 1px solid #dddddd;
-    background-color: #F8F9FC;
-    vertical-align: middle;
-  }
+//   td {
+//     border: 1px solid #dddddd;
+//     background-color: #F8F9FC;
+//     vertical-align: middle;
+//   }
  
-  th {
-    border: 1px solid #dddddd;
-  }
+//   th {
+//     border: 1px solid #dddddd;
+//   }
  
-  tr {
-    border-bottom: 1px solid #dddddd;
-  }
+//   tr {
+//     border-bottom: 1px solid #dddddd;
+//   }
  
-  button:hover {
-    background-color: #cdcdcd;
-    border-radius: 5px;
-  }
-  button:active {
-   background-color: #cdcdcd;
-   border-radius: 5px;
- }
-   button{
-     border: none;
-   }
+//   button:hover {
+//     background-color: #cdcdcd;
+//     border-radius: 5px;
+//   }
+//   button:active {
+//    background-color: #cdcdcd;
+//    border-radius: 5px;
+//  }
+//    button{
+//      border: none;
+//    }
    
-   .nb-btn-span{
-     vertical-align: middle;
-   }
+//    .nb-btn-span{
+//      vertical-align: middle;
+//    }
  
-   .nb-search-span{
-     float: left;
-     background-color: white;
-   }
-   .nb-search-input{
-     border: none;
-   }
-   .nb-search-input:active{
-     border: none;
+//    .nb-search-span{
+//      float: left;
+//      background-color: white;
+//    }
+//    .nb-search-input{
+//      border: none;
+//    }
+//    .nb-search-input:active{
+//      border: none;
      
-   }
+//    }
+
+
+// modal
+.modal-body .formBox {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-top: 10px;
+}
+
+.modal-body .formBox .inputBox {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.modal-body .formBox .inputBox.w50 {
+  width: 47%;
+}
+
+.modal-body .formBox .inputBox.w100 {
+  width: 100%;
+}
+
+.modal-body .formBox .inputBox input,
+.modal-body .formBox .inputBox textarea {
+width: 100%;
+resize: none;
+padding: 5px 0;
+font-size: 18px;
+font-weight: 300;
+color: #000;
+border: none;
+outline: none;
+border-bottom: 1px solid #777;
+background-color: #fff;
+}
+
+.modal-body .formBox .inputBox textarea {
+  height: 120px;
+}
+
+.modal-body .formBox .inputBox label {
+position: absolute;
+left: 0;
+padding: 5px 0;
+pointer-events: none;
+font-size: 18px;
+font-weight: 300;
+transition: 0.3s;
+}
+
+.modal-body .formBox .inputBox input:focus ~ label,
+.modal-body .formBox .inputBox input:valid ~ label,
+.modal-body .formBox .inputBox textarea:focus ~ label,
+.modal-body .formBox .inputBox textarea:valid ~ label {
+transform: translateY(-20px);
+font-size: 12px;
+font-weight: 400;
+letter-spacing: 1px;
+color: #000;
+font-weight: 500;
+}

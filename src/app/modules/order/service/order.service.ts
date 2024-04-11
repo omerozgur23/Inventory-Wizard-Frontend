@@ -12,7 +12,11 @@ export class OrderService {
   ) { }
 
   getOrders(): Observable<any[]>{
-    return this.httpClient.get<any[]>('/order/getall');
+    return this.httpClient.get<any[]>('/orders/getall');
+  }
+
+  getAllOrdersByPage(pageNo: number, pageSize: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(`/orders/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
 }

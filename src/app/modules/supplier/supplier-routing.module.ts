@@ -5,7 +5,7 @@ import { SupplierCreateComponent } from './supplier-create/supplier-create.compo
 
 const routes: Routes = [
   { path: '', component: SupplierListComponent, pathMatch: 'full' },
-  { path: 'supplier-create', component: SupplierCreateComponent },
+  { path: 'create', component: SupplierCreateComponent },
 ];
 
 @NgModule({

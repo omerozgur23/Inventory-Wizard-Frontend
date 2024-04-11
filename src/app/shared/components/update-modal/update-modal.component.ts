@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-update-modal',
@@ -7,23 +8,39 @@ import { FormBuilder } from '@angular/forms';
   styleUrl: './update-modal.component.scss'
 })
 export class UpdateModalComponent {
-  @Output() updateEvent = new EventEmitter<any>();
-  @Output() submitEvent = new EventEmitter<any>();
-  categoryForm = this.fb.group({
-    categoryName: ''
-  });
+  // inputs: any[] = [];
+  title = '';
+  inputLabels: string[] = [];
+  
+  updateForm!: FormGroup;
+  // updateForm = this.fb.group({
+  //   values: this.fb.array([])
+  // });
 
   constructor(
     private fb: FormBuilder,
-  ){}
-
-  selectedId: string = '';
-
-  update(id: any){
-    this.updateEvent.emit(id);
+    public dialogRef: MatDialogRef<UpdateModalComponent>,
+  ) {
+    this.updateForm = this.fb.group({
+      values: this.fb.array([]),
+    })
   }
 
-  submitt(){
-    this.submitEvent.emit();
+  get values() {
+    return this.updateForm.get('values') as FormArray;
+  }
+
+  addValue() {
+    const value = new FormControl('');
+    this.values.push(value);
+    console.log(this.values.value);
+  }
+
+  update(){
+    this.dialogRef.close({result: 'yes'});
+  }
+
+  close(){
+    this.dialogRef.close({result: 'no'});
   }
 }
