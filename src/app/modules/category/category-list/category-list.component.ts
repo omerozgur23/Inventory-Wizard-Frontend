@@ -1,4 +1,4 @@
-import { UpdateCategoryRequest } from './../dto/updateCategoryRequest';
+
 import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryService } from '../service/category.service';
@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
+import { UpdateCategoryRequest } from '../dto/updateCategoryRequest';
 
 
 @Component({
