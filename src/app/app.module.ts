@@ -1,5 +1,5 @@
 import { MatDialogModule } from '@angular/material/dialog';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -42,7 +42,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
       provide: APP_CONFIG,
       useValue: environment,
     },
-    provideAnimationsAsync(),
+    // provideAnimationsAsync(),
+    { provide: LOCALE_ID, useValue: 'tr'},
   ],
   bootstrap: [AppComponent]
 })

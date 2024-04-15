@@ -1,26 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UpdateCustomerDTO } from '../../customer/dto/updateCustomerDTO';
-import { Employee } from '../../employee/dto/employee';
+import { UpdateCustomerRequest } from '../../customer/dto/updateCustomerRequest';
+import { GetEmployeeResponse } from '../../employee/dto/getEmployeeResponse';
 import { forkJoin } from 'rxjs';
 import { CategoryService } from '../../category/service/category.service';
 import { EmployeeService } from '../../employee/service/employee.service';
 import { CustomerService } from '../../customer/service/customer.service';
 import { ShelfService } from '../../warehouse/service/shelf.service';
-import { Product } from '../dto/product';
+import { GetProductResponse } from '../dto/getProductResponse';
 
 @Component({
   selector: 'app-product-sale',
   templateUrl: './product-sale.component.html',
   styleUrl: './product-sale.component.scss'
 })
-export class ProductSaleComponent {
-  customerList: UpdateCustomerDTO[] = [];
-  employeeList: Employee[] = [];
-  productList: Product[] = [];
+export class ProductSaleComponent implements OnInit{
+  customerList: UpdateCustomerRequest[] = [];
+  employeeList: GetEmployeeResponse[] = [];
+  productList: GetProductResponse[] = [];
 
   saleForm = this.fb.group({
     productId: '',
@@ -42,12 +42,12 @@ export class ProductSaleComponent {
 
   ngOnInit(): void{
     forkJoin({
-      categories: this.customerService.getCustomers(),
+      customers: this.customerService.getCustomers(),
       suppliers: this.employeeService.getEmployee(),
-      products: this.productService.getProducts(),
+      products: this.productService.getAllProducts(),
     }).subscribe({
       next: (resp => {
-        this.customerList = resp.categories;
+        this.customerList = resp.customers;
         this.employeeList = resp.suppliers;
         this.productList = resp.products;
       }),

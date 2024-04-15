@@ -1,40 +1,83 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Category } from '../dto/category';
+import { GetCategoryResponse } from '../dto/getCategoryResponse';
 import { Observable, catchError, throwError } from 'rxjs';
-import { UpdateCategory } from '../dto/UpdateCategoryRequest';
-import { CreateCategoryRequest } from '../dto/createCategoryDTO';
+import { CreateCategoryRequest } from '../dto/createCategoryRequest';
+import { UpdateCategoryRequest } from '../dto/updateCategoryRequest';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
+  private httpOptions = {
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
+  };
 
   constructor(
     private httpClient: HttpClient,
-  ) { }
+  ) {}
 
-  getCategory():Observable<Category[]> {
-    return this.httpClient.get<Category[]>('/category/getall');
+  getCategory():Observable<GetCategoryResponse[]> {
+    return this.httpClient.get<GetCategoryResponse[]>('/category/getall');
   }
 
-  getAllCategoriesByPage(pageNo: number, pageSize: number): Observable<Category[]> {
-    return this.httpClient.get<Category[]>(`/category/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getAllCategoriesByPage(pageNo: number, pageSize: number): Observable<GetCategoryResponse[]> {
+    return this.httpClient.get<GetCategoryResponse[]>(`/category/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
-  createCategory(categoryName: string): Observable<any> {
-    const request = new CreateCategoryRequest(categoryName); // CreateCategoryRequest nesnesini oluştur
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.post<any>('/category/create', request, { headers });
+  createCategory(category: CreateCategoryRequest): Observable<CreateCategoryRequest> {
+    return this.httpClient.post<CreateCategoryRequest>('/category/create', category, this.httpOptions)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'Bir hata oluştu';
+        if (error.error instanceof ErrorEvent) {
+          // İstemci tarafında hata
+          errorMessage = `Hata: ${error.error.message}`;
+        } else {
+          // Sunucu tarafında hata
+          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
+        }
+        console.error(errorMessage);
+        return throwError(errorMessage); // Hata durumunu tekrar fırlat
+      })
+    );
   }
 
-  updateCategory(id: string, categoryName: string): Observable<any> {
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.put<any>('/category/update', {id,categoryName}, { headers })
+  updateCategory(category: UpdateCategoryRequest): Observable<UpdateCategoryRequest> {
+    return this.httpClient.put<UpdateCategoryRequest>('/category/update', category, this.httpOptions)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'Bir hata oluştu';
+        if (error.error instanceof ErrorEvent) {
+          // İstemci tarafında hata
+          errorMessage = `Hata: ${error.error.message}`;
+        } else {
+          // Sunucu tarafında hata
+          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
+        }
+        console.error(errorMessage);
+        return throwError(errorMessage); // Hata durumunu tekrar fırlat
+      })
+    );
   }
 
   deleteCategory(id: string):Observable<any> {
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.post('/category/delete', JSON.stringify(id), { headers });
+    return this.httpClient.post('/category/delete', JSON.stringify(id), this.httpOptions)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'Bir hata oluştu';
+        if (error.error instanceof ErrorEvent) {
+          // İstemci tarafında hata
+          errorMessage = `Hata: ${error.error.message}`;
+        } else {
+          // Sunucu tarafında hata
+          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
+        }
+        console.error(errorMessage);
+        return throwError(errorMessage); // Hata durumunu tekrar fırlat
+      })
+    );
   }
 }

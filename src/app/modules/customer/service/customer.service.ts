@@ -1,42 +1,81 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { UpdateCustomerDTO } from '../dto/updateCustomerDTO';
-import { CreateCustomerRequest } from '../dto/createCustomerDTO';
+import { Observable, catchError, throwError } from 'rxjs';
+import { UpdateCustomerRequest } from '../dto/updateCustomerRequest';
+import { CreateCustomerRequest } from '../dto/createCustomerRequest';
+import { GetCustomerResponse } from '../dto/getCustomerResponse';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
+  private httpOptions = {
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
+  };
 
   constructor(
     private httpClient: HttpClient,
   ) { }
 
-  getCustomers(): Observable<any[]>{
-    return this.httpClient.get<any[]>('/customer/getall');
+  getCustomers(): Observable<GetCustomerResponse[]>{
+    return this.httpClient.get<GetCustomerResponse[]>('/customer/getall');
   }
 
-  getAllCustomersByPage(pageNo: number, pageSize: number): Observable<UpdateCustomerDTO[]> {
-    return this.httpClient.get<UpdateCustomerDTO[]>(`/customer/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getAllCustomersByPage(pageNo: number, pageSize: number): Observable<GetCustomerResponse[]> {
+    return this.httpClient.get<GetCustomerResponse[]>(`/customer/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  }
+  
+  createCustomer(customer: CreateCustomerRequest): Observable<CreateCustomerRequest> {
+    return this.httpClient.post<any>('/customer/create', customer, this.httpOptions)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'Bir hata oluştu';
+        if (error.error instanceof ErrorEvent) {
+          // İstemci tarafında hata
+          errorMessage = `Hata: ${error.error.message}`;
+        } else {
+          // Sunucu tarafında hata
+          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
+        }
+        console.error(errorMessage);
+        return throwError(errorMessage); // Hata durumunu tekrar fırlat
+      })
+    );
   }
 
+  updateCustomer(customer: UpdateCustomerRequest):Observable<UpdateCustomerRequest>{
+    return this.httpClient.put<any>('/customer/update', customer, this.httpOptions)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'Bir hata oluştu';
+        if (error.error instanceof ErrorEvent) {
+          // İstemci tarafında hata
+          errorMessage = `Hata: ${error.error.message}`;
+        } else {
+          // Sunucu tarafında hata
+          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
+        }
+        console.error(errorMessage);
+        return throwError(errorMessage); // Hata durumunu tekrar fırlat
+      })
+    );
+  }
+  
   deleteData(id: string):Observable<any> {
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.post('/customer/delete', JSON.stringify(id), { headers });
-  }
-
-  // createCustomer(customerData: any): Observable<any> {
-  //   return this.httpClient.post<any>(`/customer/create`, customerData);
-  // }
-  createCustomer(companyName: string, contactName: string, email: string, contactPhone: string, taxNumber: string, address: string): Observable<any> {
-    const request = new CreateCustomerRequest(companyName, contactName, email, contactPhone, taxNumber, address);
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.post<any>('/customer/create', request, { headers });
-  }
-
-  updateCustomer(customer: UpdateCustomerDTO):Observable<any>{
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.put<any>('/customer/update', customer, { headers });
+    return this.httpClient.post('/customer/delete', JSON.stringify(id), this.httpOptions)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'Bir hata oluştu';
+        if (error.error instanceof ErrorEvent) {
+          // İstemci tarafında hata
+          errorMessage = `Hata: ${error.error.message}`;
+        } else {
+          // Sunucu tarafında hata
+          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
+        }
+        console.error(errorMessage);
+        return throwError(errorMessage); // Hata durumunu tekrar fırlat
+      })
+    );
   }
 }
