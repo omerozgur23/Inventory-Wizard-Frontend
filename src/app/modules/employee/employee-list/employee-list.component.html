@@ -1,12 +1,14 @@
+<!-- TABLE MODAL -->
 <app-table
   [tableData]="tableData"
   [columns]="columns"
-  (navigateCreateEvent)="navigateCreate()"
-  (deleteEvent)="setSelectedEmployee($event.id)"
-  (updateEvent)="update($event)"
+  (navigateCreateDialogEvent)="openCreateEmployeeDialog()"
+  (navigateUpdateDialogEvent)="openUpdateEmployeeDialog($event)"
+  (navigateDeleteDialogEvent)="setSelectedEmployee($event.id)"
   (refreshEvent)="ngOnInit()"
 ></app-table>
 
+<!-- PAGINATION -->
 <nav aria-label="Page navigation example" style="cursor: pointer">
   <ul class="pagination justify-content-center">
     <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
@@ -31,4 +33,8 @@
   </ul>
 </nav>
 
-<app-delete-modal (deleteEvent)="deleteEmployee(id)"></app-delete-modal>
+<!-- DELETE MODAL -->
+<app-delete-modal
+  [description]="deleteDialogDescription"
+  (deleteEvent)="deleteEmployee(id)"
+></app-delete-modal>

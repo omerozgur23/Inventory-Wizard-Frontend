@@ -1,9 +1,11 @@
+<!-- TABLE MODAL -->
 <app-table
+  [currentUrl]="currentUrl"
   [tableData]="tableData"
   [columns]="columns"
-  (navigateCreateEvent)="create()"
-  (deleteEvent)="setSelectedCategory($event.id)"
-  (updateEvent)="update($event)"
+  (navigateCreateDialogEvent)="openCreateCategoryDialog()"
+  (navigateUpdateDialogEvent)="openUpdateCategoryDialog($event)"
+  (navigateDeleteDialogEvent)="setSelectedCategory($event.id)"
   (refreshEvent)="ngOnInit()"
 ></app-table>
 
@@ -33,4 +35,7 @@
 </nav>
 
 <!-- DELETE MODAL -->
-<app-delete-modal (deleteEvent)="deleteCategory(id)"></app-delete-modal>
+<app-delete-modal
+  [description]="deleteDialogDescription"
+  (deleteEvent)="deleteCategory(id)"
+></app-delete-modal>

@@ -1,20 +1,20 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
-import { Product } from '../dto/product';
 import { TableColumn } from '../../../shared/components/table/dto/table';
-import { UpdateProductDTO } from '../dto/updateProductDTO';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { UpdateProductRequest } from '../dto/updateProductRequest';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
+import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
+import { CreateProductRequest } from '../dto/createProductRequest';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.scss'
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit{
   // productList: Product[] = [];
   tableData: any[] = [];
   columns: TableColumn[] = [
@@ -23,10 +23,12 @@ export class ProductListComponent {
     { label: 'Tedarikçi', field: 'supplierCompanyName' },
     { label: 'Alış Fiyatı', field: 'purchasePrice' },
     { label: 'Satış Fiyatı', field: 'unitPrice' },
-    { label: 'Kritik Stok', field: '' },
+    { label: 'Kritik Stok', field: 'criticalCount' },
     { label: 'Stok Adedi', field: 'quantity' },
   ];
+
   
+  deleteDialogDescription = 'Ürün kaydını silmek istediğinizden emin misiniz?';
   id = '';
   currentPage: number = 1;
   // totalPages: number = 10;
@@ -34,9 +36,6 @@ export class ProductListComponent {
   constructor(
     private toastr: ToastrService,
     private productService: ProductService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private fb: FormBuilder,
     private dialog: MatDialog,
   ){}
 
@@ -49,7 +48,7 @@ export class ProductListComponent {
   }
  
   loadProducts() {
-    this.productService.getAllProductsByPage(this.currentPage, 2).subscribe(response => {
+    this.productService.getProductsByPage(this.currentPage, 2).subscribe(response => {
       this.tableData = response;
     });
   }
@@ -58,9 +57,98 @@ export class ProductListComponent {
     this.currentPage = pageNo;
     this.loadProducts();
   }
- 
-  navigateCreate(){
-    this.router.navigate(['./create'], { relativeTo: this.route });
+
+  getProduct(){
+    this.productService.getAllProducts().subscribe({
+      next: (result) => {
+        this.tableData = result;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  openCreateProductDialog() {
+    let dialog = this.dialog.open(CreateModalComponent, {
+      width: '500px',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '250ms',
+    });    
+    dialog.afterClosed().subscribe({
+      next: (data) => {
+        if (data?.result === 'yes') {
+          const productNameValue = dialog.componentInstance.createForm.value.values[0];
+          const categoryIdValue = dialog.componentInstance.createForm.value.values[1];
+          const supplierIdValue = dialog.componentInstance.createForm.value.values[2];
+          const criticalCountValue = dialog.componentInstance.createForm.value.values[3];
+          const purchasePriceValue = dialog.componentInstance.createForm.value.values[4];
+          const unitPriceValue = dialog.componentInstance.createForm.value.values[5];
+          this.createProduct(productNameValue, categoryIdValue, supplierIdValue, criticalCountValue, purchasePriceValue, unitPriceValue);
+        }
+      }
+    });
+    dialog.componentInstance.title = 'Yeni Ürün Oluştur';
+    dialog.componentInstance.inputLabels = ['Ürün Adı', 'Kategori', 'Tedarikçi', 'Kritik Stok', 'Alış Fiyatı', 'Satış Fiyatı'];
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+  }
+
+  createProduct(productname: string, categoryId: string, supplierId: string, criticalCount: number, purchasePrice: number, unitPrice: number) {
+    const product = new CreateProductRequest(productname, categoryId, supplierId, criticalCount, purchasePrice, unitPrice);
+    this.productService.createProduct(product).subscribe({
+      next: (resp) => {
+        this.toastr.success('Ürün Oluşturuldu');
+        this.loadProducts();
+      },
+      error: (err) => {
+        // console.log(err);
+        this.toastr.error("Hata oluştu");
+      }
+    });
+  }
+
+  openUpdateProductDialog(item: any){
+    let dialog =  this.dialog.open(UpdateModalComponent, {
+      width: '500px',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '250ms',
+    });
+    dialog.afterClosed().subscribe({
+      next: (data) => {
+        if (data?.result === 'yes') {
+        const productNameValue =  dialog.componentInstance.updateForm.value.values[0];
+        const criticalCountValue =  dialog.componentInstance.updateForm.value.values[1];
+        const purchasePriceValue =  dialog.componentInstance.updateForm.value.values[2];
+        const unitPriceValue =  dialog.componentInstance.updateForm.value.values[3];
+        this.updateProduct(item.id,/* item.categoryId, item.supplierId,*/ productNameValue, criticalCountValue, purchasePriceValue, unitPriceValue);
+        }
+      }
+    });
+    dialog.componentInstance.title='Ürün Güncelle';
+    dialog.componentInstance.inputLabels=['Ürün Adı', 'Kritik Stok', 'Alış Fiyatı', 'Satış Fiyatı'];
+    dialog.componentInstance.values.push(new FormControl(item.productName));
+    dialog.componentInstance.values.push(new FormControl(item.criticalCount));
+    dialog.componentInstance.values.push(new FormControl(item.purchasePrice));
+    dialog.componentInstance.values.push(new FormControl(item.unitPrice));
+  }
+
+  updateProduct(id: string, /*categoryId: string, supplierId: string,*/ productName: string, criticalCount: number, purchasePrice: number, unitPrice: number ){
+    const product = new UpdateProductRequest(id,/* categoryId, supplierId,*/ productName, criticalCount, purchasePrice, unitPrice);
+    this.productService.updateProduct(product).subscribe({
+      next: (resp) => {
+        this.toastr.success('Ürün Güncellenmiştir');
+        this.loadProducts();
+      },
+      error: (err) => {
+        console.log(err);
+        this.toastr.error("Hata oluştu");
+      }
+    })
   }
 
   deleteProduct(id: any){
@@ -83,43 +171,4 @@ export class ProductListComponent {
       this.tableData = products;  
     });
   }
-
-  updateProduct(id: string, /*categoryId: string, supplierId: string,*/ productName: string, purchasePrice: number, unitPrice: number ){
-    const product = new UpdateProductDTO(id,/* categoryId, supplierId,*/ productName, purchasePrice, unitPrice);
-    this.productService.updateProduct(product).subscribe({
-      next: (resp) => {
-        this.toastr.success('Ürün Güncellenmiştir');
-        this.loadProducts();
-      },
-      error: (err) => {
-        console.log(err);
-        this.toastr.error("Hata oluştu");
-      }
-    })
-  }
-
-  update(item: any){
-    let dialog =  this.dialog.open(UpdateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
-
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-        const productNameValue =  dialog.componentInstance.updateForm.value.values[0];
-        const purchasePriceValue =  dialog.componentInstance.updateForm.value.values[1];
-        const unitPriceValue =  dialog.componentInstance.updateForm.value.values[2];
-        this.updateProduct(item.id,/* item.categoryId, item.supplierId,*/ productNameValue, purchasePriceValue, unitPriceValue);
-        }
-      }
-    });
-    dialog.componentInstance.title='Ürün Güncelle';
-    dialog.componentInstance.inputLabels=['Ürün Adı', 'Alış Fiyatı', 'Satış Fiyatı'];
-    dialog.componentInstance.values.push(new FormControl(item.productName));
-    dialog.componentInstance.values.push(new FormControl(item.purchasePrice));
-    dialog.componentInstance.values.push(new FormControl(item.unitPrice));
-  }
-
 } 

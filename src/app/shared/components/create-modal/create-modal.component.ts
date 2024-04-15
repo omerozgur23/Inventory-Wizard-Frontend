@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, NgZone, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create-modal',
   templateUrl: './create-modal.component.html',
   styleUrl: './create-modal.component.scss'
@@ -12,34 +13,32 @@ export class CreateModalComponent {
   inputLabels: string[] = [];
   createForm!: FormGroup;
 
+  // @Input() dropdownOptions: any[] = []; 
+  // showDropdown: boolean = false;
+  
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<CreateModalComponent>,
-  ){}
-
-  ngOnInit(): void {
+  ) {
     this.createForm = this.fb.group({
-      values: this.fb.array([this.createValueFormControl()])
-    });
-  }
-
-  createValueFormControl(): FormControl {
-    return this.fb.control('', Validators.required);
+      values: this.fb.array([], Validators.required),
+    })
   }
 
   get values() {
     return this.createForm.get('values') as FormArray;
   }
 
-  addValue(): void {
-    // const newControl = this.fb.control('', Validators.required);
-    // this.values.push(newControl);
-    const value = new FormControl('');
+  addValue() {
+    const value = new FormControl('', Validators.required);
     this.values.push(value);
+    console.log(this.values.value);
   }
 
   create(){
-    this.dialogRef.close({result: 'yes', createForm: this.dialogRef.componentInstance.createForm});
+    if (this.createForm.valid) {
+      this.dialogRef.close({result: 'yes'});
+    }
   }
 
   close(){

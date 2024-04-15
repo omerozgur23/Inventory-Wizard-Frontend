@@ -10,8 +10,8 @@ import { LoginService } from '../../service/login.service';
 
 
 export class MenuComponent {
-  @Input() isExpanded: boolean = false;
-  @Output() toggleSidebar: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Input() isExpanded = false;
+  // @Output() toggleSidebar: EventEmitter<boolean> = new EventEmitter<boolean>();
   
   
 
@@ -21,14 +21,14 @@ export class MenuComponent {
     public route: ActivatedRoute,
   ) {}
 
-  handleSidebarToggle = () => this.toggleSidebar.emit(!this.isExpanded);
+  // handleSidebarToggle = () => this.toggleSidebar.emit(!this.isExpanded);
 
   logout(){
     this.loginService.logout();
     this.router.navigate(["/"]);
   }
 
-  isExpandedd: boolean = false;
+  // isExpandedd: boolean = false;
 
   toggleSidebarr() {
     this.isExpanded = !this.isExpanded;

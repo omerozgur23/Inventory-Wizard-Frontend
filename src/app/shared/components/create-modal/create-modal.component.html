@@ -3,13 +3,21 @@
   <!-- <h5 class="modal-title" id="updateModalLabel">{{ title }}</h5> -->
   <form [formGroup]="createForm">
     <div class="formBox form-group" formArrayName="values">
-      <div
-        class="inputBox w100"
-        *ngFor="let value of values.controls; let i = index"
-      >
+      @for (values of values.controls; track values; let i = $index) {
+      <div class="inputBox w100">
         <input formControlName="{{ i }}" required style="margin-top: 5px" />
         <label [for]="'input_' + i">{{ inputLabels[i] }}</label>
       </div>
+      }
+
+      <!-- <div>
+        <label for="categoryId">Kategori Seçiniz:</label>
+        <select formControlName="categoryId" id="categoryId">
+          <option *ngFor="let option of dropdownOptions" [value]="option.id">
+            {{ option.name }}
+          </option>
+        </select>
+      </div> -->
     </div>
   </form>
 </mat-dialog-content>
@@ -23,7 +31,7 @@
       (click)="create()"
       type="submit"
       class="btn btn-outline-primary"
-      [disabled]="createForm.invalid"
+      [disabled]="!createForm.valid"
     >
       Ekle
     </button>

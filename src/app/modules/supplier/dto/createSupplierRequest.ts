@@ -1,11 +1,10 @@
-export class UpdateCustomerDTO {
+export class CreateSupplierRequest{
     constructor(
-        public id: string,
         public companyName: string,
         public contactName: string,
-        public email: string,
+        public contactEmail: string,
         public contactPhone: string,
+        public taxNumber: string,
         public address: string,
     ){}
-    
 }
