@@ -6,6 +6,12 @@ import { ShelfService } from '../service/shelf.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
+import { CreateShelfRequest } from '../dto/createShelfRequest';
+import { UpdateShelfRequest } from '../dto/updateShelfRequest';
+import { GetProductResponse } from '../../product/dto/getProductResponse';
+import { ProductService } from '../../product/service/product.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-shelf-list',
@@ -20,14 +26,18 @@ export class ShelfListComponent implements OnInit{
     { label: 'Kapasite', field: 'capacity' },
   ];
 
-  shelfForm = this.fb.group({
-    count: [null, Validators.required],
-    capacity: [null, Validators.required]
+  productList: GetProductResponse[] = [];
+  acceptProductForm = this.fb.group({
+    productId: '',
+    count: 0,
   });
+  // shelfForm = this.fb.group({
+  //   count: [null, Validators.required],
+  //   capacity: [null, Validators.required]
+  // });
 
-
+  deleteDialogDescription = 'Raf kaydını silmek istediğinizden emin misiniz?';
   id = '';
-
   currentPage: number = 1;
   // totalPages: number = 10;
 
@@ -36,8 +46,9 @@ export class ShelfListComponent implements OnInit{
     private shelfService: ShelfService,
     private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
     private dialog: MatDialog,
+    private fb: FormBuilder,
+    private productService: ProductService,
   ){}
 
   setSelectedShelf(shelfId: string) {
@@ -46,11 +57,34 @@ export class ShelfListComponent implements OnInit{
 
   ngOnInit(): void { 
     this.loadShelve();
-    
+
+    forkJoin({
+      products: this.productService.getAllProducts(),
+    }).subscribe({
+      next: (resp => {
+        this.productList = resp.products;
+      }),
+      error: (err => {
+        console.log(err);
+      })
+    })
+  }
+
+  acceptProduct() {
+    this.shelfService.acceptProduct(this.acceptProductForm.value ).subscribe({
+      next: (resp) => {
+        this.toastr.success('Ürün Girişi Yapıldı');
+        this.loadShelve();
+      },
+      error: (err) => {
+        console.log(err);
+        this.toastr.error("Hata oluştu");
+      }
+    });
   }
 
   loadShelve() {
-    this.shelfService.getShelvesByPage(this.currentPage, 2).subscribe(response => {
+    this.shelfService.getShelvesByPage(this.currentPage, 5).subscribe(response => {
       this.tableData = response;
     });
   }
@@ -60,26 +94,92 @@ export class ShelfListComponent implements OnInit{
     this.loadShelve();
   }
 
-  // getShelfs(){
-  //   this.shelfService.getShelf().subscribe({
-  //     next: (result) => {
-  //       this.tableData = result;
-  //     },
-  //     error: (err) => {
-  //       console.log(err);
-        
-  //     }
-  //   });
-  // }
-
-  // navigateCreate(){
-  //   this.router.navigate(['./create'], { relativeTo: this.route });
-  // }
+  getAllShelfs(){
+    this.shelfService.getAllShelf().subscribe({
+      next: (result) => {
+        this.tableData = result;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
 
   navigateAcceptProduct(){
     this.router.navigate(['./accept-product'], {relativeTo: this.route});
   }
 
+  opwnCreateShelfDialog(){
+    let dialog = this.dialog.open(CreateModalComponent, {
+      width: '500px',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '250ms',
+    });
+    dialog.afterClosed().subscribe({
+      next: (data) => {
+        if (data?.result === 'yes') {
+          const capacityValue = dialog.componentInstance.createForm.value.values[0];
+          const countValue = dialog.componentInstance.createForm.value.values[1];
+          this.createShelf(capacityValue, countValue);
+        }
+      }
+    });
+    dialog.componentInstance.title = 'Yeni Raf Oluştur';
+    dialog.componentInstance.inputLabels = ['Kapasite', 'Adet'];
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+  }
+
+  createShelf(capacity: number, count: number){
+    const shelf = new CreateShelfRequest(capacity, count);
+    this.shelfService.createShelf(shelf).subscribe({
+      next: (resp) => {
+        this.toastr.success('Yeni raf oluşturuldu');
+        this.loadShelve();
+      },
+      error: (err) => {
+        this.toastr.error('Hata oluştu!');
+      }
+    });
+  }
+
+  openUpdateShelfDialog(item: any){
+    let dialog =  this.dialog.open(UpdateModalComponent, {
+      width: '500px',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '250ms',
+    });
+    dialog.afterClosed().subscribe({
+      next: (data) => {
+        if (data?.result === 'yes') {
+          // this.updateShelf(item.id,parseInt(dialog.componentInstance.updateForm.value.capacity!));
+
+        // const capacityValue = parseInt(dialog.componentInstance.updateForm.value.values[0],10);
+        const capacityValue = dialog.componentInstance.updateForm.value.values[0];
+        this.updateShelf(item.id, capacityValue);
+        }
+      }
+    });
+    // dialog.componentInstance.updateForm.patchValue({capacity:item.capacity});
+    dialog.componentInstance.title='Raf Güncelle';
+    dialog.componentInstance.inputLabels=['Kapasite'];
+    dialog.componentInstance.values.push(new FormControl(item.capacity));
+  }
+
+  updateShelf(id: string, capacity: number){
+    const shelf = new UpdateShelfRequest(id, capacity)
+    this.shelfService.updateShelf(shelf).subscribe({
+      next: (resp) => {
+        this.toastr.success('Raf Bilgileri Güncellendi');
+        this.loadShelve();
+      },
+      error: (err) => {
+        console.log(err);
+        this.toastr.error("Hata oluştu");
+      }
+    })
+  }
+  
   deleteShelf(id: any){
     this.shelfService.deleteShelf(id).subscribe(
       {
@@ -93,58 +193,17 @@ export class ShelfListComponent implements OnInit{
       }
     );
   }
-
-  updateShelf(id: string, capacity: number){  
-    this.shelfService.updateShelf(id, capacity).subscribe({
-      next: (resp) => {
-        this.toastr.success('Raf Güncellenmiştir');
-        this.loadShelve();
-      },
-      error: (err) => {
-        console.log(err);
-        this.toastr.error("Hata oluştu");
-      }
-    })
-  }
-
-  update(item: any){
-    let dialog =  this.dialog.open(UpdateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
-    
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-          // this.updateShelf(item.id,parseInt(dialog.componentInstance.updateForm.value.capacity!));
-
-          // this.updateShelf(item.id,parseInt(dialog.componentInstance.updateForm.value.values['capacity'])); 
-
-        const capacityValue = parseInt(dialog.componentInstance.updateForm.value.values[0],10);
-        this.updateShelf(item.id, capacityValue);
-        }
-      }
-    });
-    // dialog.componentInstance.updateForm.patchValue({capacity:item.capacity});
-    dialog.componentInstance.title='Raf Güncelle';
-    dialog.componentInstance.inputLabels=['Kapasite'];
-    dialog.componentInstance.values.push(new FormControl(item.capacity));
-    // dialog.componentInstance.degerler.push(new FormControl(item.count));
-    // dialog.componentInstance.degerler.push(new FormControl(item.productName));
-  }
-  
  
-  submit(){
-    this.shelfService.createShelf(this.shelfForm.value).subscribe({
-      next: (resp) => {
-        this.toastr.success('Shelf Oluşturulmuştur');
-        this.ngOnInit();
-      },
-      error: (err) => {
-        console.log(err);
-        this.toastr.error("Hata oluştu");
-      }
-    })
-  }
+  // submit(){
+  //   this.shelfService.createShelf(this.shelfForm.value).subscribe({
+  //     next: (resp) => {
+  //       this.toastr.success('Shelf Oluşturulmuştur');
+  //       this.ngOnInit();
+  //     },
+  //     error: (err) => {
+  //       console.log(err);
+  //       this.toastr.error("Hata oluştu");
+  //     }
+  //   })
+  // }
 }

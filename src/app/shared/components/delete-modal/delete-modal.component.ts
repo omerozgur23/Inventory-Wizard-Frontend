@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewContainerRef } from '@angular/core';
 
 @Component({
   selector: 'app-delete-modal',
@@ -7,8 +7,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class DeleteModalComponent {
   @Output() deleteEvent = new EventEmitter<any>();
-
-  selectedId: string = '';
+  @Input() description = '';
+  selectedId = '';
 
   delete(id: any){
     this.deleteEvent.emit(id);

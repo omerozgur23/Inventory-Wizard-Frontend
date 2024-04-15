@@ -8,7 +8,6 @@ import { UpdateModalComponent } from './components/update-modal/update-modal.com
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { CreateModalComponent } from './components/create-modal/create-modal.component';
-// import { YesNoDialogComponent } from './yes-no-dialog/yes-no-dialog/yes-no-dialog.component';
 // import { MatDialogModule } from '@angular/material/dialog';
 // import { MatIconModule } from '@angular/material/icon';
 
@@ -16,7 +15,6 @@ import { CreateModalComponent } from './components/create-modal/create-modal.com
 
 @NgModule({
   declarations: [
-    // YesNoDialogComponent
     TableComponent,
     CreateComponent,
     DeleteModalComponent,

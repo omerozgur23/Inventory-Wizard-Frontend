@@ -1,7 +1,8 @@
-export interface Supplier{
+export interface GetSupplierResponse{
     id: string;
     companyName: string;
     contactName: string;
+    contactEmail: string,
 	contactPhone: string;
 	taxNumber: string;
 	address: string;

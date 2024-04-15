@@ -1,9 +1,15 @@
+<!-- TABLE MODAL -->
 <app-table
   [tableData]="tableData"
   [columns]="columns"
+  (navigateUpdateDialogEvent)="updateOrder()"
+  (navigateDeleteDialogEvent)="deleteOrder()"
   (refreshEvent)="ngOnInit()"
+  [showOrderDetailButton]="true"
+  (navigateOrderDetailsEvent)="navigateOrderDetails($event)"
 ></app-table>
 
+<!-- PAGINATION -->
 <nav aria-label="Page navigation example" style="cursor: pointer">
   <ul class="pagination justify-content-center">
     <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
@@ -27,3 +33,6 @@
     </li>
   </ul>
 </nav>
+
+<!-- DELETE MODAL -->
+<!-- <app-delete-modal></app-delete-modal> -->

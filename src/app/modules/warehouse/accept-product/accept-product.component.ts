@@ -3,9 +3,10 @@ import { FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ShelfService } from '../service/shelf.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Product } from '../../product/dto/product';
 import { forkJoin } from 'rxjs';
 import { ProductService } from '../../product/service/product.service';
+import { GetProductResponse } from '../../product/dto/getProductResponse';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-accept-product',
@@ -13,8 +14,7 @@ import { ProductService } from '../../product/service/product.service';
   styleUrl: './accept-product.component.scss'
 })
 export class AcceptProductComponent {
-  productList: Product[] = [];
-
+  productList: GetProductResponse[] = [];
   acceptProductForm = this.fb.group({
     productId: '',
     count: 0,
@@ -27,13 +27,13 @@ export class AcceptProductComponent {
     private productService: ProductService,
     private router: Router,
     private route: ActivatedRoute,
+    private dialog: MatDialog,
   ) {}
 
   submit() {
     this.shelfService.acceptProduct(this.acceptProductForm.value ).subscribe({
       next: (resp) => {
         this.toastr.success('Ürün Oluşturulmuştur');
-        this.router.navigate(['..'], {relativeTo: this.route});
       },
       error: (err) => {
         console.log(err);
@@ -45,7 +45,7 @@ export class AcceptProductComponent {
   
   ngOnInit(): void{
     forkJoin({
-      products: this.productService.getProducts(),
+      products: this.productService.getAllProducts(),
     }).subscribe({
       next: (resp => {
         this.productList = resp.products;
@@ -56,4 +56,5 @@ export class AcceptProductComponent {
       })
     })
   }
+
 }

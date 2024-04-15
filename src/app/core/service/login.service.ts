@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,6 @@ export class LoginService {
   token = "";
   email = "";
   password = "";
-  //kullanicilarId = "";
   roller: string[] = [];
 
   constructor(
@@ -24,13 +23,7 @@ export class LoginService {
       map(data => this.parseLoginResponse(data, email, password))
     );
   }
-
-  // signup(email: string, password: string): Observable<any> {
-  //   return this.httpClient.post<any>('/signup', {email, password}).pipe(
-  //     map(data => this.parseLoginResponse(data, email, password))
-  //   );
-  // }
-
+  
   // login olunursa çalışıyor
   parseLoginResponse(data: any, email: string, password: string){
     this.loggedIn = true;
@@ -41,8 +34,7 @@ export class LoginService {
         localStorage.setItem("email", email);
         localStorage.setItem("password", password);
         let payload = this.parseJwt(this.token);
-        this.roller = payload.roller;
-        //this.kullanicilarId = payload.kullanicilarId;
+        this.roller = payload.roles;
         return data;
   }
 
@@ -55,10 +47,9 @@ export class LoginService {
     this.token = "";
     this.email = "";
     this.password = "";
-    //this.kullanicilarId = "";
     this.roller = [];
     localStorage.clear();
-  }
+  } 
 
   parseJwt (token: string) {
     let base64Url = token.split('.')[1];

@@ -1,12 +1,14 @@
+<!-- TABLE MODAL -->
 <app-table
   [tableData]="tableData"
   [columns]="columns"
-  (navigateCreateEvent)="navigateCreate()"
-  (deleteEvent)="setSelectedProduct($event.id)"
-  (updateEvent)="update($event)"
+  (navigateCreateDialogEvent)="openCreateProductDialog()"
+  (navigateUpdateDialogEvent)="openUpdateProductDialog($event)"
+  (navigateDeleteDialogEvent)="setSelectedProduct($event.id)"
   (refreshEvent)="ngOnInit()"
 ></app-table>
 
+<!-- PAGINATION -->
 <nav aria-label="Page navigation example" style="cursor: pointer">
   <ul class="pagination justify-content-center">
     <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
@@ -135,5 +137,8 @@
   </nav>
 </div> -->
 
-<!-- Button trigger modal -->
-<app-delete-modal (deleteEvent)="deleteProduct(id)"></app-delete-modal>
+<!-- DELETE MODAL -->
+<app-delete-modal
+  [description]="deleteDialogDescription"
+  (deleteEvent)="deleteProduct(id)"
+></app-delete-modal>

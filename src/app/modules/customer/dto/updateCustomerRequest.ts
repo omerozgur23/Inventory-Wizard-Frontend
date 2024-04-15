@@ -1,11 +1,11 @@
-export class CreateCustomerRequest {
+export class UpdateCustomerRequest {
     constructor(
+        public id: string,
         public companyName: string,
         public contactName: string,
-        public email: string,
+        public contactEmail: string,
         public contactPhone: string,
-        public taxNumber: string,
         public address: string,
-    ) {}
-  }
-  
+    ){}
+    
+}
