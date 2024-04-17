@@ -17,6 +17,7 @@ export class UpdateModalComponent {
   //   values: this.fb.array([])
   // });
 
+  // switch ile dropdown dene => NgSwitch
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<UpdateModalComponent>,
