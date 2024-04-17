@@ -128,7 +128,7 @@
           [relativeTo]="route"
           [routerLinkActive]="'active'"
         >
-          <img src="./assets/img/shelf.svg" alt="Shelf">
+          <img src="./assets/img/shelf.svg" alt="Shelf" />
           <span>Raflar</span>
         </a>
       </li>
@@ -139,7 +139,11 @@
           [relativeTo]="route"
           [routerLinkActive]="'active'"
         >
-        <img src="./assets/img/category.svg" alt="Category">
+          <img
+            style="width: 22px; height: 22px"
+            src="./assets/img/category.svg"
+            alt="Category"
+          />
           <span>Kategoriler</span>
         </a>
       </li>
@@ -151,8 +155,8 @@
           [relativeTo]="route"
           [routerLinkActive]="'active'"
         >
-        <img src="./assets/img/products.svg" alt="Products">
-                  <span>Ürünler</span>
+          <img src="./assets/img/product.svg" alt="Products" />
+          <span>Ürünler</span>
         </a>
       </li>
 
@@ -163,7 +167,7 @@
           [relativeTo]="route"
           [routerLinkActive]="'active'"
         >
-        <img src="./assets/img/sale_product.svg" alt="Sale Product">
+          <img src="./assets/img/saleProduct.svg" alt="Sale Product" />
           <span>Ürün Satışı</span>
         </a>
       </li>
@@ -175,8 +179,8 @@
           [relativeTo]="route"
           [routerLinkActive]="'active'"
         >
-        <img src="./assets/img/order.svg" alt="Order">
-                  <span>Siparişler</span>
+          <img src="./assets/img/order.svg" alt="Order" />
+          <span>Siparişler</span>
         </a>
       </li>
 
@@ -187,7 +191,7 @@
           [relativeTo]="route"
           [routerLinkActive]="'active'"
         >
-        <img src="./assets/img/Customers.svg" alt="Customers">
+          <img src="./assets/img/customer.svg" alt="Customers" />
           <span>Müşteriler</span>
         </a>
       </li>
@@ -199,7 +203,7 @@
           [relativeTo]="route"
           [routerLinkActive]="'active'"
         >
-        <img src="./assets/img/supplier.svg" alt="Supplier">
+          <img src="./assets/img/supplier.svg" alt="Supplier" />
           <span>Tedarikçiler</span>
         </a>
       </li>
@@ -211,7 +215,7 @@
           [relativeTo]="route"
           [routerLinkActive]="'active'"
         >
-        <img src="./assets/img/employee.svg" alt="Employee">
+          <img src="./assets/img/employee.svg" alt="Employee" />
           <span>Personeller</span>
         </a>
       </li>
@@ -223,20 +227,19 @@
           [relativeTo]="route"
           [routerLinkActive]="'active'"
         >
-        <img src="./assets/img/report.svg" alt="Report">
-                  <span>Raporlar</span>
+          <img src="./assets/img/report.svg" alt="Report" />
+          <span>Raporlar</span>
         </a>
       </li>
-
     </ul>
     <div class="sidebar-footer" (click)="logout()">
       <a class="sidebar-link">
-        <img src="./assets/img/Settings.svg" alt="Settings">
-                  <span>Ayarlar</span>
+        <img src="./assets/img/settings.svg" alt="Settings" />
+        <span>Ayarlar</span>
       </a>
       <a class="sidebar-link">
-        <img src="./assets/img/Logout.svg" alt="Logout">
-                <span>Çıkış</span>
+        <img src="./assets/img/logout.svg" alt="Logout" />
+        <span>Çıkış</span>
       </a>
     </div>
   </aside>

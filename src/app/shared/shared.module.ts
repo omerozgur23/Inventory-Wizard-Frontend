@@ -8,6 +8,7 @@ import { UpdateModalComponent } from './components/update-modal/update-modal.com
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { CreateModalComponent } from './components/create-modal/create-modal.component';
+import { AcceptProductModalComponent } from './components/accept-product-modal/accept-product-modal.component';
 // import { MatDialogModule } from '@angular/material/dialog';
 // import { MatIconModule } from '@angular/material/icon';
 
@@ -20,6 +21,7 @@ import { CreateModalComponent } from './components/create-modal/create-modal.com
     DeleteModalComponent,
     UpdateModalComponent,
     CreateModalComponent,
+    AcceptProductModalComponent,
   ],
   imports: [
     CommonModule,

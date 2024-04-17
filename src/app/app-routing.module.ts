@@ -23,7 +23,7 @@ const routes: Routes = [
       { path: 'customer', loadChildren: () => import('./modules/customer/customer.module').then(m => m.CustomerModule)},
       { path: 'order', loadChildren: () => import('./modules/order/order.module').then(m => m.OrderModule)},
       { path: 'report', loadChildren: () => import('./modules/report/report.module').then(m => m.ReportModule)},
-      { path: 'product-sale', component: ProductSaleComponent, canActivate: [roleControlGuard(ROLE_EMPLOYEE)] },
+      { path: 'product-sale', component: ProductSaleComponent, canActivate: [roleControlGuard(ROLE_ADMIN)] },
       { path: 'order-details', component: OrderDetailsComponent },
       { path: 'access-denied', loadChildren: () => import('./modules/access-denied/access-denied.module').then(m => m.AccessDeniedModule)},
       // { path: 'order-details', loadChildren: () => import('./modules/order/order-details.module').then(m => m.OrderDetailsModule)},
