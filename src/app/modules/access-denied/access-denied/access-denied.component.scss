@@ -2,7 +2,7 @@
 
 $animationTime: 2s;
 
-#page {
+* {
   position: relative;
   margin: 0;
   padding: 0;
@@ -10,7 +10,7 @@ $animationTime: 2s;
   font-family: 'Lato', sans-serif;
 }
 
-#test {
+body {
   height: 100vh;
   display: flex;
   flex-direction: column;

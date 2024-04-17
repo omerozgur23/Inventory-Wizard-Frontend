@@ -9,7 +9,7 @@ export function roleControlGuard(...roles: string[]): CanActivateFn {
      let toastr = inject(ToastrService);
      let router = inject(Router);
  
-     let sonuc = loginService.roller.find(rol => roles.find(rol2 => rol2 === rol)!=undefined) != undefined;
+     let sonuc = loginService.roles.find(rol => roles.find(rol2 => rol2 === rol)!=undefined) != undefined;
      if (!sonuc) {
       //  toastr.error('Bu sayfaya girmeye yetkiniz bulunmamaktadır');
        router.navigate(["/menu/access-denied"]);
