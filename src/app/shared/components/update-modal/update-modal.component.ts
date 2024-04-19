@@ -13,9 +13,6 @@ export class UpdateModalComponent {
   inputLabels: string[] = [];
   
   updateForm!: FormGroup;
-  // updateForm = this.fb.group({
-  //   values: this.fb.array([])
-  // });
 
   // switch ile dropdown dene => NgSwitch
   constructor(

@@ -16,8 +16,7 @@
       <button
         *ngIf="showAcceptProductButton"
         class="btn btn primary img-button"
-        data-bs-toggle="modal"
-        data-bs-target="#acceptProductModal"
+        (click)="navigateAcceptProduct()"
       >
         <img
           src="../../../../assets/img/acceptProduct.png"

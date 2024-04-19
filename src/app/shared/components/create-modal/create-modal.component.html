@@ -1,6 +1,5 @@
 <h2 mat-dialog-title>{{ title }}</h2>
 <mat-dialog-content class="mat-typography">
-  <!-- <h5 class="modal-title" id="updateModalLabel">{{ title }}</h5> -->
   <form [formGroup]="createForm">
     <div class="formBox form-group" formArrayName="values">
       @for (values of values.controls; track values; let i = $index) {

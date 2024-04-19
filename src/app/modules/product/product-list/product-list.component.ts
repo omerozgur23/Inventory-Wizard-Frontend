@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, VERSION } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
@@ -9,6 +9,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateProductRequest } from '../dto/createProductRequest';
+import {jsPDF} from 'jspdf';
+import 'jspdf-autotable';
+
+import pdfMake from "pdfmake/build/pdfmake";
+import  pdfFonts from 'pdfmake/build/vfs_fonts';
+
+(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+
 
 @Component({
   selector: 'app-product-list',
@@ -39,6 +47,52 @@ export class ProductListComponent implements OnInit{
     private productService: ProductService,
     private dialog: MatDialog,
   ){}
+
+  public export(): void {
+    var fonts = {
+      Roboto: {
+        normal: 'fonts/Roboto-Regular.ttf',
+        bold: 'fonts/Roboto-Medium.ttf',
+        italics: 'fonts/Roboto-Italic.ttf',
+        bolditalics: 'fonts/Roboto-MediumItalic.ttf'
+      }
+    };
+    
+    var PdfPrinter = require('pdfmake');
+    var printer = new PdfPrinter(fonts);
+    var fs = require('fs');
+    
+    var docDefinition = {
+      content: [
+        { text: 'Merhaba Dünya!', fontSize: 16, bold: true, margin: [0, 0, 0, 10] },
+        { text: 'Türkçe karakterler: ÇçĞğİıÖöŞşÜü', fontSize: 14 },
+      ],
+    };
+    
+    var options = {
+      // ...
+    }
+    
+    var pdfDoc = printer.createPdfKitDocument(docDefinition, options);
+    pdfDoc.pipe(fs.createWriteStream('document.pdf'));
+    pdfDoc.end();
+  }
+
+  downloadProductsAsPDF() {
+    const doc = new jsPDF(); // jsPDF'nin default exportunu kullan
+
+    const tableData = this.tableData.map(product => [product.productName, product.categoryName, product.supplierCompanyName, product.purchasePrice, product.unitPrice, product.criticalCount, product.quantity]);
+
+    doc.setFont('OpenSans-Italic', 'normal');
+
+
+    (doc as any).autoTable({
+      head: [['Ürün Adi', 'Kategori', 'Tedarikçi', 'Alış Fiyati', 'Satis Fiyati', 'Kritik Stok', 'Stok Adedi']],
+      body: tableData, 
+    });
+
+    doc.save('products.pdf');
+  }
 
   setSelectedProduct(productId: string) {
     this.id = productId;
