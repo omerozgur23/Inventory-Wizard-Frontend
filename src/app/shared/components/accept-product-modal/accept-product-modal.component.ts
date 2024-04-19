@@ -1,44 +1,39 @@
-import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { GetProductResponse } from '../../../modules/product/dto/getProductResponse';
 
 @Component({
   selector: 'app-accept-product-modal',
   templateUrl: './accept-product-modal.component.html',
-  styleUrl: './accept-product-modal.component.scss'
+  styleUrls: ['./accept-product-modal.component.scss']
 })
 export class AcceptProductModalComponent {
   title = '';
-  inputLabels: string[] = [];
-  dropdownLables: string[] = [];
-  acceptProductForm!: FormGroup; 
-  
+  productList: GetProductResponse[] = [];
+  acceptProductForm: FormGroup;
+
   constructor(
-    private fb: FormBuilder,
-    public dialogRef: MatDialogRef<AcceptProductModalComponent>,
+    private dialogRef: MatDialogRef<AcceptProductModalComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: any,
+    private fb: FormBuilder
   ) {
+    this.title = data.title;
+    this.productList = data.productList;
+
     this.acceptProductForm = this.fb.group({
-      values: this.fb.array([], Validators.required),
-    })
+      productId: ['', Validators.required],
+      count: [, Validators.required]
+    });
   }
 
-  get values() {
-    return this.acceptProductForm.get('values') as FormArray;
-  }
-
-  addValue() {
-    const value = new FormControl('', Validators.required);
-    this.values.push(value);
-    console.log(this.values.value);
-  }
-
-  create(){
+  create() {
     if (this.acceptProductForm.valid) {
-      this.dialogRef.close({result: 'yes'});
+      this.dialogRef.close({ result: 'yes', formValue: this.acceptProductForm.value });
     }
   }
 
-  close(){
-    this.dialogRef.close({result: 'no'});
+  close() {
+    this.dialogRef.close({ result: 'no' });
   }
 }

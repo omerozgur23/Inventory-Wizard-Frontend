@@ -12,6 +12,7 @@ import { UpdateShelfRequest } from '../dto/updateShelfRequest';
 import { GetProductResponse } from '../../product/dto/getProductResponse';
 import { ProductService } from '../../product/service/product.service';
 import { forkJoin } from 'rxjs';
+import { AcceptProductModalComponent } from '../../../shared/components/accept-product-modal/accept-product-modal.component';
 
 @Component({
   selector: 'app-shelf-list',
@@ -56,7 +57,7 @@ export class ShelfListComponent implements OnInit{
   }
 
   ngOnInit(): void { 
-    this.loadShelve();
+    this.loadShelves();
 
     forkJoin({
       products: this.productService.getAllProducts(),
@@ -70,20 +71,20 @@ export class ShelfListComponent implements OnInit{
     })
   }
 
-  acceptProduct() {
-    this.shelfService.acceptProduct(this.acceptProductForm.value ).subscribe({
-      next: (resp) => {
-        this.toastr.success('Ürün Girişi Yapıldı');
-        this.loadShelve();
-      },
-      error: (err) => {
-        console.log(err);
-        this.toastr.error("Hata oluştu");
-      }
-    });
-  }
+  // acceptProduct() {
+  //   this.shelfService.acceptProduct(this.acceptProductForm.value ).subscribe({
+  //     next: (resp) => {
+  //       this.toastr.success('Ürün Girişi Yapıldı');
+  //       this.loadShelve();
+  //     },
+  //     error: (err) => {
+  //       console.log(err);
+  //       this.toastr.error("Hata oluştu");
+  //     }
+  //   });
+  // }
 
-  loadShelve() {
+  loadShelves() {
     this.shelfService.getShelvesByPage(this.currentPage, 5).subscribe(response => {
       this.tableData = response;
     });
@@ -91,7 +92,7 @@ export class ShelfListComponent implements OnInit{
 
   onPageChange(pageNo: number) {
     this.currentPage = pageNo;
-    this.loadShelve();
+    this.loadShelves();
   }
 
   getAllShelfs(){
@@ -135,7 +136,7 @@ export class ShelfListComponent implements OnInit{
     this.shelfService.createShelf(shelf).subscribe({
       next: (resp) => {
         this.toastr.success('Yeni raf oluşturuldu');
-        this.loadShelve();
+        this.loadShelves();
       },
       error: (err) => {
         this.toastr.error('Hata oluştu!');
@@ -171,7 +172,7 @@ export class ShelfListComponent implements OnInit{
     this.shelfService.updateShelf(shelf).subscribe({
       next: (resp) => {
         this.toastr.success('Raf Bilgileri Güncellendi');
-        this.loadShelve();
+        this.loadShelves();
       },
       error: (err) => {
         console.log(err);
@@ -206,4 +207,45 @@ export class ShelfListComponent implements OnInit{
   //     }
   //   })
   // }
+
+  openAcceptProductDialog(item: any) {
+    // const dialog = new MatDialogConfig();
+    // dialog.width = '500px';
+    // dialog.data = {
+    //   title: 'Ürün Girişi',
+    //   productList: this.productList
+    // };
+  
+    const dialogRef = this.dialog.open(AcceptProductModalComponent, {
+      width: '500px',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '250ms',
+      data : {
+        title: 'Ürün Girişi',
+        productList: this.productList,
+      }
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.result === 'yes') {
+        const formValue = result.formValue;
+        // const countValue = formValue.count;
+        this.acceptProduct(formValue);
+      }
+    });
+  }
+  
+
+  acceptProduct(formValue: any) {
+    this.shelfService.acceptProduct(formValue).subscribe({
+      next: (resp) => {
+        this.toastr.success('Ürün Girişi Yapıldı');
+        this.loadShelves();
+      },
+      error: (err) => {
+        console.log(err);
+        this.toastr.error("Hata oluştu");
+      }
+    });
+  }
 }
