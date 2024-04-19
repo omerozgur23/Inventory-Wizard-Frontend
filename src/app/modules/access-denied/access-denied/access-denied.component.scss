@@ -46,13 +46,14 @@ h1 {
     border: 5px solid #333;
     border-bottom-color: transparent;
     border-radius: 15px 15px 0 0;
-    height: 30px;
+    width: 25px;
+    height: 40px;
     animation: lock $animationTime, spin $animationTime;
   }
   
   &::after {
     top: -10px; 
-    border-right: 5px solid transparent;
+    border-right: 20px solid transparent;
     animation: spin $animationTime;
   }
 }

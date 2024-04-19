@@ -8,7 +8,7 @@ import { Component, HostListener } from '@angular/core';
 export class AppComponent {
   title = 'warehouseManagement-frontend';
   
-  private inactivityTimeout = 30 * 1000; // 30 dakika (30 * 60 * 1000)
+  private inactivityTimeout = /* 30 * 1000 */ 30 * 60 * 1000; // 30 dakika (30 * 60 * 1000)
   private inactivityTimer: any;
 
   constructor() {
