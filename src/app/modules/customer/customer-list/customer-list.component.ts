@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateCustomerRequest } from '../dto/createCustomerRequest';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-customer-list',
@@ -34,6 +35,8 @@ export class CustomerListComponent implements OnInit{
     private customerService: CustomerService,
     private toastr: ToastrService,
     private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   setSelectedCustomer(customerId: string) {
@@ -45,7 +48,7 @@ export class CustomerListComponent implements OnInit{
   }
 
   loadCustomer() {
-    this.customerService.getAllCustomersByPage(this.currentPage, 2).subscribe(response => {
+    this.customerService.getAllCustomersByPage(this.currentPage, 18).subscribe(response => {
       this.tableData = response;
     });
   }
@@ -157,5 +160,9 @@ export class CustomerListComponent implements OnInit{
         }
       }
     );
+  }
+
+  navigateSettings(){
+    this.router.navigate(['/home/settings']);
   }
 }

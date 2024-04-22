@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
 import { CreateEmployeeRequest } from '../dto/createEmployeeRequest';
 import { UpdateEmployeeRequest } from '../dto/updateEmployeeRequest';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-employee-list',
@@ -32,6 +33,8 @@ export class EmployeeListComponent implements OnInit{
     private employeeService: EmployeeService,
     private dialog: MatDialog,
     private toastr: ToastrService,
+    private router: Router,
+    private route: ActivatedRoute,
   ){}
 
   setSelectedEmployee(employeeId: string) {
@@ -43,7 +46,7 @@ export class EmployeeListComponent implements OnInit{
   }
   
   loadEmployee() {
-    this.employeeService.getAllEmployeesByPage(this.currentPage, 2).subscribe(response => {
+    this.employeeService.getAllEmployeesByPage(this.currentPage, 18).subscribe(response => {
       this.tableData = response;
     });
   }
@@ -108,24 +111,23 @@ export class EmployeeListComponent implements OnInit{
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
-        const emailValue =  dialog.componentInstance.updateForm.value.values[2];
-        const passwordValue =  dialog.componentInstance.updateForm.value.values[3];
-        const roleValue =  dialog.componentInstance.updateForm.value.values[4];
-        this.updateEmployee(item.id, emailValue, passwordValue, roleValue);
+        const emailValue =  dialog.componentInstance.updateForm.value.values[0];
+        const passwordValue =  dialog.componentInstance.updateForm.value.values[1];
+        // const roleValue =  dialog.componentInstance.updateForm.value.values[4];
+        this.updateEmployee(item.id, emailValue, passwordValue); 
         }
       }
     });
     dialog.componentInstance.title='Personel Güncelle';
-    dialog.componentInstance.inputLabels=['E-mail'];
-    dialog.componentInstance.inputLabels=['Şifre'];
-    dialog.componentInstance.inputLabels=['Rol'];
+    dialog.componentInstance.inputLabels=['E-mail', 'Şifre'];
+    // dialog.componentInstance.inputLabels=['Rol'];
     dialog.componentInstance.values.push(new FormControl(item.email));
     dialog.componentInstance.values.push(new FormControl(item.password));
-    dialog.componentInstance.values.push(new FormControl(item.role));
+    // dialog.componentInstance.values.push(new FormControl(item.role));
   }
 
-  updateEmployee(id: string, email: string, password: string, role: string){
-    const employee = new UpdateEmployeeRequest(id, email, password, role);
+  updateEmployee(id: string, email: string, password: string){
+    const employee = new UpdateEmployeeRequest(id, email, password);
     this.employeeService.updateEmployee(employee).subscribe({
       next: (resp) => {
         this.toastr.success('Kullanıcı Güncellenmiştir');
@@ -150,5 +152,9 @@ export class EmployeeListComponent implements OnInit{
         }
       }
     );
+  }
+
+  navigateSettings(){
+    this.router.navigate(['/home/settings']);
   }
 }

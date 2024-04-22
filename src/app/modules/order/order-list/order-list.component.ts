@@ -33,7 +33,7 @@ export class OrderListComponent implements OnInit{
   }
 
   loadOrder() {
-    this.orderService.getAllOrdersByPage(this.currentPage, 2).subscribe(response => {
+    this.orderService.getAllOrdersByPage(this.currentPage, 18).subscribe(response => {
       this.tableData = response;
     });
   }
@@ -69,8 +69,10 @@ export class OrderListComponent implements OnInit{
     // } else {
     //   console.error('Invalid Order ID:', orderId);
     // }
-    this.router.navigate(['/menu/order-details'], { queryParams: { id: orderId } });
+    this.router.navigate(['/home/order-details'], { queryParams: { id: orderId } });
   }
   
-
+  navigateSettings(){
+    this.router.navigate(['/home/settings']);
+  }
 }

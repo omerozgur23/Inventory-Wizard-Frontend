@@ -5,6 +5,7 @@
   (navigateCreateDialogEvent)="openCreateProductDialog()"
   (navigateUpdateDialogEvent)="openUpdateProductDialog($event)"
   (navigateDeleteDialogEvent)="setSelectedProduct($event.id)"
+  (navigateSettingsEvent)="navigateSettings()"
   (refreshEvent)="ngOnInit()"
 ></app-table>
 
@@ -33,7 +34,7 @@
   </ul>
 </nav>
 
-<button type="button" (click)="export()">Ürünleri PDF Olarak İndir</button>
+<button type="button" (click)="generatePDF()">Ürünleri PDF Olarak İndir</button>
 
 <!-- <div>
   <div class="pt-2 pb-2" style="background-color: #f8f9fc">

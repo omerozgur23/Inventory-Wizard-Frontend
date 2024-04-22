@@ -10,7 +10,8 @@ import { FormBuilder, Validators } from '@angular/forms';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-
+  showLogoEffect = false;
+  showLoginForm = true;
   loginForm = this.fb.nonNullable.group({
     email: '',
     password: '',
@@ -25,17 +26,26 @@ export class LoginComponent {
   }
 
   login(){
+    this.showLoginForm = false;
+    this.showLogoEffect = true;
     let email = this.loginForm.get('email')!.value;
     let password = this.loginForm.get('password')!.value;
-    console.log(email, password);
+
     this.loginService.login(email, password).subscribe({
         next: () => {
-          this.toastr.success("Giriş yapıldı")
-          this.router.navigate(["/menu"]);
+          setTimeout(() => {
+            this.showLogoEffect = false; // Efekti gizle
+            this.router.navigate(["/home/shelf"]);
+            this.toastr.success("Hoşgeldiniz")
+          }, 800);
         },
         error: (err) => {
+          setTimeout(() => { 
+            this.showLogoEffect = false;
+            this.toastr.error("Email veya şifre hatalı")
+            this.showLoginForm = true;
+          }, 800);
           console.log(err);
-          this.toastr.error("Email veya şifre hatalı")
         }
       }
     );

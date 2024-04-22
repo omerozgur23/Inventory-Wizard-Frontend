@@ -1,0 +1,89 @@
+<div class="sayfa" style="margin: 40px">
+  <form [formGroup]="accountForm" (ngSubmit)="submit()">
+    <div class="mb-3">
+      <label for="txtEmail" class="form-label">E-Mail</label>
+      <input
+        formControlName="email"
+        type="text"
+        class="form-control"
+        id="txtEmail"
+        aria-describedby="e-mail"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="txtLastPassword" class="form-label">Mevcut Şifre</label>
+      <input
+        formControlName="lastPassword"
+        type="password"
+        class="form-control"
+        id="txtLastPassword"
+        aria-describedby="lastPassword"
+        [class.is-invalid]="
+          accountForm.get('lastPassword')?.hasError('incorrectPassword')
+        "
+      />
+      <div
+        *ngIf="accountForm.get('lastPassword')?.hasError('incorrectPassword')"
+        class="small text-danger"
+      >
+        Eski şifre yanlış.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="txtPassword" class="form-label">Şifre</label>
+      <input
+        formControlName="password"
+        type="password"
+        class="form-control"
+        [class.is-invalid]="
+          !accountForm.get('password')?.valid &&
+          accountForm.get('password')?.touched
+        "
+        id="txtPassword"
+        aria-describedby="password"
+      />
+      <div
+        *ngIf="
+          !accountForm.get('password')?.valid &&
+          accountForm.get('password')?.touched
+        "
+        class="small text-danger"
+      >
+        <div *ngIf="accountForm.get('password')?.errors?.['required'] ">
+          Şifre alanını boş geçemezsiniz.
+        </div>
+        <div *ngIf="accountForm.get('password')?.errors?.['minlength']">
+          Şifre en az 3 karakter olmalıdır
+        </div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="txtPassword2" class="form-label">Şifre Tekrarı</label>
+      <input
+        formControlName="password2"
+        type="password"
+        class="form-control"
+        id="txtPassword2"
+        aria-describedby="password2"
+        [class.is-invalid]="
+          accountForm.get('password2')?.hasError('passwordMismatch')
+        "
+        (input)="checkPasswordMatch()"
+      />
+      <div
+        *ngIf="accountForm.get('password2')?.hasError('passwordMismatch')"
+        class="small text-danger"
+      >
+        Yeni şifre ile şifre tekrarı eşleşmiyor.
+      </div>
+    </div>
+    <button
+      class="btn btn-primary"
+      type="submit"
+      [disabled]="!accountForm.valid"
+    >
+      Kaydet
+    </button>
+    <!-- <button class="btn btn-warning ms-2" [routerLink]="['..']">Geri</button> -->
+  </form>
+</div>

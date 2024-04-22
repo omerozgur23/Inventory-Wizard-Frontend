@@ -19,7 +19,7 @@ export class CategoryService {
     private httpClient: HttpClient,
   ) {}
 
-  getCategory():Observable<GetCategoryResponse[]> {
+  getAllCategory():Observable<GetCategoryResponse[]> {
     return this.httpClient.get<GetCategoryResponse[]>('/category/getall');
   }
 
