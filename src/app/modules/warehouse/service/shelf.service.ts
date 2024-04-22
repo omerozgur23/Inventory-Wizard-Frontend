@@ -4,6 +4,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { UpdateShelfRequest } from '../dto/updateShelfRequest';
 import { GetShelfResponse } from '../dto/getShelfResponse';
 import { CreateShelfRequest } from '../dto/createShelfRequest';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class ShelfService {
 
   constructor(
     private httpClient: HttpClient,
+    private toastr: ToastrService,
   ) { }
 
   getAllShelf():Observable<GetShelfResponse[]> {
@@ -32,6 +34,9 @@ export class ShelfService {
         let errorMessage = 'Bir hata oluştu';
         if (error.error instanceof ErrorEvent) {
           // İstemci tarafında hata
+          if (shelf.count > 1) {
+            this.toastr.info('Tek seferde maksimum 1 raf oluşturulabilir!');
+          }
           errorMessage = `Hata: ${error.error.message}`;
         } else {
           // Sunucu tarafında hata

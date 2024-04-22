@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, NgZone, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, Input, NgZone, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,9 +12,8 @@ export class CreateModalComponent {
   title = '';
   inputLabels: string[] = [];
   createForm!: FormGroup;
-
-  // @Input() dropdownOptions: any[] = []; 
-  // showDropdown: boolean = false;
+  dropdownOptions: any[] = [];
+  showDropdown = false;
   
   constructor(
     private fb: FormBuilder,
@@ -22,9 +21,10 @@ export class CreateModalComponent {
   ) {
     this.createForm = this.fb.group({
       values: this.fb.array([], Validators.required),
-    })
+      categoryId: '',
+    });
   }
-
+  
   get values() {
     return this.createForm.get('values') as FormArray;
   }
@@ -37,8 +37,9 @@ export class CreateModalComponent {
 
   create(){
     if (this.createForm.valid) {
+      const formValues = { ...this.createForm.value, categoryId: this.createForm.value.categoryId };
       this.dialogRef.close({result: 'yes'});
-    }
+    } 
   }
 
   close(){

@@ -19,6 +19,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     SharedModule,
     FormsModule,
     MatDialogModule,
+    MatDialogModule,
   ]
 })
 export class CategoryModule { }

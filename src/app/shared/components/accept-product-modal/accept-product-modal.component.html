@@ -1,36 +1,34 @@
-<!-- <h2 mat-dialog-title>{{ title }}</h2>
+<h2 mat-dialog-title>{{ title }}</h2>
 <mat-dialog-content class="mat-typography">
-      <form [formGroup]="acceptProductForm">
-        <div style="margin: 20px" class="mb-3">
-          <label for="">Ürün Seçiniz</label>
-          <select formControlName="productId" class="form-select my-2 mb-3">
-            @for (item of productList; track $index) {
-            <option [value]="item.id">{{ item.productName }}</option>
-            }
-          </select>
-
-          <label for="txtCount" class="form-label">Adet</label>
-          <input
-            formControlName="count"
-            type="number"
-            class="form-control"
-            id="txtCount"
-            aria-describedby="count"
-          />
-        </div>
-      </form>
-    </mat-dialog-content>
-
-    <mat-dialog-actions class="btn-dialog" align="end">
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary">
-          Vazgeç
-        </button>
-        <button
-          type="submit"
-          class="btn btn-danger img-button"
-        >
-          Ekle
-        </button>
+  <form [formGroup]="acceptProductForm">
+    <div class="formBox form-group">
+      <label for="productId">Ürün Seçiniz</label>
+      <div class="inputBox w100">
+        <select formControlName="productId" class="form-select my-2 mb-3">
+          @for (item of productList; track $index) {
+          <option [value]="item.id">
+            {{ item.productName }}
+          </option>
+          }
+        </select>
       </div>
-    </mat-dialog-actions> -->
+      <div class="inputBox w100">
+        <input formControlName="count" required />
+        <label for="txtCount">Adet</label>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="btn-dialog" align="end">
+  <div class="btn-modal">
+    <button class="btn btn-outline-secondary" (click)="close()">Vazgeç</button>
+    <button
+      class="btn btn-outline-primary"
+      [disabled]="!acceptProductForm.valid"
+      (click)="create()"
+    >
+      Ekle
+    </button>
+  </div>
+</mat-dialog-actions>

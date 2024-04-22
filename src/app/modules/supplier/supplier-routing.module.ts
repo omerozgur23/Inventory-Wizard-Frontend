@@ -4,7 +4,6 @@ import { SupplierListComponent } from './supplier-list/supplier-list.component';
 
 const routes: Routes = [
   { path: '', component: SupplierListComponent, pathMatch: 'full' },
-  // { path: 'create', component: SupplierCreateComponent },
 ];
 
 @NgModule({

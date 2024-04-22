@@ -16,6 +16,7 @@ export class TableComponent implements OnInit{
   @Output() navigateDeleteDialogEvent = new EventEmitter<any>();
   @Output() navigateAcceptProductEvent = new EventEmitter<any>();
   @Output() navigateOrderDetailsEvent = new EventEmitter<any>();
+  @Output() navigateSettingsEvent = new EventEmitter<any>();
   @Output() refreshEvent = new EventEmitter();
   @Input() showAcceptProductButton: boolean = false;
   @Input() showOrderDetailButton = false;
@@ -79,6 +80,10 @@ export class TableComponent implements OnInit{
     }
   }
 
+  navigateSettings(){
+    this.navigateSettingsEvent.emit();
+  }
+
   isCritical(item: any, fieldName: string): boolean {
     if (fieldName === 'quantity') {
       const criticalField = 'criticalCount';
@@ -86,4 +91,6 @@ export class TableComponent implements OnInit{
     }
     return false;
   }
+  
+
 }

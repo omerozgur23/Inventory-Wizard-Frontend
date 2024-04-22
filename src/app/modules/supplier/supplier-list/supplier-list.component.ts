@@ -36,6 +36,8 @@ export class SupplierListComponent implements OnInit{
     private supplierService: SupplierService,
     private toastr: ToastrService,
     private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
   ){}
 
   setSelectedSupplier(supplierId: string) {
@@ -52,8 +54,10 @@ export class SupplierListComponent implements OnInit{
   }
 
   loadSupplier() {
-    this.supplierService.getAllSuppliersByPage(this.currentPage, 2).subscribe(response => {
+    this.supplierService.getAllSuppliersByPage(this.currentPage, 18).subscribe(response => {
       this.tableData = response;
+      console.log(this.tableData);
+      
     });
   }
 
@@ -157,5 +161,9 @@ export class SupplierListComponent implements OnInit{
         this.toastr.error("Hata oluştu!")
       }
     })
+  }
+
+  navigateSettings(){
+    this.router.navigate(['/home/settings']);
   }
 }

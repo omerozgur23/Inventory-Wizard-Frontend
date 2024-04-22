@@ -1,0 +1,68 @@
+.formBox {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-top: 10px;
+  }
+  
+  .formBox .inputBox {
+    position: relative;
+    margin-bottom: 15px;
+  }
+  
+  .formBox .inputBox.w100 {
+    width: 100%;
+    margin-top: 5px;
+  }
+  
+  .formBox .inputBox input {
+    width: 100%;
+    resize: none;
+    padding: 5px 0;
+    font-size: 18px;
+    font-weight: 300;
+    color: #000;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #777;
+    background-color: #fff;
+  }
+  
+ 
+  
+  .formBox .inputBox label {
+    position: absolute;
+    left: 0;
+    padding: 5px 0;
+    pointer-events: none;
+    font-size: 18px;
+    font-weight: 300;
+    transition: 0.3s;
+  }
+    
+  .formBox .inputBox input:focus ~ label,
+  .formBox .inputBox input:valid ~ label {
+    transform: translateY(-20px);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #000;
+    font-weight: 500;
+  }
+  
+  mat-dialog-actions {
+    border-top: 1px solid #DEE2E6;
+  }
+  
+  .btn-modal {
+    margin: 10px;
+  }
+  
+  button {
+    margin-right: 10px;
+  }
+  
+  h2 {
+    border-bottom: 1px solid #DEE2E6;
+  }

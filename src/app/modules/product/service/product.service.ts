@@ -7,6 +7,7 @@ import { GetSupplierResponse } from '../../supplier/dto/getSupplierResponse';
 import { HttpHeaders } from '@angular/common/http';
 import { UpdateProductRequest } from '../dto/updateProductRequest';
 import { CreateProductRequest } from '../dto/createProductRequest';
+import { SaleRequest } from '../product-sale/saleRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -98,6 +99,23 @@ export class ProductService {
         return throwError(errorMessage); // Hata durumunu tekrar fırlat
       })
     );
+  }
+
+  saleProductTest(saleRequest: SaleRequest): Observable<any> {
+    console.log('Sale Request:', saleRequest);
+    return this.httpClient.post<any>(`/product/saleTest`, saleRequest)
+      .pipe(
+        catchError((error) => {
+          let errorMessage = 'Bir hata oluştu';
+          if (error.error instanceof ErrorEvent) {
+            errorMessage = `Hata: ${error.error.message}`;
+          } else {
+            errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
+          }
+          console.error(errorMessage);
+          throw new Error(errorMessage);
+        })
+      );
   }
   
   search(name: string): Observable<GetProductResponse[]> {

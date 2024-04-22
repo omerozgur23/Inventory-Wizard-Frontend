@@ -1,23 +1,26 @@
 <h2 mat-dialog-title>{{ title }}</h2>
 <mat-dialog-content class="mat-typography">
-  <!-- <h5 class="modal-title" id="updateModalLabel">{{ title }}</h5> -->
   <form [formGroup]="createForm">
     <div class="formBox form-group" formArrayName="values">
-      @for (values of values.controls; track values; let i = $index) {
+      @for (values of values.controls; track $index) {
       <div class="inputBox w100">
-        <input formControlName="{{ i }}" required style="margin-top: 5px" />
-        <label [for]="'input_' + i">{{ inputLabels[i] }}</label>
+        <input
+          formControlName="{{ $index }}"
+          required
+          style="margin-top: 5px"
+        />
+        <label [for]="'input_' + $index">{{ inputLabels[$index] }}</label>
       </div>
       }
-
-      <!-- <div>
-        <label for="categoryId">Kategori Seçiniz:</label>
-        <select formControlName="categoryId" id="categoryId">
-          <option *ngFor="let option of dropdownOptions" [value]="option.id">
+      <div class="inputBox w100" *ngIf="showDropdown">
+        <select formControlName="categoryId">
+          @for (option of dropdownOptions; track $index) {
+          <option [value]="option.id">
             {{ option.name }}
           </option>
+          }
         </select>
-      </div> -->
+      </div>
     </div>
   </form>
 </mat-dialog-content>

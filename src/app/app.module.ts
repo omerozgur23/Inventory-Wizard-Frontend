@@ -1,5 +1,5 @@
 import { MatDialogModule } from '@angular/material/dialog';
-import { HostListener, LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,8 +13,8 @@ import { APP_CONFIG } from './app.config';
 import { environment } from './environments/environment';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { AccountComponent } from './core/component/account/account.component';
 
 
 
@@ -24,6 +24,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     LoginComponent,
     ErrorComponent,
     MenuComponent,
+    AccountComponent,
   ],
   imports: [
     BrowserModule,
