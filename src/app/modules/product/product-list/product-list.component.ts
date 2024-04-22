@@ -1,22 +1,21 @@
+import { GetCategoryResponse } from './../../category/dto/getCategoryResponse';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, VERSION } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { UpdateProductRequest } from '../dto/updateProductRequest';
-import { FormControl } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateProductRequest } from '../dto/createProductRequest';
-import {jsPDF} from 'jspdf';
-import 'jspdf-autotable';
-
-import pdfMake from "pdfmake/build/pdfmake";
+import  pdfMake from 'pdfmake/build/pdfmake';
 import  pdfFonts from 'pdfmake/build/vfs_fonts';
-
-(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
-
+import { forkJoin } from 'rxjs';
+import { CategoryService } from '../../category/service/category.service';
+import { CategoryListComponent } from '../../category/category-list/category-list.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -36,7 +35,7 @@ export class ProductListComponent implements OnInit{
     { label: 'Stok Adedi', field: 'quantity' },
   ];
 
-  
+  categoryList: GetCategoryResponse[] = [];
   deleteDialogDescription = 'Ürün kaydını silmek istediğinizden emin misiniz?';
   id = '';
   currentPage: number = 1;
@@ -45,53 +44,13 @@ export class ProductListComponent implements OnInit{
   constructor(
     private toastr: ToastrService,
     private productService: ProductService,
+    private categoryService: CategoryService,
     private dialog: MatDialog,
-  ){}
-
-  public export(): void {
-    var fonts = {
-      Roboto: {
-        normal: 'fonts/Roboto-Regular.ttf',
-        bold: 'fonts/Roboto-Medium.ttf',
-        italics: 'fonts/Roboto-Italic.ttf',
-        bolditalics: 'fonts/Roboto-MediumItalic.ttf'
-      }
-    };
-    
-    var PdfPrinter = require('pdfmake');
-    var printer = new PdfPrinter(fonts);
-    var fs = require('fs');
-    
-    var docDefinition = {
-      content: [
-        { text: 'Merhaba Dünya!', fontSize: 16, bold: true, margin: [0, 0, 0, 10] },
-        { text: 'Türkçe karakterler: ÇçĞğİıÖöŞşÜü', fontSize: 14 },
-      ],
-    };
-    
-    var options = {
-      // ...
-    }
-    
-    var pdfDoc = printer.createPdfKitDocument(docDefinition, options);
-    pdfDoc.pipe(fs.createWriteStream('document.pdf'));
-    pdfDoc.end();
-  }
-
-  downloadProductsAsPDF() {
-    const doc = new jsPDF(); // jsPDF'nin default exportunu kullan
-
-    const tableData = this.tableData.map(product => [product.productName, product.categoryName, product.supplierCompanyName, product.purchasePrice, product.unitPrice, product.criticalCount, product.quantity]);
-
-    doc.setFont('OpenSans-Italic', 'normal');
-
-
-    (doc as any).autoTable({
-      head: [['Ürün Adi', 'Kategori', 'Tedarikçi', 'Alış Fiyati', 'Satis Fiyati', 'Kritik Stok', 'Stok Adedi']],
-      body: tableData, 
-    });
-
-    doc.save('products.pdf');
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+  ){
+    (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
   }
 
   setSelectedProduct(productId: string) {
@@ -100,10 +59,11 @@ export class ProductListComponent implements OnInit{
 
   ngOnInit(): void{
     this.loadProducts();
+    this.getAllCategory();
   }
  
   loadProducts() {
-    this.productService.getProductsByPage(this.currentPage, 2).subscribe(response => {
+    this.productService.getProductsByPage(this.currentPage, 18).subscribe(response => {
       this.tableData = response;
     });
   }
@@ -113,7 +73,7 @@ export class ProductListComponent implements OnInit{
     this.loadProducts();
   }
 
-  getProduct(){
+  getAllProduct(){
     this.productService.getAllProducts().subscribe({
       next: (result) => {
         this.tableData = result;
@@ -124,33 +84,72 @@ export class ProductListComponent implements OnInit{
     });
   }
 
+  getAllCategory(){
+    this.categoryService.getAllCategory().subscribe({
+      next: (result) => {
+        this.categoryList = result;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  showDropdown = true;
+
   openCreateProductDialog() {
     let dialog = this.dialog.open(CreateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
     });    
+    dialog.componentInstance.showDropdown = this.showDropdown;
+    dialog.componentInstance.title = 'Yeni Ürün Oluştur';
+    dialog.componentInstance.inputLabels = ['Ürün Adı', 'Tedarikçi', 'Kritik Stok', 'Alış Fiyatı', 'Satış Fiyatı'];
+    dialog.componentInstance.dropdownOptions = this.categoryList;
+    // dialog.componentInstance.values.push(new FormControl(''));
+    // dialog.componentInstance.values.push(new FormControl(''));
+    // dialog.componentInstance.values.push(new FormControl(''));
+    // dialog.componentInstance.values.push(new FormControl(''));
+    // dialog.componentInstance.values.push(new FormControl(''));
+    for (let i = 0; i < 5; i++) {
+      dialog.componentInstance.values.push(new FormControl(''));
+    }
+
+    const dropdownFormControl = new FormControl(''); // Varsayılan olarak seçili değer boş
+
+  // Dropdown'daki seçimlerin değiştiğini izleyelim
+  dropdownFormControl.valueChanges.subscribe((categoryId) => {
+    console.log("Seçilen kategori ID: " + categoryId);
+
+    // Kategori seçimi değiştiğinde burada ek işlemler yapabilirsiniz
+    // Örneğin, seçilen kategoriye göre ek bazı bilgileri doldurabilirsiniz
+  });
+
+  // Yeni oluşturduğumuz dropdown FormControl'ü dialog'a ekleyelim
+  dialog.componentInstance.values.push(dropdownFormControl);
+    
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
-          const productNameValue = dialog.componentInstance.createForm.value.values[0];
-          const categoryIdValue = dialog.componentInstance.createForm.value.values[1];
-          const supplierIdValue = dialog.componentInstance.createForm.value.values[2];
-          const criticalCountValue = dialog.componentInstance.createForm.value.values[3];
-          const purchasePriceValue = dialog.componentInstance.createForm.value.values[4];
-          const unitPriceValue = dialog.componentInstance.createForm.value.values[5];
+          const formValues = dialog.componentInstance.createForm.value.values;
+          const productNameValue = formValues[0];
+          const supplierIdValue = formValues[1];
+          const criticalCountValue = formValues[2];
+          const purchasePriceValue = formValues[3];
+          const unitPriceValue = formValues[4];
+          const categoryIdValue = formValues[5];
+          console.log("categoryId: " + categoryIdValue);
+          
           this.createProduct(productNameValue, categoryIdValue, supplierIdValue, criticalCountValue, purchasePriceValue, unitPriceValue);
         }
+      },
+      error: (err) => {
+        console.log("Dialog Hatası " + err);
+        
       }
     });
-    dialog.componentInstance.title = 'Yeni Ürün Oluştur';
-    dialog.componentInstance.inputLabels = ['Ürün Adı', 'Kategori', 'Tedarikçi', 'Kritik Stok', 'Alış Fiyatı', 'Satış Fiyatı'];
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
+    
   }
 
   createProduct(productname: string, categoryId: string, supplierId: string, criticalCount: number, purchasePrice: number, unitPrice: number) {
@@ -220,10 +219,49 @@ export class ProductListComponent implements OnInit{
     );
   }
 
+  navigateSettings(){
+    this.router.navigate(['/home/settings']);
+  }
+
+  generatePDF(){
+    const tableBody = [];
+    // Tablo başlıkları
+    const tableHeaders = this.columns.map(column => {
+      return { text: column.label, style: 'tableHeader' }; // Başlık metni ve renk
+    });
+    tableBody.push(tableHeaders);
+
+    // Tablo satırları
+    this.tableData.forEach(item => {
+      const rowData = this.columns.map(column => item[column.field]);
+      tableBody.push(rowData);
+    });
+    let docDefinition = {
+      content: [
+        { text: 'Ürün Listesi', style: 'header' },
+        { table: { body: tableBody } }
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 0, 0, 10],
+        },
+        tableHeader: {
+          fillColor: '#333333', // Arka plan rengi
+          color: '#FFF', // Metin rengi (siyah)
+          bold: true,
+        }
+      }
+    };
+
+    pdfMake.createPdf(docDefinition as any).download('product.pdf');
+  }
+
   name: string = '';
   search() {
     this.productService.search(this.name).subscribe(products => {
       this.tableData = products;  
     });
   }
-} 
+}

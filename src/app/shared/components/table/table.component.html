@@ -28,6 +28,39 @@
         <img src="../../../../assets/img/search.svg" alt="" />
         <input type="text" class="nb-search-input" placeholder="Ara" />
       </span>
+
+      <div class="flex-shrink-0 dropdown" style="float: right">
+        <a
+          href="#"
+          class="d-block link-dark text-decoration-none dropdown-toggle"
+          id="dropdownUser2"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            src="../../../../assets/img/profile.webp"
+            alt="mdo"
+            width="32"
+            height="32"
+            class="rounded-circle"
+          />
+        </a>
+        <ul
+          class="dropdown-menu text-small shadow"
+          aria-labelledby="dropdownUser2"
+        >
+          <li>
+            <a
+              style="cursor: pointer; text-align: center"
+              class="dropdown-item"
+              (click)="navigateSettings()"
+              >Ayarlar</a
+            >
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          <!-- <li><a style="cursor: pointer" class="dropdown-item">Çıkış</a></li> -->
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -75,7 +108,7 @@
             }
             <td *ngIf="showOrderDetailButton" scope="row">
               <button (click)="navigateOrderDetails(item.id)">
-                <i class="lni lni-eye"></i>
+                <img src="../../../../assets/img/favicon.png" alt="" />
               </button>
             </td>
             <td scope="row">

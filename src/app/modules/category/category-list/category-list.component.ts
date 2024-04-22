@@ -1,5 +1,5 @@
 
-import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryService } from '../service/category.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
@@ -9,7 +9,7 @@ import { UpdateModalComponent } from '../../../shared/components/update-modal/up
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
 import { UpdateCategoryRequest } from '../dto/updateCategoryRequest';
-
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-category-list',
@@ -33,6 +33,8 @@ export class CategoryListComponent implements OnInit {
     private categoryService: CategoryService,
     private toastr: ToastrService,
     private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
   ){}
 
   setSelectedCategory(categoryId: string) {
@@ -44,8 +46,10 @@ export class CategoryListComponent implements OnInit {
   }
 
   loadCategory() {
-    this.categoryService.getAllCategoriesByPage(this.currentPage, 2).subscribe(response => {
+    this.categoryService.getAllCategoriesByPage(this.currentPage, 18).subscribe(response => {
       this.tableData = response;
+      console.log(this.tableData);
+      
       this.existingCategoryNames = this.tableData.map(item => item.name);
     });
   }
@@ -56,7 +60,7 @@ export class CategoryListComponent implements OnInit {
   }
 
   getCategory(){
-    this.categoryService.getCategory().subscribe({
+    this.categoryService.getAllCategory().subscribe({
       next: (result) => {
         this.tableData = result;
       },
@@ -150,5 +154,9 @@ export class CategoryListComponent implements OnInit {
         }
       }
     );
+  }
+
+  navigateSettings(){
+    this.router.navigate(['/home/settings']);
   }
 }

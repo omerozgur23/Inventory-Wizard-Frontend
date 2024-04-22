@@ -4,7 +4,6 @@ import { CustomerListComponent } from './customer-list/customer-list.component';
 
 const routes: Routes = [
   { path: '', component: CustomerListComponent, pathMatch: 'full' },
-  // { path: 'create', component: CustomerCreateComponent },
 ];
 
 @NgModule({

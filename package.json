@@ -21,8 +21,6 @@
     "@angular/platform-browser-dynamic": "^17.2.0",
     "@angular/router": "^17.2.0",
     "@types/uuid": "^9.0.8",
-    "jspdf": "^2.5.1",
-    "jspdf-autotable": "^3.8.2",
     "ngx-pagination": "^6.0.3",
     "ngx-toastr": "^18.0.0",
     "pdfmake": "^0.2.10",

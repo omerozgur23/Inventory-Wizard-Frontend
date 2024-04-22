@@ -1,3 +1,3 @@
-export const ROLE_EMPLOYEE = 'employee';
-export const ROLE_ADMIN = 'admin';
-export const ROLE_REPORTER = 'reporter';
+export const ROLE_EMPLOYEE = 'Employee';
+export const ROLE_ADMIN = 'Admin';
+export const ROLE_REPORTER = 'Reporter';

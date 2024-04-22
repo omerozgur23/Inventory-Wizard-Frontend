@@ -11,7 +11,7 @@ import { CreateShelfRequest } from '../dto/createShelfRequest';
 import { UpdateShelfRequest } from '../dto/updateShelfRequest';
 import { GetProductResponse } from '../../product/dto/getProductResponse';
 import { ProductService } from '../../product/service/product.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, count } from 'rxjs';
 import { AcceptProductModalComponent } from '../../../shared/components/accept-product-modal/accept-product-modal.component';
 
 @Component({
@@ -85,7 +85,7 @@ export class ShelfListComponent implements OnInit{
   // }
 
   loadShelves() {
-    this.shelfService.getShelvesByPage(this.currentPage, 5).subscribe(response => {
+    this.shelfService.getShelvesByPage(this.currentPage, 15).subscribe(response => {
       this.tableData = response;
     });
   }
@@ -110,7 +110,7 @@ export class ShelfListComponent implements OnInit{
     this.router.navigate(['./accept-product'], {relativeTo: this.route});
   }
 
-  opwnCreateShelfDialog(){
+  openCreateShelfDialog(){
     let dialog = this.dialog.open(CreateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -139,7 +139,14 @@ export class ShelfListComponent implements OnInit{
         this.loadShelves();
       },
       error: (err) => {
-        this.toastr.error('Hata oluştu!');
+        if (capacity > 5) {
+          this.toastr.error('Raf kapasitesi maksimum 5 olabilir!');
+        }if (count > 2) {
+          this.toastr.info('Tek seferde maksimum 10 raf oluşturulabilir!')
+        }
+        // else{
+        //   this.toastr.error('Hata oluştu!');
+        // }
       }
     });
   }
@@ -175,8 +182,9 @@ export class ShelfListComponent implements OnInit{
         this.loadShelves();
       },
       error: (err) => {
-        console.log(err);
-        this.toastr.error("Hata oluştu");
+        if (capacity > 5) {
+          this.toastr.error('Raf kapasitesi maksimum 5 olabilir!')
+        }
       }
     })
   }
@@ -209,13 +217,6 @@ export class ShelfListComponent implements OnInit{
   // }
 
   openAcceptProductDialog(item: any) {
-    // const dialog = new MatDialogConfig();
-    // dialog.width = '500px';
-    // dialog.data = {
-    //   title: 'Ürün Girişi',
-    //   productList: this.productList
-    // };
-  
     const dialogRef = this.dialog.open(AcceptProductModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -247,5 +248,9 @@ export class ShelfListComponent implements OnInit{
         this.toastr.error("Hata oluştu");
       }
     });
+  }
+
+  navigateSettings(){
+    this.router.navigate(['/home/settings']);
   }
 }
