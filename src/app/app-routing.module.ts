@@ -8,13 +8,15 @@ import { roleControlGuard } from './shared/guard/role-control.guard';
 import { ROLE_ADMIN, ROLE_EMPLOYEE } from './shared/model/constants';
 import { ProductSaleComponent } from './modules/product/product-sale/product-sale.component';
 import { OrderDetailsComponent } from './modules/order/order-details/order-details.component';
+import { AccountComponent } from './core/component/account/account.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path:'menu', component: MenuComponent, 
+  { path:'home', component: MenuComponent,
    canActivate: [loginGuard],
     children: [
+      { path: '', redirectTo: 'shelf', pathMatch: 'full'},
       { path: 'product', loadChildren: () => import('./modules/product/product.module').then(m => m.ProductModule)},
       { path: 'employee', loadChildren: () => import('./modules/employee/employee.module').then(m => m.EmployeeModule)},
       { path: 'shelf', loadChildren: () => import('./modules/warehouse/warehouse.module').then(m => m.WarehouseModule)},
@@ -27,6 +29,7 @@ const routes: Routes = [
       { path: 'order-details', component: OrderDetailsComponent },
       { path: 'access-denied', loadChildren: () => import('./modules/access-denied/access-denied.module').then(m => m.AccessDeniedModule)},
       // { path: 'order-details', loadChildren: () => import('./modules/order/order-details.module').then(m => m.OrderDetailsModule)},
+      { path: 'settings', component: AccountComponent },
     ]
   },
   { path: '**', component: ErrorComponent}

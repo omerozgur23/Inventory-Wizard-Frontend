@@ -14,7 +14,7 @@ export class ErrorComponent {
   ) {}
 
   redirectToMenu() {
-    this.router.navigate(['/menu']);
+    this.router.navigate(['/home']);
   }
   
 }

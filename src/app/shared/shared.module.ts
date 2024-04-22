@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent } from './components/table/table.component';
-import { CreateComponent } from './components/forms/create/create.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 import { UpdateModalComponent } from './components/update-modal/update-modal.component';
@@ -17,7 +16,6 @@ import { AcceptProductModalComponent } from './components/accept-product-modal/a
 @NgModule({
   declarations: [
     TableComponent,
-    CreateComponent,
     DeleteModalComponent,
     UpdateModalComponent,
     CreateModalComponent,
@@ -32,7 +30,6 @@ import { AcceptProductModalComponent } from './components/accept-product-modal/a
   ],
   exports: [
     TableComponent,
-    CreateComponent,
     DeleteModalComponent,
     UpdateModalComponent,
   ]

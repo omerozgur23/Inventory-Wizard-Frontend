@@ -3,6 +3,6 @@ export class UpdateEmployeeRequest {
         public id: string,
         public email: string,
         public password: string,
-        public role: string,
+        // public role: string,
     ){}
 }

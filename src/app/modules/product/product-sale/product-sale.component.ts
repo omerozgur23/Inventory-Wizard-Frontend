@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { EmployeeService } from '../../employee/service/employee.service';
 import { CustomerService } from '../../customer/service/customer.service';
 import { ShelfService } from '../../warehouse/service/shelf.service';
 import { GetProductResponse } from '../dto/getProductResponse';
+import { SaleRequest } from './saleRequest';
 
 @Component({
   selector: 'app-product-sale',
@@ -21,13 +22,14 @@ export class ProductSaleComponent implements OnInit{
   customerList: UpdateCustomerRequest[] = [];
   employeeList: GetEmployeeResponse[] = [];
   productList: GetProductResponse[] = [];
-
-  saleForm = this.fb.group({
-    productId: '',
-    count: 0,
-    customerId: '',
-    userId: '',
-  });
+  saleProductForm!: FormGroup;
+  
+  // saleForm = this.fb.group({
+  //   productId: '',
+  //   count: 0,
+  //   customerId: '',
+  //   userId: '',
+  // });
 
   constructor(
     private fb: FormBuilder,
@@ -55,18 +57,96 @@ export class ProductSaleComponent implements OnInit{
         console.log(err);
       })
     })
+
+    this.saleProductForm = this.fb.group({
+      customerId: '',
+      userId: '',
+      productItems: this.fb.array([this.createProductGroup()]),
+      // orderDate: '',
+    });
+  }
+  get productItems(): FormArray {
+    return this.saleProductForm.get('productItems') as FormArray;
   }
 
-  submit(){
-    this.productService.saleProduct(this.saleForm.value).subscribe({
-      next: (resp) => {
-        this.toastr.success('Ürün Satışı Yapılmıştır');
-        this.router.navigate(['..'], {relativeTo: this.route});
-      },
-      error: (err) => {
-        console.log(err);
-        this.toastr.error("Hata oluştu");
-      }
-    })
+  createProductGroup(): FormGroup {
+    return this.fb.group({
+      productId: '',
+      count: 0
+    });
   }
+  addProduct(): void {
+    this.productItems.push(this.createProductGroup());
+  }
+
+  removeProduct(index: number): void {
+    this.productItems.removeAt(index);
+  }
+
+  submit(): void {
+    if (this.saleProductForm.valid) {
+      const saleRequest: SaleRequest = this.saleProductForm.value;
+      // const saleRequest: SaleRequest = {
+      //   productItems: this.saleProductForm.value.productItems,
+      //   customerId: this.saleProductForm.value.customerId,
+      //   userId: this.saleProductForm.value.userId,
+      //   orderDate: new Date().toISOString() // Şu anki tarih/datetime değeri ISO formatında
+      // };
+      this.productService.saleProductTest(saleRequest).subscribe({
+        next: (resp) => {
+          console.log("component submit: " + JSON.stringify(saleRequest) );
+          
+          this.toastr.success('Ürün Satışı Başarıyla Tamamlandı');
+          // Başarılı olduğunda yapılacak işlemler
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastr.error('Satış sırasında bir hata oluştu');
+        }
+      });
+    } else {
+      this.toastr.error('Lütfen formu eksiksiz doldurun');
+    }
+  }
+  // submit(){
+  //   this.productService.saleProduct(this.saleProductForm.value).subscribe({
+  //     next: (resp) => {
+  //       this.toastr.success('Ürün Satışı Yapılmıştır');
+  //       this.router.navigate(['..'], {relativeTo: this.route});
+  //     },
+  //     error: (err) => {
+  //       console.log(err);
+  //       this.toastr.error("Hata oluştu");
+  //     }
+  //   })
+  // }
+  // saleProductForm = this.fb.group({
+  //   customerAndEmployeeInfo: this.fb.group({
+  //     customerId: '',
+  //     userId: '',
+  //   }),
+  //   products: this.fb.array([
+  //     this.fb.group({
+  //       productId: '',
+  //       count: 0,
+  //     }),
+  //   ]),
+  // });
+
+  // get productsGroups() {
+  //   return this.saleProductForm.get('products') as FormArray;
+  // }
+
+  // addProduct() {
+  //   this.productsGroups.push(
+  //     this.fb.group({
+  //       productId: '',
+  //       count: 0,
+  //     })
+  //   );
+  // }
+
+  // removeProduct(index: number) {
+  //   this.productsGroups.removeAt(index);
+  // }
 }
