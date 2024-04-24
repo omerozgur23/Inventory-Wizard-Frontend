@@ -22,6 +22,7 @@ import { AcceptProductModalComponent } from '../../../shared/components/accept-p
 export class ShelfListComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
+    { label: 'Raf Kodu', field: 'shortId' },
     { label: 'Ürün Adı', field: 'productName' },
     { label: 'Ürün Adedi', field: 'count' },
     { label: 'Kapasite', field: 'capacity' },
@@ -86,7 +87,14 @@ export class ShelfListComponent implements OnInit{
 
   loadShelves() {
     this.shelfService.getShelvesByPage(this.currentPage, 15).subscribe(response => {
-      this.tableData = response;
+      this.tableData = this.processData(response);
+    });
+  }
+
+  processData(data: any[]): any[] {
+    return data.map(item => {
+      const shortId = '#' + item.id.split('-')[0];
+      return { ...item, shortId };
     });
   }
 

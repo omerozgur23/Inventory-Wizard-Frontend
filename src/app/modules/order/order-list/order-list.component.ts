@@ -13,9 +13,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class OrderListComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
+    { label: 'Sipariş Kodu', field: 'shortId' },
     { label: 'Müşteri Ünvanı', field: 'customerCompanyName' },
     { label: 'Sipariş Oluşturan', field: 'employeeFirstName' },
     { label: 'Sipariş Tarihi', field: 'orderDate' },
+    { label: 'Sipariş Tutarı', field: 'orderPrice' },
   ];
 
   currentPage: number = 1;
@@ -34,7 +36,14 @@ export class OrderListComponent implements OnInit{
 
   loadOrder() {
     this.orderService.getAllOrdersByPage(this.currentPage, 18).subscribe(response => {
-      this.tableData = response;
+      this.tableData = this.processData(response);
+    });
+  }
+
+  processData(data: any[]): any[] {
+    return data.map(item => {
+      const shortId = '#' + item.id.split('-')[0];
+      return { ...item, shortId };
     });
   }
 

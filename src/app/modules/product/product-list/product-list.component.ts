@@ -26,6 +26,7 @@ export class ProductListComponent implements OnInit{
   // productList: Product[] = [];
   tableData: any[] = [];
   columns: TableColumn[] = [
+    { label: 'Ürün Kodu', field: 'shortId' },
     { label: 'Ürün Adı', field: 'productName' },
     { label: 'Kategori', field: 'categoryName' },
     { label: 'Tedarikçi', field: 'supplierCompanyName' },
@@ -38,7 +39,7 @@ export class ProductListComponent implements OnInit{
   categoryList: GetCategoryResponse[] = [];
   deleteDialogDescription = 'Ürün kaydını silmek istediğinizden emin misiniz?';
   id = '';
-  currentPage: number = 1;
+  currentPage: number = 1; 
   // totalPages: number = 10;
 
   constructor(
@@ -64,7 +65,14 @@ export class ProductListComponent implements OnInit{
  
   loadProducts() {
     this.productService.getProductsByPage(this.currentPage, 18).subscribe(response => {
-      this.tableData = response;
+      this.tableData = this.processData(response);
+    });
+  }
+
+  processData(data: any[]): any[] {
+    return data.map(item => {
+      const shortId = '#' + item.id.split('-')[0];
+      return { ...item, shortId };
     });
   }
 
