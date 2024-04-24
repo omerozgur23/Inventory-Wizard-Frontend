@@ -18,9 +18,11 @@ export class TableComponent implements OnInit{
   @Output() navigateOrderDetailsEvent = new EventEmitter<any>();
   @Output() navigateSettingsEvent = new EventEmitter<any>();
   @Output() refreshEvent = new EventEmitter();
+  @Output() paginationEvent = new EventEmitter();
   @Input() showAcceptProductButton: boolean = false;
   @Input() showOrderDetailButton = false;
   @Input() currentUrl = '';
+  currentPage = 1;
 
   constructor(
     private router: Router,
@@ -28,7 +30,6 @@ export class TableComponent implements OnInit{
   ) {}
 
   ngOnInit() {
-    // this.calculateTotalPages();
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event) => {
@@ -36,18 +37,9 @@ export class TableComponent implements OnInit{
       });
   }
 
-  calculateTotalPages() {
-    // if (this.tableData && this.tableData.length > 0) {
-    //   this.totalPages = Math.ceil(this.tableData.length / this.pageSize);
-    // }
-  }
-
   onPageChange(pageNo: number) {
-    // this.onPageChangeEvent.emit();
-    // if (pageNo >= 1 && pageNo <= this.totalPages) {
-    //   this.currentPage = pageNo;
-    //   this.onPageChangeEvent.emit(pageNo);
-    // }
+    this.currentPage = pageNo;
+    this.paginationEvent.emit(pageNo);
   }
 
   refresh(){

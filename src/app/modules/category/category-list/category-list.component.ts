@@ -19,10 +19,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class CategoryListComponent implements OnInit {
   tableData: any[] = [];
   columns: TableColumn[] = [
+    { label: 'Kategori Kodu', field: 'shortId' },
     { label: 'Kategori Adı', field: 'name' },
   ];
-  currentUrl: string = 'Home / Category'
 
+
+  currentUrl: string = 'Home / Category'
   deleteDialogDescription = 'Kategori kaydını silmek istediğinizden emin misiniz?';
   id = '';
   currentPage: number = 1;
@@ -47,10 +49,17 @@ export class CategoryListComponent implements OnInit {
 
   loadCategory() {
     this.categoryService.getAllCategoriesByPage(this.currentPage, 18).subscribe(response => {
-      this.tableData = response;
+      this.tableData = this.processData(response)
       console.log(this.tableData);
       
-      this.existingCategoryNames = this.tableData.map(item => item.name);
+      // this.existingCategoryNames = this.tableData.map(item => item.name);
+    });
+  }
+
+  processData(data: any[]): any[] {
+    return data.map(item => {
+      const shortId = '#' + item.id.split('-')[0];
+      return { ...item, shortId };
     });
   }
 
