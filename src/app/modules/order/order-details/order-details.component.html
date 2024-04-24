@@ -3,4 +3,5 @@
   [tableData]="tableData"
   [columns]="columns"
   (refreshEvent)="ngOnInit()"
+  (paginationEvent)="onPageChange($event)"
 ></app-table>

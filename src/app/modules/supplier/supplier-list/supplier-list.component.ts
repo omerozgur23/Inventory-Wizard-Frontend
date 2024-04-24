@@ -57,7 +57,6 @@ export class SupplierListComponent implements OnInit{
     this.supplierService.getAllSuppliersByPage(this.currentPage, 18).subscribe(response => {
       this.tableData = response;
       console.log(this.tableData);
-      
     });
   }
 
