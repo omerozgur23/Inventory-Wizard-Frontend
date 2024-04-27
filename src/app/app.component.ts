@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +7,14 @@ import { Component, HostListener } from '@angular/core';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+
+  constructor(
+    private translateService: TranslateService,
+  ){
+    this.translateService.setDefaultLang("en");
+    this.translateService.use(localStorage.getItem("lang") || "en");
+  }
+
   title = 'warehouseManagement-frontend';
   
   // private inactivityTimeout = /* 30 * 1000 */ 30 * 60 * 1000; // 30 dakika (30 * 60 * 1000)

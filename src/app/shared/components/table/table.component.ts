@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TableColumn } from './dto/table';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, filter } from 'rxjs';
+import { debounceTime } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-table',
@@ -11,6 +13,9 @@ import { filter } from 'rxjs';
 export class TableComponent implements OnInit{
   @Input() tableData: any[] = [];
   @Input() columns: TableColumn[] = [];
+  @Input() showAcceptProductButton: boolean = false;
+  @Input() showOrderDetailButton = false;
+  @Input() tableTitle = '';
   @Output() navigateCreateDialogEvent = new EventEmitter();
   @Output() navigateUpdateDialogEvent = new EventEmitter<any>();
   @Output() navigateDeleteDialogEvent = new EventEmitter<any>();
@@ -19,22 +24,31 @@ export class TableComponent implements OnInit{
   @Output() navigateSettingsEvent = new EventEmitter<any>();
   @Output() refreshEvent = new EventEmitter();
   @Output() paginationEvent = new EventEmitter();
-  @Input() showAcceptProductButton: boolean = false;
-  @Input() showOrderDetailButton = false;
-  @Input() currentUrl = '';
+  @Output() generatePdfEvent = new EventEmitter();
+  @Output() onSearchInputChangeEvent = new EventEmitter<any>();
+  private searchKeywordChange = new Subject<string>();
+
+  lang = "";
   currentPage = 1;
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-  ) {}
+    // private router: Router,
+    // private route: ActivatedRoute,
+    private translateService: TranslateService,
+  ) {
+    this.searchKeywordChange.pipe(debounceTime(300)).subscribe({
+      next: (value) => {
+        this.onSearchInputChange(value);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
 
-  ngOnInit() {
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event) => {
-        this.currentUrl = this.router.url; // Mevcut URL'i al
-      });
+  ngOnInit(): void {
+    this.lang = localStorage.getItem("lang") || "en";
+
   }
 
   onPageChange(pageNo: number) {
@@ -52,7 +66,6 @@ export class TableComponent implements OnInit{
 
   navigateUpdateDialog(item: any){
     this.navigateUpdateDialogEvent.emit(item);
-    console.log(item);
   }
 
   navigateDeleteDialog(id: any){
@@ -67,7 +80,6 @@ export class TableComponent implements OnInit{
   
   navigateOrderDetails(id: string) {
     if (this.showOrderDetailButton) {
-      console.log(id);
       this.navigateOrderDetailsEvent.emit(id);
     }
   }
@@ -83,6 +95,28 @@ export class TableComponent implements OnInit{
     }
     return false;
   }
-  
 
+  generatePDF(){
+    this.generatePdfEvent.emit();
+  }
+  
+  handleSearchInputChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target instanceof HTMLInputElement) {
+      const keyword = target.value;
+      this.searchKeywordChange.next(keyword);
+    }
+  }
+
+  onSearchInputChange(keyword: string) {
+    this.onSearchInputChangeEvent.emit(keyword);
+  }
+
+  ChangeLang(lang: any) {
+    const selectedLanguage = lang.target.value;
+
+    localStorage.setItem('lang', selectedLanguage);
+
+    this.translateService.use(selectedLanguage);
+  }
 }

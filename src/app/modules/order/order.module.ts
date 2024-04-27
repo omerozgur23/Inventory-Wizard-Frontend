@@ -6,7 +6,6 @@ import { OrderListComponent } from './order-list/order-list.component';
 import { SharedModule } from '../../shared/shared.module';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 
-
 @NgModule({
   declarations: [
     OrderListComponent,

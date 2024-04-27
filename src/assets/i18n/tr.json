@@ -1,0 +1,19 @@
+{
+    "shelves": "Raflar",
+    "categories": "Kategoriler",
+    "products": "Ürünler",
+    "productSale": "Ürün Satışı",
+    "orders": "Siparişler",
+    "customers": "Müşteriler",
+    "suppliers": "Tedarikçiler",
+    "employees": "Personeller",
+    "reports": "Raporlar",
+    "refresh": "Yenile",
+    "create": "Ekle",
+    "acceptProduct": "Ürün Girişi",
+    "pdf": "PDF İndir",
+    "search": "Ara",
+    "signOut": "Çıkış",
+    "settings": "Ayarlar",
+    "saleFormTitle": "Ürün Çıkışı"
+}

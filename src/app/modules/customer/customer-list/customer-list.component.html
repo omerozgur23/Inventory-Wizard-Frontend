@@ -1,5 +1,6 @@
 <!-- TABLE MODAL -->
 <app-table
+  [tableTitle]="tableTitle"
   [tableData]="tableData"
   [columns]="columns"
   (navigateCreateDialogEvent)="openCreateCustomerDialog()"
@@ -8,6 +9,8 @@
   (navigateSettingsEvent)="navigateSettings()"
   (refreshEvent)="ngOnInit()"
   (paginationEvent)="onPageChange($event)"
+  (onSearchInputChangeEvent)="onSearchInputChange($event)"
+  (generatePdfEvent)="generatePDF()"
 ></app-table>
 
 <!-- DELETE MODAL -->

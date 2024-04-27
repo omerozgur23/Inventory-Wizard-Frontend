@@ -91,10 +91,10 @@ body {
     min-width: 80px;
     z-index: 1000;
     transition: all .25s ease-in-out;
-    background-color: #3923BE;
+    background-color: #0138B1;
     display: flex;
     flex-direction: column;
-    border-top-right-radius: 20px; /* Sağ üst köşe border-radius */
+    border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
 }
 
@@ -170,18 +170,18 @@ a.sidebar-link {
 }
 
 a.sidebar-link:hover {
-    background-color: #cdcdcd;
-    color: rgba(0,0,0,0.85); 
-    font-weight: bold; 
-    border-radius: 10px;
-    border-left: 3px solid #000;
+    background-color: #1d4db4;
+    color: rgba(0,0,0,0.85);
+    font-weight: bold;
+    border-radius: 7px;
+    border-left: 3px solid #fff;
 }
 
 a.sidebar-link.active {
-  background-color: #cdcdcd;
+  background-color: #1d4db4;
   color: rgba(0, 0, 0, 0.85);
   font-weight: bold;
-  border-radius: 10px;
+  border-radius: 7px;
 }
 
 .sidebar-item {
