@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { OrderService } from '../service/order.service';
 import { ToastrService } from 'ngx-toastr';
-import { GetOrderResponse } from '../dto/getOrderResponse';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PdfService } from '../../../core/service/pdf.service';
 
 @Component({
   selector: 'app-order-list',
@@ -20,6 +20,7 @@ export class OrderListComponent implements OnInit{
     { label: 'Sipariş Tutarı', field: 'orderPrice' },
   ];
 
+  tableTitle = "Siparişler";
   currentPage: number = 1;
   // totalPages: number = 10;
 
@@ -27,7 +28,8 @@ export class OrderListComponent implements OnInit{
     private orderService: OrderService,
     private toastr: ToastrService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private pdfService: PdfService,
   ) {}
 
   ngOnInit(): void {
@@ -35,12 +37,17 @@ export class OrderListComponent implements OnInit{
   }
 
   loadOrder() {
-    this.orderService.getAllOrdersByPage(this.currentPage, 18).subscribe(response => {
-      this.tableData = this.processData(response);
+    this.orderService.getOrdersByPage(this.currentPage, 18).subscribe({
+      next: (result) => {
+        this.tableData = this.uuidSplit(result);
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
   }
 
-  processData(data: any[]): any[] {
+  uuidSplit(data: any[]): any[] {
     return data.map(item => {
       const shortId = '#' + item.id.split('-')[0];
       return { ...item, shortId };
@@ -52,7 +59,7 @@ export class OrderListComponent implements OnInit{
     this.loadOrder();
   }
 
-  getOrders() {
+  getAllOrders() {
     this.orderService.getAllOrders().subscribe({
       next: (result) => {
         this.tableData = result
@@ -72,13 +79,31 @@ export class OrderListComponent implements OnInit{
   }
 
   navigateOrderDetails(orderId: string) {
-    // if (orderId && orderId.trim() !== '') { orderId'nin boş olmadığın ve boşluk karekterleri içermediği kontrolü
-    //   console.log('Navigating to Order Details for Order ID:', orderId);
-    //   this.router.navigate(['/menu/order-details'], { queryParams: { id: orderId } });
-    // } else {
-    //   console.error('Invalid Order ID:', orderId);
-    // }
     this.router.navigate(['/home/order-details'], { queryParams: { id: orderId } });
+  }
+
+  generatePDF() {
+    const fileName = 'orders.pdf';
+    const tableTitle = 'Sipariş Listesi';
+    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+  }
+  
+  onSearchInputChange(searchKeyword: string) {
+    if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      setTimeout(() => 
+        this.orderService.search(searchKeyword).subscribe({
+          next: (result) => {
+            this.tableData = this.uuidSplit(result);
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        }),
+        300
+      );
+    } else {
+      this.loadOrder();
+    }
   }
   
   navigateSettings(){

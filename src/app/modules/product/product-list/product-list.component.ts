@@ -1,21 +1,17 @@
 import { GetCategoryResponse } from './../../category/dto/getCategoryResponse';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, VERSION } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { UpdateProductRequest } from '../dto/updateProductRequest';
-import { FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateProductRequest } from '../dto/createProductRequest';
-import  pdfMake from 'pdfmake/build/pdfmake';
-import  pdfFonts from 'pdfmake/build/vfs_fonts';
-import { forkJoin } from 'rxjs';
 import { CategoryService } from '../../category/service/category.service';
-import { CategoryListComponent } from '../../category/category-list/category-list.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PdfService } from '../../../core/service/pdf.service';
 
 @Component({
   selector: 'app-product-list',
@@ -23,7 +19,6 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './product-list.component.scss'
 })
 export class ProductListComponent implements OnInit{
-  // productList: Product[] = [];
   tableData: any[] = [];
   columns: TableColumn[] = [
     { label: 'Ürün Kodu', field: 'shortId' },
@@ -36,6 +31,7 @@ export class ProductListComponent implements OnInit{
     { label: 'Stok Adedi', field: 'quantity' },
   ];
 
+  tableTitle = "Ürünler"
   categoryList: GetCategoryResponse[] = [];
   deleteDialogDescription = 'Ürün kaydını silmek istediğinizden emin misiniz?';
   id = '';
@@ -50,9 +46,8 @@ export class ProductListComponent implements OnInit{
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-  ){
-    (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
-  }
+    private pdfService: PdfService,
+  ){}
 
   setSelectedProduct(productId: string) {
     this.id = productId;
@@ -60,16 +55,21 @@ export class ProductListComponent implements OnInit{
 
   ngOnInit(): void{
     this.loadProducts();
-    this.getAllCategory();
+    // this.getAllCategory();
   }
  
   loadProducts() {
-    this.productService.getProductsByPage(this.currentPage, 18).subscribe(response => {
-      this.tableData = this.processData(response);
+    this.productService.getProductsByPage(this.currentPage, 18).subscribe({
+      next: (result) => {
+        this.tableData = this.uuidSplit(result);
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
   }
 
-  processData(data: any[]): any[] {
+  uuidSplit(data: any[]): any[] {
     return data.map(item => {
       const shortId = '#' + item.id.split('-')[0];
       return { ...item, shortId };
@@ -104,7 +104,6 @@ export class ProductListComponent implements OnInit{
   }
 
   showDropdown = true;
-
   openCreateProductDialog() {
     let dialog = this.dialog.open(CreateModalComponent, {
       width: '500px',
@@ -130,8 +129,6 @@ export class ProductListComponent implements OnInit{
   dropdownFormControl.valueChanges.subscribe((categoryId) => {
     console.log("Seçilen kategori ID: " + categoryId);
 
-    // Kategori seçimi değiştiğinde burada ek işlemler yapabilirsiniz
-    // Örneğin, seçilen kategoriye göre ek bazı bilgileri doldurabilirsiniz
   });
 
   // Yeni oluşturduğumuz dropdown FormControl'ü dialog'a ekleyelim
@@ -180,6 +177,14 @@ export class ProductListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
     });
+
+    dialog.componentInstance.title='Ürün Güncelle';
+    dialog.componentInstance.inputLabels=['Ürün Adı', 'Kritik Stok', 'Alış Fiyatı', 'Satış Fiyatı'];
+    dialog.componentInstance.values.push(new FormControl(item.productName));
+    dialog.componentInstance.values.push(new FormControl(item.criticalCount));
+    dialog.componentInstance.values.push(new FormControl(item.purchasePrice));
+    dialog.componentInstance.values.push(new FormControl(item.unitPrice));
+
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
@@ -191,18 +196,12 @@ export class ProductListComponent implements OnInit{
         }
       }
     });
-    dialog.componentInstance.title='Ürün Güncelle';
-    dialog.componentInstance.inputLabels=['Ürün Adı', 'Kritik Stok', 'Alış Fiyatı', 'Satış Fiyatı'];
-    dialog.componentInstance.values.push(new FormControl(item.productName));
-    dialog.componentInstance.values.push(new FormControl(item.criticalCount));
-    dialog.componentInstance.values.push(new FormControl(item.purchasePrice));
-    dialog.componentInstance.values.push(new FormControl(item.unitPrice));
   }
 
   updateProduct(id: string, /*categoryId: string, supplierId: string,*/ productName: string, criticalCount: number, purchasePrice: number, unitPrice: number ){
     const product = new UpdateProductRequest(id,/* categoryId, supplierId,*/ productName, criticalCount, purchasePrice, unitPrice);
     this.productService.updateProduct(product).subscribe({
-      next: (resp) => {
+      next: (result) => {
         this.toastr.success('Ürün Güncellenmiştir');
         this.loadProducts();
       },
@@ -216,11 +215,12 @@ export class ProductListComponent implements OnInit{
   deleteProduct(id: any){
     this.productService.deleteProduct(id).subscribe(
       {
-        next: (id) =>{
+        next: (result) =>{
           this.toastr.success("Ürün silinmiştir")
           this.ngOnInit();
         },
-        error: (id) => {
+        error: (err) => {
+          console.log(err);
           this.toastr.error("Hata oluştu")
         }
       }
@@ -231,45 +231,27 @@ export class ProductListComponent implements OnInit{
     this.router.navigate(['/home/settings']);
   }
 
-  generatePDF(){
-    const tableBody = [];
-    // Tablo başlıkları
-    const tableHeaders = this.columns.map(column => {
-      return { text: column.label, style: 'tableHeader' }; // Başlık metni ve renk
-    });
-    tableBody.push(tableHeaders);
-
-    // Tablo satırları
-    this.tableData.forEach(item => {
-      const rowData = this.columns.map(column => item[column.field]);
-      tableBody.push(rowData);
-    });
-    let docDefinition = {
-      content: [
-        { text: 'Ürün Listesi', style: 'header' },
-        { table: { body: tableBody } }
-      ],
-      styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10],
-        },
-        tableHeader: {
-          fillColor: '#333333', // Arka plan rengi
-          color: '#FFF', // Metin rengi (siyah)
-          bold: true,
-        }
-      }
-    };
-
-    pdfMake.createPdf(docDefinition as any).download('product.pdf');
+  generatePDF() {
+    const fileName = 'products.pdf';
+    const tableTitle = 'Ürün Listesi';
+    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
-
-  name: string = '';
-  search() {
-    this.productService.search(this.name).subscribe(products => {
-      this.tableData = products;  
-    });
+  
+  onSearchInputChange(searchKeyword: string) {
+    if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      setTimeout(() => 
+        this.productService.search(searchKeyword).subscribe({
+          next: (result) => {
+            this.tableData = this.uuidSplit(result);
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        }),
+        300
+      );
+    } else {
+      this.loadProducts();
+    }
   }
 }

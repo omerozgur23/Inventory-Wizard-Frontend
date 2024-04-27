@@ -28,7 +28,6 @@ const routes: Routes = [
       { path: 'product-sale', component: ProductSaleComponent, canActivate: [roleControlGuard(ROLE_ADMIN)] },
       { path: 'order-details', component: OrderDetailsComponent },
       { path: 'access-denied', loadChildren: () => import('./modules/access-denied/access-denied.module').then(m => m.AccessDeniedModule)},
-      // { path: 'order-details', loadChildren: () => import('./modules/order/order-details.module').then(m => m.OrderDetailsModule)},
       { path: 'settings', component: AccountComponent },
     ]
   },

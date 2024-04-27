@@ -1,18 +1,20 @@
 import { UpdateModalComponent } from './../../../shared/components/update-modal/update-modal.component';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ShelfService } from '../service/shelf.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateShelfRequest } from '../dto/createShelfRequest';
 import { UpdateShelfRequest } from '../dto/updateShelfRequest';
 import { GetProductResponse } from '../../product/dto/getProductResponse';
 import { ProductService } from '../../product/service/product.service';
-import { forkJoin, count } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { AcceptProductModalComponent } from '../../../shared/components/accept-product-modal/accept-product-modal.component';
+import { PdfService } from '../../../core/service/pdf.service';
+import { GenericService } from '../../../core/service/generic.service';
 
 @Component({
   selector: 'app-shelf-list',
@@ -28,20 +30,16 @@ export class ShelfListComponent implements OnInit{
     { label: 'Kapasite', field: 'capacity' },
   ];
 
+  tableTitle = "Raflar"
   productList: GetProductResponse[] = [];
-  acceptProductForm = this.fb.group({
-    productId: '',
-    count: 0,
-  });
-  // shelfForm = this.fb.group({
-  //   count: [null, Validators.required],
-  //   capacity: [null, Validators.required]
-  // });
-
   deleteDialogDescription = 'Raf kaydını silmek istediğinizden emin misiniz?';
   id = '';
   currentPage: number = 1;
   // totalPages: number = 10;
+  acceptProductForm = this.fb.group({
+    productId: '',
+    count: 0,
+  });
 
   constructor(
     private toastr: ToastrService,
@@ -51,6 +49,9 @@ export class ShelfListComponent implements OnInit{
     private dialog: MatDialog,
     private fb: FormBuilder,
     private productService: ProductService,
+    private pdfService: PdfService,
+    private genericService: GenericService,
+    // private cdr: ChangeDetectorRef,
   ){}
 
   setSelectedShelf(shelfId: string) {
@@ -63,48 +64,40 @@ export class ShelfListComponent implements OnInit{
     forkJoin({
       products: this.productService.getAllProducts(),
     }).subscribe({
-      next: (resp => {
-        this.productList = resp.products;
-      }),
-      error: (err => {
+      next: (result) => {
+        this.productList = result.products;
+      },
+      error: (err) => {
         console.log(err);
-      })
+      }
     })
   }
 
-  // acceptProduct() {
-  //   this.shelfService.acceptProduct(this.acceptProductForm.value ).subscribe({
-  //     next: (resp) => {
-  //       this.toastr.success('Ürün Girişi Yapıldı');
-  //       this.loadShelve();
-  //     },
-  //     error: (err) => {
-  //       console.log(err);
-  //       this.toastr.error("Hata oluştu");
-  //     }
+  loadShelves() {
+    this.shelfService.getShelvesByPage(this.currentPage, 15).subscribe({
+      next: (result) => {
+        this.tableData = this.genericService.uuidSplit(result);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  // uuidSplit(data: any[]): any[] {
+  //   return data.map(item => {
+  //     const shortId = '#' + item.id.split('-')[0];
+  //     return { ...item, shortId };
   //   });
   // }
-
-  loadShelves() {
-    this.shelfService.getShelvesByPage(this.currentPage, 15).subscribe(response => {
-      this.tableData = this.processData(response);
-    });
-  }
-
-  processData(data: any[]): any[] {
-    return data.map(item => {
-      const shortId = '#' + item.id.split('-')[0];
-      return { ...item, shortId };
-    });
-  }
 
   onPageChange(pageNo: number) {
     this.currentPage = pageNo;
     this.loadShelves();
   }
 
-  getAllShelfs(){
-    this.shelfService.getAllShelf().subscribe({
+  getAllShelves(){
+    this.shelfService.getAllShelves().subscribe({
       next: (result) => {
         this.tableData = result;
       },
@@ -124,6 +117,12 @@ export class ShelfListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
     });
+
+    dialog.componentInstance.title = 'Yeni Raf Oluştur';
+    dialog.componentInstance.inputLabels = ['Kapasite', 'Adet'];
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
@@ -133,10 +132,6 @@ export class ShelfListComponent implements OnInit{
         }
       }
     });
-    dialog.componentInstance.title = 'Yeni Raf Oluştur';
-    dialog.componentInstance.inputLabels = ['Kapasite', 'Adet'];
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
   }
 
   createShelf(capacity: number, count: number){
@@ -152,6 +147,7 @@ export class ShelfListComponent implements OnInit{
         }if (count > 2) {
           this.toastr.info('Tek seferde maksimum 10 raf oluşturulabilir!')
         }
+        console.log(err);
         // else{
         //   this.toastr.error('Hata oluştu!');
         // }
@@ -165,27 +161,28 @@ export class ShelfListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
     });
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-          // this.updateShelf(item.id,parseInt(dialog.componentInstance.updateForm.value.capacity!));
 
-        // const capacityValue = parseInt(dialog.componentInstance.updateForm.value.values[0],10);
-        const capacityValue = dialog.componentInstance.updateForm.value.values[0];
-        this.updateShelf(item.id, capacityValue);
-        }
-      }
-    });
-    // dialog.componentInstance.updateForm.patchValue({capacity:item.capacity});
     dialog.componentInstance.title='Raf Güncelle';
     dialog.componentInstance.inputLabels=['Kapasite'];
     dialog.componentInstance.values.push(new FormControl(item.capacity));
+
+    dialog.afterClosed().subscribe({
+      next: (data) => {
+        if (data?.result === 'yes') {
+        const capacityValue = dialog.componentInstance.updateForm.value.values[0];
+        this.updateShelf(item.id, capacityValue);
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
   }
 
   updateShelf(id: string, capacity: number){
     const shelf = new UpdateShelfRequest(id, capacity)
     this.shelfService.updateShelf(shelf).subscribe({
-      next: (resp) => {
+      next: (result) => {
         this.toastr.success('Raf Bilgileri Güncellendi');
         this.loadShelves();
       },
@@ -193,6 +190,7 @@ export class ShelfListComponent implements OnInit{
         if (capacity > 5) {
           this.toastr.error('Raf kapasitesi maksimum 5 olabilir!')
         }
+        console.log(err);
       }
     })
   }
@@ -210,19 +208,6 @@ export class ShelfListComponent implements OnInit{
       }
     );
   }
- 
-  // submit(){
-  //   this.shelfService.createShelf(this.shelfForm.value).subscribe({
-  //     next: (resp) => {
-  //       this.toastr.success('Shelf Oluşturulmuştur');
-  //       this.ngOnInit();
-  //     },
-  //     error: (err) => {
-  //       console.log(err);
-  //       this.toastr.error("Hata oluştu");
-  //     }
-  //   })
-  // }
 
   openAcceptProductDialog(item: any) {
     const dialogRef = this.dialog.open(AcceptProductModalComponent, {
@@ -235,11 +220,15 @@ export class ShelfListComponent implements OnInit{
       }
     });
   
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.result === 'yes') {
-        const formValue = result.formValue;
-        // const countValue = formValue.count;
-        this.acceptProduct(formValue);
+    dialogRef.afterClosed().subscribe({
+      next: (data) => {
+        if (data?.result === 'yes') {
+          const formValue = data.formValue;
+          this.acceptProduct(formValue);
+        }
+      },
+      error: (err) => {
+        console.log(err);
       }
     });
   }
@@ -247,7 +236,7 @@ export class ShelfListComponent implements OnInit{
 
   acceptProduct(formValue: any) {
     this.shelfService.acceptProduct(formValue).subscribe({
-      next: (resp) => {
+      next: (result) => {
         this.toastr.success('Ürün Girişi Yapıldı');
         this.loadShelves();
       },
@@ -257,6 +246,34 @@ export class ShelfListComponent implements OnInit{
       }
     });
   }
+
+  generatePDF() {
+    const fileName = 'shelves.pdf';
+    const tableTitle = 'Raf Listesi';
+    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+  }
+  
+  onSearchInputChange(searchKeyword: string) {
+    if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      setTimeout(() => 
+        this.shelfService.search(searchKeyword).subscribe({
+          next: (result) => {
+            this.tableData = this.genericService.uuidSplit(result);
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        }),
+        300
+      );
+    } else {
+      this.loadShelves();
+    }
+  }
+  // onSearchInputChange(searchKeyword: string) {
+  //   this.genericService.onSearchInputChange(searchKeyword, this.loadShelves.bind(this));
+  //   this.tableData = this.genericService.getSearchResponse();
+  // }
 
   navigateSettings(){
     this.router.navigate(['/home/settings']);

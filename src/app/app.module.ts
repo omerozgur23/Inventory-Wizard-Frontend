@@ -7,7 +7,7 @@ import { LoginComponent } from './core/component/login/login.component';
 import { ErrorComponent } from './core/component/error/error.component';
 import { MenuComponent } from './core/component/menu/menu.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { urlInterceptor } from './core/interceptor/url.interceptor';
 import { APP_CONFIG } from './app.config';
 import { environment } from './environments/environment';
@@ -15,8 +15,13 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AccountComponent } from './core/component/account/account.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TableComponent } from './shared/components/table/table.component';
 
-
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -36,6 +41,15 @@ import { AccountComponent } from './core/component/account/account.component';
     BrowserAnimationsModule,
     NgxPaginationModule,
     MatDialogModule,
+    TranslateModule.forRoot(
+      {
+        loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+        }
+      }
+    )
   ],
   providers: [
     provideHttpClient(withInterceptors([urlInterceptor])),
@@ -45,7 +59,8 @@ import { AccountComponent } from './core/component/account/account.component';
     },
     // provideAnimationsAsync(),
     { provide: LOCALE_ID, useValue: 'tr'},
+    HttpClient
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

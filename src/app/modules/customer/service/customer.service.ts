@@ -1,6 +1,6 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UpdateCustomerRequest } from '../dto/updateCustomerRequest';
 import { CreateCustomerRequest } from '../dto/createCustomerRequest';
 import { GetCustomerResponse } from '../dto/getCustomerResponse';
@@ -17,65 +17,28 @@ export class CustomerService {
     private httpClient: HttpClient,
   ) { }
 
-  getCustomers(): Observable<GetCustomerResponse[]>{
+  getAllCustomer(): Observable<GetCustomerResponse[]>{
     return this.httpClient.get<GetCustomerResponse[]>('/customer/getall');
   }
 
-  getAllCustomersByPage(pageNo: number, pageSize: number): Observable<GetCustomerResponse[]> {
+  getCustomersByPage(pageNo: number, pageSize: number): Observable<GetCustomerResponse[]> {
     return this.httpClient.get<GetCustomerResponse[]>(`/customer/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
   
   createCustomer(customer: CreateCustomerRequest): Observable<CreateCustomerRequest> {
-    return this.httpClient.post<any>('/customer/create', customer, this.httpOptions)
-    .pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = 'Bir hata oluştu';
-        if (error.error instanceof ErrorEvent) {
-          // İstemci tarafında hata
-          errorMessage = `Hata: ${error.error.message}`;
-        } else {
-          // Sunucu tarafında hata
-          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
-        }
-        console.error(errorMessage);
-        return throwError(errorMessage); // Hata durumunu tekrar fırlat
-      })
-    );
+    return this.httpClient.post<any>('/customer/create', customer, this.httpOptions);
   }
 
   updateCustomer(customer: UpdateCustomerRequest):Observable<UpdateCustomerRequest>{
-    return this.httpClient.put<any>('/customer/update', customer, this.httpOptions)
-    .pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = 'Bir hata oluştu';
-        if (error.error instanceof ErrorEvent) {
-          // İstemci tarafında hata
-          errorMessage = `Hata: ${error.error.message}`;
-        } else {
-          // Sunucu tarafında hata
-          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
-        }
-        console.error(errorMessage);
-        return throwError(errorMessage); // Hata durumunu tekrar fırlat
-      })
-    );
+    return this.httpClient.put<any>('/customer/update', customer, this.httpOptions);
   }
   
-  deleteData(id: string):Observable<any> {
-    return this.httpClient.post('/customer/delete', JSON.stringify(id), this.httpOptions)
-    .pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = 'Bir hata oluştu';
-        if (error.error instanceof ErrorEvent) {
-          // İstemci tarafında hata
-          errorMessage = `Hata: ${error.error.message}`;
-        } else {
-          // Sunucu tarafında hata
-          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
-        }
-        console.error(errorMessage);
-        return throwError(errorMessage); // Hata durumunu tekrar fırlat
-      })
-    );
+  deleteCustomer(id: string):Observable<any> {
+    return this.httpClient.post('/customer/delete', JSON.stringify(id), this.httpOptions);
+  }
+
+  search(keyword: string): Observable<GetCustomerResponse[]> {
+    const params = new HttpParams().set('keyword', keyword);
+    return this.httpClient.get<GetCustomerResponse[]>(`/customer/search`, { params: params });
   }
 }
