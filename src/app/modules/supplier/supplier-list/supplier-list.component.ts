@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { GetSupplierResponse } from '../dto/getSupplierResponse';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupplierService } from '../service/supplier.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { UpdateSupplierRequest } from '../dto/updateSupplierRequest';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateSupplierRequest } from '../dto/createSupplierRequest';
+import { PdfService } from '../../../core/service/pdf.service';
 
 @Component({
   selector: 'app-supplier-list',
@@ -27,6 +27,7 @@ export class SupplierListComponent implements OnInit{
     { label: 'Adres', field: 'address' },
   ];
 
+  tableTitle = "Tedarikçiler";
   deleteDialogDescription = 'Tedarikçi kaydını silmek istediğinizden emin misiniz?';
   id = '';
   currentPage: number = 1;
@@ -38,6 +39,7 @@ export class SupplierListComponent implements OnInit{
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
+    private pdfService: PdfService,
   ){}
 
   setSelectedSupplier(supplierId: string) {
@@ -54,15 +56,25 @@ export class SupplierListComponent implements OnInit{
   }
 
   loadSupplier() {
-    this.supplierService.getAllSuppliersByPage(this.currentPage, 18).subscribe(response => {
-      this.tableData = response;
-      console.log(this.tableData);
+    this.supplierService.getSuppliersByPage(this.currentPage, 18).subscribe({
+      next: (result) => {
+        this.tableData = result;
+        console.log(this.tableData);
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
   }
 
-  getAllSupplier() {
-    this.supplierService.getAllSupplier().subscribe((customers: any[]) => {
-      this.tableData = customers;
+  getAllSuppliers() {
+    this.supplierService.getAllSuppliers().subscribe({
+      next: (result) => {
+        this.tableData = result;
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
   }
 
@@ -72,6 +84,16 @@ export class SupplierListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms,'
     });
+
+    dialog.componentInstance.title = 'Yeni Tedarikçi Oluştur';
+    dialog.componentInstance.inputLabels = ['Firma Ünvanı', 'Firma Yetkilisi', 'Yetkili E-Mail', 'Yetkili Telefon', 'Vergi No', 'Adres'];
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+
     dialog.afterClosed().subscribe({
       next: (data) => {
         if(data?.result === 'yes') {
@@ -85,24 +107,17 @@ export class SupplierListComponent implements OnInit{
         }
       }
     });
-    dialog.componentInstance.title = 'Yeni Tedarikçi Oluştur';
-    dialog.componentInstance.inputLabels = ['Firma Ünvanı', 'Firma Yetkilisi', 'Yetkili E-Mail', 'Yetkili Telefon', 'Vergi No', 'Adres'];
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
   }
 
   createSupplier(companyName: string, contactName: string, contactEmail: string, contactPhone: string, taxNumber: string, address: string){
     const supplier = new CreateSupplierRequest(companyName, contactName, contactEmail, contactPhone, taxNumber, address);
     this.supplierService.createSupplier(supplier).subscribe({
-      next: (resp) => {
+      next: (result) => {
         this.toastr.success('Tedarikçi Kaydı Yapıldı');
         this.loadSupplier();
       },
       error: (err) => { 
+        console.log(err);
         this.toastr.error('hata oluştu');
       },
     });
@@ -114,6 +129,15 @@ export class SupplierListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
     });
+
+    dialog.componentInstance.title='Tedarikçi Güncelle';
+    dialog.componentInstance.inputLabels = ['Firma Ünvanı', 'Firma Yetkilisi', 'Yetkili E-Mail', 'Yetkili Telefon', 'Adres'];
+    dialog.componentInstance.values.push(new FormControl(item.companyName));
+    dialog.componentInstance.values.push(new FormControl(item.contactName));
+    dialog.componentInstance.values.push(new FormControl(item.contactEmail));
+    dialog.componentInstance.values.push(new FormControl(item.contactPhone));
+    dialog.componentInstance.values.push(new FormControl(item.address));
+
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
@@ -126,24 +150,17 @@ export class SupplierListComponent implements OnInit{
         }
       }
     });
-    dialog.componentInstance.title='Tedarikçi Güncelle';
-    dialog.componentInstance.inputLabels = ['Firma Ünvanı', 'Firma Yetkilisi', 'Yetkili E-Mail', 'Yetkili Telefon', 'Adres'];
-    dialog.componentInstance.values.push(new FormControl(item.companyName));
-    dialog.componentInstance.values.push(new FormControl(item.contactName));
-    dialog.componentInstance.values.push(new FormControl(item.contactEmail));
-    dialog.componentInstance.values.push(new FormControl(item.contactPhone));
-    dialog.componentInstance.values.push(new FormControl(item.address));
   }
 
   updateSupplier(id: string, companyName: string, contactName: string, contactEmail: string, contactPhone: string, address: string){
     const supplier = new UpdateSupplierRequest(id, companyName, contactName, contactEmail, contactPhone, address);
-    this.supplierService.update(supplier).subscribe({
-      next: (resp) => {
+    this.supplierService.updateSupplier(supplier).subscribe({
+      next: (result) => {
         this.toastr.success('Tedarikçi Güncellenmiştir');
         this.loadSupplier();
       },
       error: (err) => {
-        // console.log(err);
+        console.log(err);
         this.toastr.error("Hata oluştu");
       }
     })
@@ -151,15 +168,39 @@ export class SupplierListComponent implements OnInit{
 
   deleteSupplier(id: any) {
     this.supplierService.deleteSupplier(id).subscribe({
-      next: (resp) => {
+      next: (result) => {
         this.toastr.success("Tedarikçi silinmiştir.")
         this.ngOnInit();
       },
       error: (err) => {
-        // console.log(err);
+        console.log(err);
         this.toastr.error("Hata oluştu!")
       }
     })
+  }
+
+  generatePDF() {
+    const fileName = 'suppliers.pdf';
+    const tableTitle = 'Tedarikçi Listesi';
+    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+  }
+  
+  onSearchInputChange(searchKeyword: string) {
+    if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      setTimeout(() => 
+        this.supplierService.search(searchKeyword).subscribe({
+          next: (result) => {
+            this.tableData = result;
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        }),
+        300
+      );
+    } else {
+      this.loadSupplier();
+    }
   }
 
   navigateSettings(){

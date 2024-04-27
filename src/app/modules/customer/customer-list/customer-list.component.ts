@@ -9,6 +9,7 @@ import { UpdateModalComponent } from '../../../shared/components/update-modal/up
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateCustomerRequest } from '../dto/createCustomerRequest';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PdfService } from '../../../core/service/pdf.service';
 
 @Component({
   selector: 'app-customer-list',
@@ -26,6 +27,7 @@ export class CustomerListComponent implements OnInit{
     { label: 'Adres', field: 'address' },
   ];
 
+  tableTitle = "Müşteriler";
   deleteDialogDescription = 'Müşteri kaydını silmek istediğinizden emin misiniz?';
   id: string = '';
   currentPage: number = 1;
@@ -37,6 +39,7 @@ export class CustomerListComponent implements OnInit{
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
+    private pdfService: PdfService,
   ) {}
 
   setSelectedCustomer(customerId: string) {
@@ -48,8 +51,13 @@ export class CustomerListComponent implements OnInit{
   }
 
   loadCustomer() {
-    this.customerService.getAllCustomersByPage(this.currentPage, 18).subscribe(response => {
-      this.tableData = response;
+    this.customerService.getCustomersByPage(this.currentPage, 18).subscribe({
+      next: (result) => {
+        this.tableData = result;
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
   }
 
@@ -58,9 +66,14 @@ export class CustomerListComponent implements OnInit{
     this.loadCustomer();
   }
 
-  getCustomers() {
-    this.customerService.getCustomers().subscribe((customers: any[]) => {
-      this.tableData = customers;
+  getAllCustomer() {
+    this.customerService.getAllCustomer().subscribe({
+      next: (result) => {
+        this.tableData = result;
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
   }
   
@@ -70,6 +83,16 @@ export class CustomerListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
     });
+
+    dialog.componentInstance.title = 'Yeni Müşteri Oluştur';
+    dialog.componentInstance.inputLabels = ['Firma Ünvanı', 'Firma Yetkilisi', 'E-Mail', 'Yetkili Telefon', 'Vergi No', 'Adres'];
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
@@ -81,27 +104,22 @@ export class CustomerListComponent implements OnInit{
           const addressValue = dialog.componentInstance.createForm.value.values[5];
           this.createCustomer(companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, taxNumber, addressValue);
         }
+      },
+      error: (err) => {
+        console.log(err);
       }
     });
-    dialog.componentInstance.title = 'Yeni Müşteri Oluştur';
-    dialog.componentInstance.inputLabels = ['Firma Ünvanı', 'Firma Yetkilisi', 'E-Mail', 'Yetkili Telefon', 'Vergi No', 'Adres'];
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
   }
 
   createCustomer(companyName: string, contactName: string, contactEmail: string, contactPhone: string, taxNumber: string, address: string) {
     const customer = new CreateCustomerRequest(companyName, contactName, contactEmail, contactPhone, taxNumber, address);
     this.customerService.createCustomer(customer).subscribe({
-      next: (resp) => {
+      next: (result) => {
         this.toastr.success('Müşteri Oluşturuldu');
         this.loadCustomer();
       },
       error: (err) => {
-        // console.log(err);
+        console.log(err);
         this.toastr.error("Hata oluştu");
       }
     });
@@ -113,6 +131,15 @@ export class CustomerListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
     });
+
+    dialog.componentInstance.title='Müşteri Güncelle';
+    dialog.componentInstance.inputLabels=['Firma Ünvanı','Firma Yetkilisi','E-Mail','Yetkili Telefon', 'Adres'];
+    dialog.componentInstance.values.push(new FormControl(item.companyName));
+    dialog.componentInstance.values.push(new FormControl(item.contactName));
+    dialog.componentInstance.values.push(new FormControl(item.contactEmail));
+    dialog.componentInstance.values.push(new FormControl(item.contactPhone));
+    dialog.componentInstance.values.push(new FormControl(item.address));
+
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
@@ -123,43 +150,64 @@ export class CustomerListComponent implements OnInit{
         const addressValue =  dialog.componentInstance.updateForm.value.values[4]; 
         this.updateCustomer(item.id, companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, addressValue);
         }
+      },
+      error: (err) => {
+        console.log(err);
       }
     });
-    dialog.componentInstance.title='Müşteri Güncelle';
-    dialog.componentInstance.inputLabels=['Firma Ünvanı','Firma Yetkilisi','E-Mail','Yetkili Telefon', 'Adres'];
-    dialog.componentInstance.values.push(new FormControl(item.companyName));
-    dialog.componentInstance.values.push(new FormControl(item.contactName));
-    dialog.componentInstance.values.push(new FormControl(item.contactEmail));
-    dialog.componentInstance.values.push(new FormControl(item.contactPhone));
-    dialog.componentInstance.values.push(new FormControl(item.address));
   }
 
   updateCustomer(id: string, companyName: string, contactName: string, contactEmail: string, contactPhone: string, address: string){
     const customer = new UpdateCustomerRequest(id, companyName, contactName, contactEmail, contactPhone, address);
     this.customerService.updateCustomer(customer).subscribe({
-      next: (resp) => {
+      next: (result) => {
         this.toastr.success('Müşteri Güncellenmiştir');
         this.loadCustomer();
       },
       error: (err) => {
-        // console.log(err);
+        console.log(err);
         this.toastr.error("Hata oluştu");
       }
     })
   }
 
   deleteCustomer(id: any){
-    this.customerService.deleteData(id).subscribe(
+    this.customerService.deleteCustomer(id).subscribe(
       {
-        next: (id) =>{
+        next: (result) =>{
           this.toastr.success("Müşteri silinmiştir")
           this.loadCustomer();
         },
-        error: (id) => {
+        error: (err) => {
+          console.log(err);
           this.toastr.error("Hata oluştu")
         }
       }
     );
+  }
+
+  generatePDF() {
+    const fileName = 'customers.pdf';
+    const tableTitle = 'Müşteri Listesi';
+    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+  }
+  
+  onSearchInputChange(searchKeyword: string) {
+    if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      setTimeout(() => 
+        this.customerService.search(searchKeyword).subscribe({
+          next: (result) => {
+            this.tableData = result;
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        }),
+        300
+      );
+    } else {
+      this.loadCustomer();
+    }
   }
 
   navigateSettings(){

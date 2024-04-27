@@ -1,7 +1,10 @@
 <!-- TABLE MODAL -->
 <app-table
+  [tableTitle]="tableTitle"
   [tableData]="tableData"
   [columns]="columns"
   (refreshEvent)="ngOnInit()"
   (paginationEvent)="onPageChange($event)"
+  (generatePdfEvent)="generatePDF()"
+  (navigateSettingsEvent)="navigateSettings()"
 ></app-table>

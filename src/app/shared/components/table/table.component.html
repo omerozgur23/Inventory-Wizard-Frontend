@@ -1,17 +1,17 @@
-<div>
-  <div class="pt-2 pb-2" style="background-color: #f8f9fc">
+<div style="background: #f8faff">
+  <div class="pt-2 pb-2 nb">
     <div class="ps-4 pe-4">
       <!-- Ekleme, Yenileme ve Arama Butonları -->
       <button class="btn primary img-button" (click)="refresh()">
         <img src="../../../../assets/img/refresh.svg" title="Yenile" />
-        <span class="nb-btn-span"> Yenile </span>
+        <span class="nb-btn-span"> {{ "refresh" | translate }} </span>
       </button>
       <button
         (click)="navigateCreateDialog()"
         class="btn btn primary img-button"
       >
         <img src="../../../../assets/img/createIcon.svg" title="Ekle" />
-        <span class="nb-btn-span"> Ekle </span>
+        <span class="nb-btn-span"> {{ "create" | translate }} </span>
       </button>
       <button
         *ngIf="showAcceptProductButton"
@@ -22,14 +22,58 @@
           src="../../../../assets/img/acceptProduct.png"
           title="acceptProduct"
         />
-        <span class="nb-btn-span"> Ürün Girişi </span>
+        <span class="nb-btn-span"> {{ "acceptProduct" | translate }} </span>
       </button>
+      <button class="btn btn primary img-button" (click)="generatePDF()">
+        <img
+          style="height: 30px; width: 33px"
+          src="./assets/img/pdf.svg"
+          alt=""
+        />
+        <span class="nb-btn-span"> {{ "pdf" | translate }} </span>
+      </button>
+
+      <!-- <div class="form">
+        <label for="search">
+          <input
+            class="input"
+            type="text"
+            required=""
+            placeholder="Ara"
+            id="search"
+            (input)="handleInputChange($event)"
+          />
+          <div class="fancy-bg"></div>
+          <div class="search">
+            <img src="../../../../assets/img/search.svg" alt="" />
+          </div>
+        </label>
+      </div> -->
+
       <span class="mt-1 me-3 nb-search-span">
         <img src="../../../../assets/img/search.svg" alt="" />
-        <input type="text" class="nb-search-input" placeholder="Ara" />
+
+        <input
+          type="text"
+          class="nb-search-input"
+          placeholder="{{ 'search' | translate }}"
+          (input)="handleSearchInputChange($event)"
+        />
       </span>
 
-      <div class="flex-shrink-0 dropdown" style="float: right">
+      <div
+        class="flex-shrink-0 dropdown d-flex justify-content-between"
+        style="float: right"
+      >
+        <select
+          class="form-select me-3"
+          (change)="ChangeLang($event)"
+          name=""
+          id=""
+        >
+          <option [selected]="lang === 'en'" value="en">English</option>
+          <option [selected]="lang === 'tr'" value="tr">Türkçe</option>
+        </select>
         <a
           style="cursor: pointer"
           class="d-block link-dark text-decoration-none dropdown-toggle"
@@ -38,7 +82,7 @@
           aria-expanded="false"
         >
           <img
-            src="../../../../assets/img/profile.webp"
+            src="../../../../assets/img/profile.svg"
             alt="mdo"
             width="32"
             height="32"
@@ -54,7 +98,7 @@
               style="cursor: pointer; text-align: center"
               class="dropdown-item"
               (click)="navigateSettings()"
-              >Ayarlar</a
+              >{{ "settings" | translate }}</a
             >
           </li>
           <li><hr class="dropdown-divider" /></li>
@@ -65,8 +109,8 @@
 
   <div class="pe-4 ps-4 py-4">
     <div class="table-responsive tbodyDiv">
-      <p>{{ currentUrl }}</p>
-      <table class="table table-sm table-hover">
+      <p style="font-weight: bold">{{ tableTitle }}</p>
+      <table style="background: #fff" class="table table-sm table-hover">
         <thead>
           <tr class="align-middle">
             <th scope="col" style="width: 10px"></th>
@@ -89,7 +133,7 @@
                 (click)="navigateUpdateDialog(item)"
                 class="btn btn primary img-button"
               >
-                <img src="../../../../assets/img/edit.svg" alt="" />
+                <img src="../../../../assets/img/editTest.svg" alt="" />
               </button>
             </td>
             @for (column of columns; track $index) {
@@ -103,7 +147,7 @@
             } @if (showOrderDetailButton) {
             <td scope="row">
               <button (click)="navigateOrderDetails(item.id)">
-                <img src="../../../../assets/img/refresh.svg" alt="" />
+                <img src="../../../../assets/img/orderDetails.svg" alt="" />
               </button>
             </td>
             }
@@ -115,7 +159,7 @@
                 data-bs-target="#deleteModal"
                 (click)="navigateDeleteDialog(item)"
               >
-                <img src="../../../../assets/img/delete.svg" />
+                <img src="../../../../assets/img/deleteTest.svg" />
               </button>
             </td>
           </tr>
@@ -133,8 +177,8 @@
           (click)="onPageChange(currentPage - 1)"
           tabindex="-1"
           aria-disabled="true"
-          >&laquo;</a
-        >
+          ><img src="../../../../assets/img/nextArrow.svg" alt=""
+        /></a>
       </li>
       <li
         *ngFor="let page of [1, 2, 3, 4, 5, 6, 7]"
@@ -142,7 +186,11 @@
       >
         <a (click)="onPageChange(page)">{{ page }}</a>
       </li>
-      <li><a (click)="onPageChange(currentPage + 1)">&raquo;</a></li>
+      <li>
+        <a (click)="onPageChange(currentPage + 1)">
+          <img src="../../../../assets/img/backArrow.svg" alt="" />
+        </a>
+      </li>
     </ul>
   </div>
 </div>

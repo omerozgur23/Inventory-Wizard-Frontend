@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { OrderService } from '../service/order.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PdfService } from '../../../core/service/pdf.service';
 
 @Component({
   selector: 'app-order-details',
@@ -11,26 +12,33 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class OrderDetailsComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
-    { label: 'Sipariş No', field: 'shortId' },
+    { label: 'Sipariş Kodu', field: 'shortId' },
     { label: 'Ürün Adı', field: 'productName' },
     { label: 'Adet', field: 'quantity' },
     { label: 'Birim Fiyatı', field: 'unitPrice' },
     { label: 'Toplam Fiyat', field: 'totalPrice' },
   ];
 
+  tableTitle = "Sipariş Detayları";
   currentPage: number = 1;
 
   constructor(
     private orderService: OrderService,
     private route: ActivatedRoute,
+    private pdfService: PdfService,
+    private router: Router,
   ){}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      const orderId = params['id'];
-      if (orderId) {
-        console.log('Received Order ID:', orderId);
-        this.getOrderDetails(orderId);
+    this.route.queryParams.subscribe({
+      next: (result) => {
+        const orderId = result['id'];
+        if (orderId) {
+          this.getOrderDetails(orderId);
+        }
+      },
+      error: (err) => {
+        console.log(err);
       }
     });
   }
@@ -38,15 +46,12 @@ export class OrderDetailsComponent implements OnInit{
   onPageChange(pageNo: number) {
     this.currentPage = pageNo;
     this.ngOnInit();
-    // this.getOrderDetails(this.tableData[0].orderId);
   }
 
   getOrderDetails(orderId: string) {
-    console.log('Get Order Details Request for Order ID:', orderId);
     this.orderService.getOrderDetails(orderId).subscribe({
       next: (result) => {
-        console.log('Order Details:', result); 
-        this.tableData = this.processData(result);
+        this.tableData = this.uuidSplit(result);
       },
       error: (err) => {
         console.error('Error fetching order details:', err);
@@ -54,12 +59,20 @@ export class OrderDetailsComponent implements OnInit{
     });
   }
 
-  processData(data: any[]): any[] {
+  uuidSplit(data: any[]): any[] {
     return data.map(item => {
       const shortId = '#' + item.orderId.split('-')[0];
       return { ...item, shortId };
     });
   }
-  
 
+  generatePDF(){
+    const fileName = 'orderDetails.pdf';
+    const tableTitle = 'Sipariş Detayı';
+    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+  }
+
+  navigateSettings(){
+    this.router.navigate(['/home/settings']);
+  }
 }

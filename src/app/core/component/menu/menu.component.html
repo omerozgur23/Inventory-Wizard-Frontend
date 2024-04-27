@@ -129,7 +129,7 @@
           [routerLinkActive]="'active'"
         >
           <img src="./assets/img/shelf.svg" alt="Shelf" />
-          <span>Raflar</span>
+          <span>{{ "shelves" | translate }}</span>
         </a>
       </li>
       <li class="sidebar-item">
@@ -144,7 +144,7 @@
             src="./assets/img/category.svg"
             alt="Category"
           />
-          <span>Kategoriler</span>
+          <span>{{ "categories" | translate }}</span>
         </a>
       </li>
 
@@ -156,7 +156,7 @@
           [routerLinkActive]="'active'"
         >
           <img src="./assets/img/product.svg" alt="Products" />
-          <span>Ürünler</span>
+          <span>{{ "products" | translate }}</span>
         </a>
       </li>
 
@@ -168,7 +168,7 @@
           [routerLinkActive]="'active'"
         >
           <img src="./assets/img/saleProduct.svg" alt="Sale Product" />
-          <span>Ürün Satışı</span>
+          <span>{{ "productSale" | translate }}</span>
         </a>
       </li>
 
@@ -180,7 +180,7 @@
           [routerLinkActive]="'active'"
         >
           <img src="./assets/img/order.svg" alt="Order" />
-          <span>Siparişler</span>
+          <span>{{ "orders" | translate }}</span>
         </a>
       </li>
 
@@ -192,7 +192,7 @@
           [routerLinkActive]="'active'"
         >
           <img src="./assets/img/customer.svg" alt="Customers" />
-          <span>Müşteriler</span>
+          <span>{{ "customers" | translate }}</span>
         </a>
       </li>
 
@@ -204,7 +204,7 @@
           [routerLinkActive]="'active'"
         >
           <img src="./assets/img/supplier.svg" alt="Supplier" />
-          <span>Tedarikçiler</span>
+          <span>{{ "suppliers" | translate }}</span>
         </a>
       </li>
 
@@ -216,7 +216,7 @@
           [routerLinkActive]="'active'"
         >
           <img src="./assets/img/employee.svg" alt="Employee" />
-          <span>Personeller</span>
+          <span>{{ "employees" | translate }}</span>
         </a>
       </li>
 
@@ -228,7 +228,7 @@
           [routerLinkActive]="'active'"
         >
           <img src="./assets/img/report.svg" alt="Report" />
-          <span>Raporlar</span>
+          <span>{{ "reports" | translate }}</span>
         </a>
       </li>
     </ul>
@@ -239,12 +239,12 @@
       </a>
       <a class="sidebar-link">
         <img src="./assets/img/logout.svg" alt="Logout" />
-        <span>Çıkış</span>
+        <span>{{ "signOut" | translate }}</span>
       </a>
     </div>
   </aside>
 
-  <div class="main">
+  <div style="background: #fbfaff" class="main">
     <router-outlet />
     <!-- <nav class="navbar navbar-expand px-4 py-3">
       <form action="#" class="d-none d-sm-inline-block"></form>

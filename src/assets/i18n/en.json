@@ -1,0 +1,19 @@
+{
+    "shelves": "Shelves",
+    "categories": "Categories",
+    "products": "Products",
+    "productSale": "Product Sale",
+    "orders": "Orders",
+    "customers": "Customers",
+    "suppliers": "Suppliers",
+    "employees": "Employees",
+    "reports": "Reports",
+    "refresh": "Refresh",
+    "create": "Create",
+    "acceptProduct": "Accept Product",
+    "pdf": "Download PDF",
+    "search": "Search",
+    "signOut": "Sign Out",
+    "settings": "Settings",
+    "saleFormTitle": "Product Sale"
+}
