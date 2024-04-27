@@ -9,6 +9,7 @@ import { UpdateModalComponent } from '../../../shared/components/update-modal/up
 import { CreateEmployeeRequest } from '../dto/createEmployeeRequest';
 import { UpdateEmployeeRequest } from '../dto/updateEmployeeRequest';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PdfService } from '../../../core/service/pdf.service';
 
 @Component({
   selector: 'app-employee-list',
@@ -24,6 +25,7 @@ export class EmployeeListComponent implements OnInit{
     { label: 'Roller', field: 'role'},
   ]
 
+  tableTitle = "Personeller";
   deleteDialogDescription = 'Personel kaydını silmek istediğinizden emin misiniz?';
   id: string = '';
   currentPage: number = 1;
@@ -35,6 +37,7 @@ export class EmployeeListComponent implements OnInit{
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute,
+    private pdfService: PdfService,
   ){}
 
   setSelectedEmployee(employeeId: string) {
@@ -46,8 +49,13 @@ export class EmployeeListComponent implements OnInit{
   }
   
   loadEmployee() {
-    this.employeeService.getAllEmployeesByPage(this.currentPage, 18).subscribe(response => {
-      this.tableData = response;
+    this.employeeService.getEmployeesByPage(this.currentPage, 18).subscribe({
+      next: (result) => {
+        this.tableData = result;
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
   }
 
@@ -56,9 +64,14 @@ export class EmployeeListComponent implements OnInit{
     this.loadEmployee();
   }
 
-  getEmployee() {
-    this.employeeService.getEmployee().subscribe((employees: any[]) => {
-      this.tableData = employees;
+  getAllEmployee() {
+    this.employeeService.getAllEmployee().subscribe({
+      next: (result) => {
+        this.tableData = result;
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
   }
 
@@ -68,6 +81,15 @@ export class EmployeeListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
     });
+
+    dialog.componentInstance.title = 'Yeni Personel Oluştur';
+    dialog.componentInstance.inputLabels = ['Ad', 'Soyad', 'E-Mail', 'Şifre', 'Rol'];
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
@@ -78,15 +100,11 @@ export class EmployeeListComponent implements OnInit{
           const roleValue =  dialog.componentInstance.createForm.value.values[4];
           this.createEmployee(firstNameValue, lastNameValue, emailValue, passwordValue, roleValue);
         }
+      },
+      error: (err) => {
+        console.log(err);
       }
     });
-    dialog.componentInstance.title = 'Yeni Personel Oluştur';
-    dialog.componentInstance.inputLabels = ['Ad', 'Soyad', 'E-Mail', 'Şifre', 'Rol'];
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
   }
 
   createEmployee(firstName: string, lastName: string, email: string, password: string, role: string){
@@ -97,6 +115,7 @@ export class EmployeeListComponent implements OnInit{
         this.loadEmployee();
       },
       error: (err) => {
+        console.log(err);
         this.toastr.error('Hata oluştu');
       }
     });
@@ -108,22 +127,24 @@ export class EmployeeListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
     });
+
+    dialog.componentInstance.title='Personel Güncelle';
+    dialog.componentInstance.inputLabels=['E-mail', 'Şifre'];
+    dialog.componentInstance.values.push(new FormControl(item.email));
+    dialog.componentInstance.values.push(new FormControl("******"));
+
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
         const emailValue =  dialog.componentInstance.updateForm.value.values[0];
         const passwordValue =  dialog.componentInstance.updateForm.value.values[1];
-        // const roleValue =  dialog.componentInstance.updateForm.value.values[4];
         this.updateEmployee(item.id, emailValue, passwordValue); 
         }
+      },
+      error: (err) => {
+        console.log(err);
       }
     });
-    dialog.componentInstance.title='Personel Güncelle';
-    dialog.componentInstance.inputLabels=['E-mail', 'Şifre'];
-    // dialog.componentInstance.inputLabels=['Rol'];
-    dialog.componentInstance.values.push(new FormControl(item.email));
-    dialog.componentInstance.values.push(new FormControl(item.password));
-    // dialog.componentInstance.values.push(new FormControl(item.role));
   }
 
   updateEmployee(id: string, email: string, password: string){
@@ -134,7 +155,7 @@ export class EmployeeListComponent implements OnInit{
         this.loadEmployee();
       },
       error: (err) => {
-        // console.log(err);
+        console.log(err);
         this.toastr.error("Hata oluştu");
       }
     })
@@ -143,15 +164,40 @@ export class EmployeeListComponent implements OnInit{
   deleteEmployee(id: any) {
     this.employeeService.deleteEmployee(id).subscribe(
       {
-        next: (id) => {
+        next: (result) => {
           this.toastr.success("Personel silinmiştir");
           this.ngOnInit();
         },
-        error: (id) => {
+        error: (err) => {
+          console.log(err);
           this.toastr.error("Hata oluştu");
         }
       }
     );
+  }
+
+  generatePDF() {
+    const fileName = 'employees.pdf';
+    const tableTitle = 'Personel Listesi';
+    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+  }
+
+  onSearchInputChange(searchKeyword: string) {
+    if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      setTimeout(() => 
+        this.employeeService.search(searchKeyword).subscribe({
+          next: (result) => {
+            this.tableData = result;
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        }),
+        300
+      );
+    } else {
+      this.loadEmployee();
+    }
   }
 
   navigateSettings(){

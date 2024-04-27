@@ -1,10 +1,10 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UpdateShelfRequest } from '../dto/updateShelfRequest';
 import { GetShelfResponse } from '../dto/getShelfResponse';
 import { CreateShelfRequest } from '../dto/createShelfRequest';
-import { ToastrService } from 'ngx-toastr';
+import { AcceptProductRequest } from '../dto/acceptProductRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +16,9 @@ export class ShelfService {
 
   constructor(
     private httpClient: HttpClient,
-    private toastr: ToastrService,
   ) { }
 
-  getAllShelf():Observable<GetShelfResponse[]> {
+  getAllShelves():Observable<GetShelfResponse[]> {
     return this.httpClient.get<GetShelfResponse[]>('/shelf/getall');
   }
 
@@ -28,63 +27,23 @@ export class ShelfService {
   }
 
   createShelf(shelf: CreateShelfRequest):Observable<CreateShelfRequest> {
-    return this.httpClient.post<GetShelfResponse>('/shelf/create', shelf, this.httpOptions)
-    .pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = 'Bir hata oluştu';
-        if (error.error instanceof ErrorEvent) {
-          // İstemci tarafında hata
-          if (shelf.count > 1) {
-            this.toastr.info('Tek seferde maksimum 1 raf oluşturulabilir!');
-          }
-          errorMessage = `Hata: ${error.error.message}`;
-        } else {
-          // Sunucu tarafında hata
-          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
-        }
-        console.error(errorMessage);
-        return throwError(errorMessage); // Hata durumunu tekrar fırlat
-      })
-    );
+    return this.httpClient.post<GetShelfResponse>('/shelf/create', shelf, this.httpOptions);
   }
 
-  updateShelf(/*id: string, capacity: number*/ shelf: UpdateShelfRequest): Observable<any> {
+  updateShelf(shelf: UpdateShelfRequest): Observable<any> {
     return this.httpClient.put<any>('/shelf/update', shelf, this.httpOptions)
-    .pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = 'Bir hata oluştu';
-        if (error.error instanceof ErrorEvent) {
-          // İstemci tarafında hata
-          errorMessage = `Hata: ${error.error.message}`;
-        } else {
-          // Sunucu tarafında hata
-          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
-        }
-        console.error(errorMessage);
-        return throwError(errorMessage); // Hata durumunu tekrar fırlat
-      })
-    );
   }
   
   deleteShelf(id: string):Observable<any> {
-    return this.httpClient.post('/shelf/delete', JSON.stringify(id), this.httpOptions)
-    .pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMessage = 'Bir hata oluştu';
-        if (error.error instanceof ErrorEvent) {
-          // İstemci tarafında hata
-          errorMessage = `Hata: ${error.error.message}`;
-        } else {
-          // Sunucu tarafında hata
-          errorMessage = `Sunucu Hatası: ${error.status}, ${error.error}`;
-        }
-        console.error(errorMessage);
-        return throwError(errorMessage); // Hata durumunu tekrar fırlat
-      })
-    );
+    return this.httpClient.post('/shelf/delete', JSON.stringify(id), this.httpOptions);
   }
 
-  acceptProduct(create: any):Observable<any> {
-    return this.httpClient.post<any>('/product/accept', create);
+  acceptProduct(request: AcceptProductRequest):Observable<AcceptProductRequest> {
+    return this.httpClient.post<AcceptProductRequest>('/product/accept', request);
+  }
+
+  search(keyword: string): Observable<GetShelfResponse[]> {
+    const params = new HttpParams().set('keyword', keyword);
+    return this.httpClient.get<GetShelfResponse[]>(`/shelf/search`, { params: params });
   }
 }

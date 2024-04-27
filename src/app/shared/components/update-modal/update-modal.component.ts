@@ -31,7 +31,7 @@ export class UpdateModalComponent {
   addValue() {
     const value = new FormControl('');
     this.values.push(value);
-    console.log(this.values.value);
+    // console.log(this.values.value);
   }
 
   update(){

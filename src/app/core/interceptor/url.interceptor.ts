@@ -31,7 +31,7 @@ export const urlInterceptor: HttpInterceptorFn = (req, next) => {
           // login işlemi yapılmıyor ve token hatası döndü
           return loginService.reLogin().pipe(
             switchMap((token: any) => {
-              toastrService.info("Tekrar giriş yapıldı");
+              // toastrService.info("Tekrar giriş yapıldı");
               headers = headers.set('Authorization', 'Bearer ' + loginService.token);
               newReq = newReq.clone({
                 headers,
