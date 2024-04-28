@@ -41,7 +41,7 @@
             required=""
             placeholder="Ara"
             id="search"
-            (input)="handleInputChange($event)"
+            (input)="handleSearchInputChange($event)"
           />
           <div class="fancy-bg"></div>
           <div class="search">
@@ -109,17 +109,19 @@
 
   <div class="pe-4 ps-4 py-4">
     <div class="table-responsive tbodyDiv">
-      <p style="font-weight: bold">{{ tableTitle }}</p>
+      <p style="font-weight: bold">{{ tableTitle | translate }}</p>
       <table style="background: #fff" class="table table-sm table-hover">
         <thead>
           <tr class="align-middle">
             <th scope="col" style="width: 10px"></th>
             @for (column of columns; track $index) {
             <th scope="col">
-              {{ column.label }}
+              {{ column.label | translate }}
             </th>
             } @if (showOrderDetailButton) {
-            <th scope="col" style="width: 120px">Sipariş Detayı</th>
+            <th scope="col" style="width: 120px">
+              {{ "orderTableOrderDetails" | translate }}
+            </th>
             }
             <th scope="col" style="width: 10px"></th>
           </tr>

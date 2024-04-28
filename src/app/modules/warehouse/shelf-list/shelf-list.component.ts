@@ -24,15 +24,15 @@ import { GenericService } from '../../../core/service/generic.service';
 export class ShelfListComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
-    { label: 'Raf Kodu', field: 'shortId' },
-    { label: 'Ürün Adı', field: 'productName' },
-    { label: 'Ürün Adedi', field: 'count' },
-    { label: 'Kapasite', field: 'capacity' },
+    { label: 'shelfTableShelfCode', field: 'shortId' },
+    { label: 'shelfTableProductName', field: 'productName' },
+    { label: 'shelfTableProductQuantity', field: 'count' },
+    { label: 'shelfTableCapacity', field: 'capacity' },
   ];
 
-  tableTitle = "Raflar"
+  tableTitle = "shelfTableTitle"
   productList: GetProductResponse[] = [];
-  deleteDialogDescription = 'Raf kaydını silmek istediğinizden emin misiniz?';
+  deleteDialogDescription = 'deleteShelfDialogDescription';
   id = '';
   currentPage: number = 1;
   // totalPages: number = 10;
@@ -118,8 +118,8 @@ export class ShelfListComponent implements OnInit{
       exitAnimationDuration: '250ms',
     });
 
-    dialog.componentInstance.title = 'Yeni Raf Oluştur';
-    dialog.componentInstance.inputLabels = ['Kapasite', 'Adet'];
+    dialog.componentInstance.title = 'createShelfTitle';
+    dialog.componentInstance.inputLabels = ['shelfTableCapacity', 'shelfInputsPeace'];
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
 
@@ -162,8 +162,8 @@ export class ShelfListComponent implements OnInit{
       exitAnimationDuration: '250ms',
     });
 
-    dialog.componentInstance.title='Raf Güncelle';
-    dialog.componentInstance.inputLabels=['Kapasite'];
+    dialog.componentInstance.title='updateShelfTitle';
+    dialog.componentInstance.inputLabels=['shelfTableCapacity'];
     dialog.componentInstance.values.push(new FormControl(item.capacity));
 
     dialog.afterClosed().subscribe({
@@ -215,7 +215,7 @@ export class ShelfListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
       data : {
-        title: 'Ürün Girişi',
+        title: 'acceptProductTitle',
         productList: this.productList,
       }
     });

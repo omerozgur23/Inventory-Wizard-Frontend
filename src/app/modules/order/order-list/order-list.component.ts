@@ -13,14 +13,14 @@ import { PdfService } from '../../../core/service/pdf.service';
 export class OrderListComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
-    { label: 'Sipariş Kodu', field: 'shortId' },
-    { label: 'Müşteri Ünvanı', field: 'customerCompanyName' },
-    { label: 'Sipariş Oluşturan', field: 'employeeFirstName' },
-    { label: 'Sipariş Tarihi', field: 'orderDate' },
-    { label: 'Sipariş Tutarı', field: 'orderPrice' },
+    { label: 'orderTableOrderCode', field: 'shortId' },
+    { label: 'orderTableCustomer', field: 'customerCompanyName' },
+    { label: 'orderTableEmployee', field: 'employeeFirstName' },
+    { label: 'orderTableDate', field: 'orderDate' },
+    { label: 'orderTableTotalPrice', field: 'orderPrice' },
   ];
 
-  tableTitle = "Siparişler";
+  tableTitle = "orderTableTitle";
   currentPage: number = 1;
   // totalPages: number = 10;
 
@@ -80,6 +80,10 @@ export class OrderListComponent implements OnInit{
 
   navigateOrderDetails(orderId: string) {
     this.router.navigate(['/home/order-details'], { queryParams: { id: orderId } });
+  }
+
+  navigateProductSale() {
+    this.router.navigate(['/home/product-sale']);
   }
 
   generatePDF() {

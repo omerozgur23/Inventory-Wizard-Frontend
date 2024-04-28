@@ -1,7 +1,9 @@
 <div class="sayfa" style="margin: 40px">
   <form [formGroup]="accountForm" (ngSubmit)="submit()">
     <div class="mb-3">
-      <label for="txtEmail" class="form-label">E-Mail</label>
+      <label for="txtEmail" class="form-label">
+        {{ "settingsFormEmail" | translate }}
+      </label>
       <input
         formControlName="email"
         type="text"
@@ -11,7 +13,9 @@
       />
     </div>
     <div class="mb-3">
-      <label for="txtLastPassword" class="form-label">Mevcut Şifre</label>
+      <label for="txtLastPassword" class="form-label">
+        {{ "settingsFormCurrentPassword" | translate }}
+      </label>
       <input
         formControlName="lastPassword"
         type="password"
@@ -26,11 +30,13 @@
         *ngIf="accountForm.get('lastPassword')?.hasError('incorrectPassword')"
         class="small text-danger"
       >
-        Eski şifre yanlış.
+        {{ "oldPasswordWrong" | translate }}
       </div>
     </div>
     <div class="mb-3">
-      <label for="txtPassword" class="form-label">Şifre</label>
+      <label for="txtPassword" class="form-label">
+        {{ "settingsFormNewPassword" | translate }}
+      </label>
       <input
         formControlName="password"
         type="password"
@@ -50,15 +56,17 @@
         class="small text-danger"
       >
         <div *ngIf="accountForm.get('password')?.errors?.['required'] ">
-          Şifre alanını boş geçemezsiniz.
+          {{ "passwordCannotEmpty" | translate }}
         </div>
         <div *ngIf="accountForm.get('password')?.errors?.['minlength']">
-          Şifre en az 3 karakter olmalıdır
+          {{ "passwordMustBe" | translate }}
         </div>
       </div>
     </div>
     <div class="mb-3">
-      <label for="txtPassword2" class="form-label">Şifre Tekrarı</label>
+      <label for="txtPassword2" class="form-label">
+        {{ "settingsFormNewConfirmPassword" | translate }}
+      </label>
       <input
         formControlName="password2"
         type="password"
@@ -74,16 +82,18 @@
         *ngIf="accountForm.get('password2')?.hasError('passwordMismatch')"
         class="small text-danger"
       >
-        Yeni şifre ile şifre tekrarı eşleşmiyor.
+        {{ "doNotMatchPassword" | translate }}
       </div>
     </div>
+    <button class="btn btn-warning me-2" [routerLink]="['..']">
+      {{ "cancelButton" | translate }}
+    </button>
     <button
       class="btn btn-primary"
       type="submit"
       [disabled]="!accountForm.valid"
     >
-      Kaydet
+      {{ "saveButton" | translate }}
     </button>
-    <!-- <button class="btn btn-warning ms-2" [routerLink]="['..']">Geri</button> -->
   </form>
 </div>

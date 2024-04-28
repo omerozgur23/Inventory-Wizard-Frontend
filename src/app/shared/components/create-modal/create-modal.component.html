@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ title }}</h2>
+<h2 mat-dialog-title>{{ title | translate }}</h2>
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="createForm">
     <div class="formBox form-group" formArrayName="values">
@@ -9,13 +9,15 @@
           required
           style="margin-top: 5px"
         />
-        <label [for]="'input_' + $index">{{ inputLabels[$index] }}</label>
+        <label [for]="'input_' + $index">{{
+          inputLabels[$index] | translate
+        }}</label>
       </div>
       }
       <div class="inputBox w100" *ngIf="showDropdown">
-        <select formControlName="categoryId">
+        <select>
           @for (option of dropdownOptions; track $index) {
-          <option [value]="option.id">
+          <option formControlName="{{ $index }}" [value]="dropdownOptions">
             {{ option.name }}
           </option>
           }
@@ -28,7 +30,7 @@
 <mat-dialog-actions class="btn-dialog" align="end">
   <div class="btn-modal">
     <button type="button" class="btn btn-outline-secondary" (click)="close()">
-      Vazgeç
+      {{ "cancelButton" | translate }}
     </button>
     <button
       (click)="create()"
@@ -36,7 +38,7 @@
       class="btn btn-outline-primary"
       [disabled]="!createForm.valid"
     >
-      Ekle
+      {{ "createButton" | translate }}
     </button>
   </div>
 </mat-dialog-actions>

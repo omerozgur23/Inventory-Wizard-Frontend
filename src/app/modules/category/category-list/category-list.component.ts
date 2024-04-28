@@ -20,12 +20,12 @@ import { TranslateService } from '@ngx-translate/core';
 export class CategoryListComponent implements OnInit {
   tableData: any[] = [];
   columns: TableColumn[] = [
-    { label: "Kategori Kodu", field: 'shortId' },
-    { label: 'Kategori Adı', field: 'name' },
+    { label: "categoryTableCategoryCode", field: 'shortId' },
+    { label: 'categoryTableCategoryName', field: 'name' }, 
   ];
 
-  tableTitle = 'Kategoriler'
-  deleteDialogDescription = 'Kategori kaydını silmek istediğinizden emin misiniz?';
+  tableTitle = 'categoryTableTitle'
+  deleteDialogDescription = 'deleteCategoryDialogDescription';
   id = '';
   currentPage = 1;
   existingCategoryNames: string[] = [];
@@ -38,6 +38,7 @@ export class CategoryListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private pdfService: PdfService,
+    private translateService: TranslateService,
   ){}
 
   setSelectedCategory(categoryId: string) {
@@ -91,8 +92,8 @@ export class CategoryListComponent implements OnInit {
       exitAnimationDuration: '250ms',
     });
 
-    dialog.componentInstance.title = 'Yeni Kategori Oluştur';
-    dialog.componentInstance.inputLabels = ['Kategori Adı'];
+    dialog.componentInstance.title = 'createCategoryTitle';
+    dialog.componentInstance.inputLabels = ['categoryTableCategoryName'];
     dialog.componentInstance.values.push(new FormControl(''));
 
     dialog.afterClosed().subscribe({
@@ -110,14 +111,15 @@ export class CategoryListComponent implements OnInit {
 
   createCategory(categoryName: string) {
     const category = new CreateCategoryRequest(categoryName);
+    const successCreatedMessage = this.translateService.instant('categoryCreatedMessage');
     this.categoryService.createCategory(category).subscribe({
       next: (result) => {
-        this.toastr.success('Kategori Kaydı Oluşturuldu');
+        this.toastr.success(successCreatedMessage);
         this.loadCategory();
       },
       error: (err) => {
         console.log(err);
-        this.toastr.error("Hata oluştu");
+        this.showError('errorMessage')
       }
     });
   }
@@ -129,8 +131,8 @@ export class CategoryListComponent implements OnInit {
       exitAnimationDuration: '250ms',
     });
 
-    dialog.componentInstance.title='Kategori Güncelle';
-    dialog.componentInstance.inputLabels=['Kategori Adı'];
+    dialog.componentInstance.title='updateCategoryTitle';
+    dialog.componentInstance.inputLabels=['categoryTableCategoryName'];
     dialog.componentInstance.values.push(new FormControl(item.name));
 
     dialog.afterClosed().subscribe({
@@ -145,28 +147,30 @@ export class CategoryListComponent implements OnInit {
 
   updateCategory(id: string, categoryName: string){
     const category = new UpdateCategoryRequest(id, categoryName);
+    const successUpdatedMessage = this.translateService.instant('categoryUpdatedMessage');
     this.categoryService.updateCategory(category).subscribe({ 
       next: (result) => {
-        this.toastr.success('Kategori Güncellenmiştir');
+        this.toastr.success(successUpdatedMessage);
         this.loadCategory();
       },
       error: (err) => {
         console.log(err);
-        this.toastr.error("Hata oluştu");
+        this.showError('errorMessage')
       }
     })
   }
 
   deleteCategory(id: any){
+    const successDeletedMessage = this.translateService.instant('categoryDeletedMessage');
     this.categoryService.deleteCategory(id).subscribe(
       {
         next: (result) =>{
-          this.toastr.success("Kategori silinmiştir")
+          this.toastr.success(successDeletedMessage)
           this.loadCategory();
         },
         error: (err) => {
           console.log(err);
-          this.toastr.error("Hata oluştu")
+          this.showError('errorMessage')
         }
       }
     );
@@ -174,7 +178,7 @@ export class CategoryListComponent implements OnInit {
 
   generatePDF() {
     const fileName = 'categories.pdf';
-    const tableTitle = 'Kategori Listesi';
+    const tableTitle = this.translateService.instant('categoryPdfTitle');
     this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
 
@@ -198,5 +202,10 @@ export class CategoryListComponent implements OnInit {
 
   navigateSettings(){
     this.router.navigate(['/home/settings']);
+  }
+
+  showError(messageKey: string) {
+    const errorMessage = this.translateService.instant(messageKey);
+    this.toastr.error(errorMessage);
   }
 }
