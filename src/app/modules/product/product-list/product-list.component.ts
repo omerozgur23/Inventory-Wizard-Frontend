@@ -21,19 +21,19 @@ import { PdfService } from '../../../core/service/pdf.service';
 export class ProductListComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
-    { label: 'Ürün Kodu', field: 'shortId' },
-    { label: 'Ürün Adı', field: 'productName' },
-    { label: 'Kategori', field: 'categoryName' },
-    { label: 'Tedarikçi', field: 'supplierCompanyName' },
-    { label: 'Alış Fiyatı', field: 'purchasePrice' },
-    { label: 'Satış Fiyatı', field: 'unitPrice' },
-    { label: 'Kritik Stok', field: 'criticalCount' },
-    { label: 'Stok Adedi', field: 'quantity' },
+    { label: 'productTableProductCode', field: 'shortId' },
+    { label: 'productTableProductName', field: 'productName' },
+    { label: 'productTableCategory', field: 'categoryName' },
+    { label: 'productTableSupplier', field: 'supplierCompanyName' },
+    { label: 'productTablePurchasePrice', field: 'purchasePrice' },
+    { label: 'productTableUnitPrice', field: 'unitPrice' },
+    { label: 'productTableCriticalStock', field: 'criticalCount' },
+    { label: 'productTableQuantity', field: 'quantity' },
   ];
 
-  tableTitle = "Ürünler"
+  tableTitle = "productTableTitle"
   categoryList: GetCategoryResponse[] = [];
-  deleteDialogDescription = 'Ürün kaydını silmek istediğinizden emin misiniz?';
+  deleteDialogDescription = 'deleteProductDialogDescription';
   id = '';
   currentPage: number = 1; 
   // totalPages: number = 10;
@@ -55,7 +55,7 @@ export class ProductListComponent implements OnInit{
 
   ngOnInit(): void{
     this.loadProducts();
-    // this.getAllCategory();
+    this.getAllCategory();
   }
  
   loadProducts() {
@@ -96,6 +96,8 @@ export class ProductListComponent implements OnInit{
     this.categoryService.getAllCategory().subscribe({
       next: (result) => {
         this.categoryList = result;
+        console.log("test: ", this.categoryList);
+        
       },
       error: (err) => {
         console.log(err);
@@ -111,29 +113,16 @@ export class ProductListComponent implements OnInit{
       exitAnimationDuration: '250ms',
     });    
     dialog.componentInstance.showDropdown = this.showDropdown;
-    dialog.componentInstance.title = 'Yeni Ürün Oluştur';
-    dialog.componentInstance.inputLabels = ['Ürün Adı', 'Tedarikçi', 'Kritik Stok', 'Alış Fiyatı', 'Satış Fiyatı'];
+    dialog.componentInstance.title = 'createProductTitle';
+    dialog.componentInstance.inputLabels = ['productTableProductName', 'productTableCategory', 'productTableSupplier', 'productTableCriticalStock', 'productTablePurchasePrice', 'productTableUnitPrice'];
     dialog.componentInstance.dropdownOptions = this.categoryList;
-    // dialog.componentInstance.values.push(new FormControl(''));
-    // dialog.componentInstance.values.push(new FormControl(''));
-    // dialog.componentInstance.values.push(new FormControl(''));
-    // dialog.componentInstance.values.push(new FormControl(''));
-    // dialog.componentInstance.values.push(new FormControl(''));
-    for (let i = 0; i < 5; i++) {
-      dialog.componentInstance.values.push(new FormControl(''));
-    }
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.values.push(new FormControl(''));
 
-    const dropdownFormControl = new FormControl(''); // Varsayılan olarak seçili değer boş
-
-  // Dropdown'daki seçimlerin değiştiğini izleyelim
-  dropdownFormControl.valueChanges.subscribe((categoryId) => {
-    console.log("Seçilen kategori ID: " + categoryId);
-
-  });
-
-  // Yeni oluşturduğumuz dropdown FormControl'ü dialog'a ekleyelim
-  dialog.componentInstance.values.push(dropdownFormControl);
-    
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
@@ -144,7 +133,8 @@ export class ProductListComponent implements OnInit{
           const purchasePriceValue = formValues[3];
           const unitPriceValue = formValues[4];
           const categoryIdValue = formValues[5];
-          console.log("categoryId: " + categoryIdValue);
+          // console.log("Kategori Id: ", categoryIdValue);
+          
           
           this.createProduct(productNameValue, categoryIdValue, supplierIdValue, criticalCountValue, purchasePriceValue, unitPriceValue);
         }
@@ -178,8 +168,8 @@ export class ProductListComponent implements OnInit{
       exitAnimationDuration: '250ms',
     });
 
-    dialog.componentInstance.title='Ürün Güncelle';
-    dialog.componentInstance.inputLabels=['Ürün Adı', 'Kritik Stok', 'Alış Fiyatı', 'Satış Fiyatı'];
+    dialog.componentInstance.title='updateProductTitle';
+    dialog.componentInstance.inputLabels=['productTableProductName', 'productTableCriticalStock', 'productTablePurchasePrice', 'productTableUnitPrice'];
     dialog.componentInstance.values.push(new FormControl(item.productName));
     dialog.componentInstance.values.push(new FormControl(item.criticalCount));
     dialog.componentInstance.values.push(new FormControl(item.purchasePrice));

@@ -19,16 +19,16 @@ import { PdfService } from '../../../core/service/pdf.service';
 export class CustomerListComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
-    { label: 'Firma Ünvanı', field: 'companyName' },
-    { label: 'Firma Yetkilisi', field: 'contactName' },
-    { label: 'Yetkili E-Mail', field: 'contactEmail' },
-    { label: 'Yetkili Telefon', field: 'contactPhone' },
-    { label: 'Vergi No', field: 'taxNumber' },
-    { label: 'Adres', field: 'address' },
+    { label: 'customerTableCompanyName', field: 'companyName' },
+    { label: 'customerTableCompanyOfficial', field: 'contactName' },
+    { label: 'customerTableOfficialEmail', field: 'contactEmail' },
+    { label: 'customerTableOfficialPhone', field: 'contactPhone' },
+    { label: 'customerTableTaxNumber', field: 'taxNumber' },
+    { label: 'customerTableAddress', field: 'address' },
   ];
 
-  tableTitle = "Müşteriler";
-  deleteDialogDescription = 'Müşteri kaydını silmek istediğinizden emin misiniz?';
+  tableTitle = "customerTableTitle";
+  deleteDialogDescription = 'deleteCustomerDialogDescription';
   id: string = '';
   currentPage: number = 1;
   // totalPages: number = 10;
@@ -84,8 +84,8 @@ export class CustomerListComponent implements OnInit{
       exitAnimationDuration: '250ms',
     });
 
-    dialog.componentInstance.title = 'Yeni Müşteri Oluştur';
-    dialog.componentInstance.inputLabels = ['Firma Ünvanı', 'Firma Yetkilisi', 'E-Mail', 'Yetkili Telefon', 'Vergi No', 'Adres'];
+    dialog.componentInstance.title = 'createCustomerTitle';
+    dialog.componentInstance.inputLabels = ['customerTableCompanyName', 'customerTableCompanyOfficial', 'customerTableOfficialEmail', 'customerTableOfficialPhone', 'customerTableTaxNumber', 'customerTableAddress'];
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
@@ -132,8 +132,8 @@ export class CustomerListComponent implements OnInit{
       exitAnimationDuration: '250ms',
     });
 
-    dialog.componentInstance.title='Müşteri Güncelle';
-    dialog.componentInstance.inputLabels=['Firma Ünvanı','Firma Yetkilisi','E-Mail','Yetkili Telefon', 'Adres'];
+    dialog.componentInstance.title='updateCustomerTitle';
+    dialog.componentInstance.inputLabels=['customerTableCompanyName','customerTableCompanyOfficial','customerTableOfficialEmail','customerTableOfficialPhone', 'customerTableAddress'];
     dialog.componentInstance.values.push(new FormControl(item.companyName));
     dialog.componentInstance.values.push(new FormControl(item.contactName));
     dialog.componentInstance.values.push(new FormControl(item.contactEmail));
