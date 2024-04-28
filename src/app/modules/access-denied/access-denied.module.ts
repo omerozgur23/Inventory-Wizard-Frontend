@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AccessDeniedRoutingModule } from './access-denied-routing.module';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { AccessDeniedComponent } from './access-denied/access-denied.component';
   ],
   imports: [
     CommonModule,
-    AccessDeniedRoutingModule
+    AccessDeniedRoutingModule,
+    TranslateModule,
   ]
 })
 export class AccessDeniedModule { }

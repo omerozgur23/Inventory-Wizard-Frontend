@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ title }}</h2>
+<h2 mat-dialog-title>{{ title | translate }}</h2>
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="updateForm">
     <div class="formBox form-group" formArrayName="values">
@@ -7,7 +7,7 @@
         *ngFor="let value of values.controls; let i = index"
       >
         <input formControlName="{{ i }}" required style="margin-top: 5px" />
-        <label [for]="'input_' + i">{{ inputLabels[i] }}</label>
+        <label [for]="'input_' + i">{{ inputLabels[i] | translate }}</label>
       </div>
     </div>
   </form>
@@ -16,7 +16,7 @@
 <mat-dialog-actions class="btn-dialog" align="end">
   <div class="btn-modal">
     <button type="button" class="btn btn-outline-secondary" (click)="close()">
-      Vazgeç
+      {{ "cancelButton" | translate }}
     </button>
     <button
       (click)="update()"
@@ -24,7 +24,7 @@
       class="btn btn-outline-primary"
       [disabled]="updateForm.invalid"
     >
-      Kaydet
+      {{ "saveButton" | translate }}
     </button>
   </div>
 </mat-dialog-actions>

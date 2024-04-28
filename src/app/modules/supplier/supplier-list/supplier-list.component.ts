@@ -19,16 +19,16 @@ import { PdfService } from '../../../core/service/pdf.service';
 export class SupplierListComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
-    { label: 'Firma Ünvanı', field: 'companyName' },
-    { label: 'Firma Yetkilisi', field: 'contactName' },
-    { label: 'Yetkili E-Mail', field: 'contactEmail' },
-    { label: 'Yetkili Telefon', field: 'contactPhone' },
-    { label: 'Vergi No', field: 'taxNumber' },
-    { label: 'Adres', field: 'address' },
+    { label: 'supplierTableCompanyName', field: 'companyName' },
+    { label: 'supplierTableCompanyOfficial', field: 'contactName' },
+    { label: 'supplierTableOfficialEmail', field: 'contactEmail' },
+    { label: 'supplierTableOfficialPhone', field: 'contactPhone' },
+    { label: 'supplierTableTaxNumber', field: 'taxNumber' },
+    { label: 'supplierTableAddress', field: 'address' },
   ];
 
-  tableTitle = "Tedarikçiler";
-  deleteDialogDescription = 'Tedarikçi kaydını silmek istediğinizden emin misiniz?';
+  tableTitle = "supplierTableTitle";
+  deleteDialogDescription = 'deleteSupplierDialogDescription';
   id = '';
   currentPage: number = 1;
   // totalPages: number = 10;
@@ -85,8 +85,8 @@ export class SupplierListComponent implements OnInit{
       exitAnimationDuration: '250ms,'
     });
 
-    dialog.componentInstance.title = 'Yeni Tedarikçi Oluştur';
-    dialog.componentInstance.inputLabels = ['Firma Ünvanı', 'Firma Yetkilisi', 'Yetkili E-Mail', 'Yetkili Telefon', 'Vergi No', 'Adres'];
+    dialog.componentInstance.title = 'createSupplierTitle';
+    dialog.componentInstance.inputLabels = ['supplierTableCompanyName', 'supplierTableCompanyOfficial', 'supplierTableOfficialEmail', 'supplierTableOfficialPhone', 'supplierTableTaxNumber', 'supplierTableAddress'];
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
@@ -130,8 +130,8 @@ export class SupplierListComponent implements OnInit{
       exitAnimationDuration: '250ms',
     });
 
-    dialog.componentInstance.title='Tedarikçi Güncelle';
-    dialog.componentInstance.inputLabels = ['Firma Ünvanı', 'Firma Yetkilisi', 'Yetkili E-Mail', 'Yetkili Telefon', 'Adres'];
+    dialog.componentInstance.title='updateSupplierTitle';
+    dialog.componentInstance.inputLabels = ['supplierTableCompanyName', 'supplierTableCompanyOfficial', 'supplierTableOfficialEmail', 'supplierTableOfficialPhone', 'supplierTableAddress'];
     dialog.componentInstance.values.push(new FormControl(item.companyName));
     dialog.componentInstance.values.push(new FormControl(item.contactName));
     dialog.componentInstance.values.push(new FormControl(item.contactEmail));

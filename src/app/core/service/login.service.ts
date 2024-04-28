@@ -65,8 +65,12 @@ export class LoginService {
     this.email = "";
     this.password = "";
     this.roles = [];
-    localStorage.clear();
-  } 
+    for (let key in localStorage) {
+      if (key !== 'lang') {
+        localStorage.removeItem(key);
+      }
+    }
+  }
 
   parseJwt (token: string) {
     let base64Url = token.split('.')[1];

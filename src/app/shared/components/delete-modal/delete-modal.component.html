@@ -11,7 +11,9 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Delete</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">
+          {{ "deleteDialogDescriptionTitle" | translate }}
+        </h5>
         <button
           type="button"
           class="btn-close"
@@ -20,19 +22,19 @@
         ></button>
       </div>
       <div class="modal-body">
-        {{ description }} <br />
-        Bu işlem geri alınamaz! <br />
+        {{ description | translate }} <br />
+        {{ "deleteDialogDescription2" | translate }} <br />
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Vazgeç
+          {{ "cancelButton" | translate }}
         </button>
         <button
           class="btn btn-danger img-button"
           data-bs-dismiss="modal"
           (click)="delete(selectedId)"
         >
-          Sil
+          {{ "deleteButton" | translate }}
         </button>
       </div>
     </div>
