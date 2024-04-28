@@ -21,7 +21,6 @@ export class CreateModalComponent {
   ) {
     this.createForm = this.fb.group({
       values: this.fb.array([], Validators.required),
-      categoryId: '',
     });
   }
   
@@ -34,10 +33,10 @@ export class CreateModalComponent {
     this.values.push(value);
     console.log(this.values.value);
   }
-
+ 
   create(){
     if (this.createForm.valid) {
-      const formValues = { ...this.createForm.value, categoryId: this.createForm.value.categoryId };
+      // const formValues = { ...this.createForm.value, categoryId: this.createForm.value.categoryId };
       this.dialogRef.close({result: 'yes'});
     } 
   }

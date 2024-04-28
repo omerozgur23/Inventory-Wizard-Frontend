@@ -19,14 +19,14 @@ import { PdfService } from '../../../core/service/pdf.service';
 export class EmployeeListComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
-    { label: 'Adı', field: 'firstName' },
-    { label: 'Soyadı', field: 'lastName'},
-    { label: 'E-Mail', field: 'email'},
-    { label: 'Roller', field: 'role'},
+    { label: 'employeeTableFirstName', field: 'firstName' },
+    { label: 'employeeTableLastName', field: 'lastName'},
+    { label: 'employeeTableEmail', field: 'email'},
+    { label: 'employeeTableRoles', field: 'role'},
   ]
 
-  tableTitle = "Personeller";
-  deleteDialogDescription = 'Personel kaydını silmek istediğinizden emin misiniz?';
+  tableTitle = "employeeTableTitle";
+  deleteDialogDescription = 'deleteEmployeeDialogDescription';
   id: string = '';
   currentPage: number = 1;
   // totalPages: number = 10;
@@ -82,8 +82,8 @@ export class EmployeeListComponent implements OnInit{
       exitAnimationDuration: '250ms',
     });
 
-    dialog.componentInstance.title = 'Yeni Personel Oluştur';
-    dialog.componentInstance.inputLabels = ['Ad', 'Soyad', 'E-Mail', 'Şifre', 'Rol'];
+    dialog.componentInstance.title = 'createEmployeeTitle';
+    dialog.componentInstance.inputLabels = ['employeeTableFirstName', 'employeeTableLastName', 'employeeTableEmail', 'employeeTablePassword', 'employeeTableRoles'];
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
@@ -128,8 +128,8 @@ export class EmployeeListComponent implements OnInit{
       exitAnimationDuration: '250ms',
     });
 
-    dialog.componentInstance.title='Personel Güncelle';
-    dialog.componentInstance.inputLabels=['E-mail', 'Şifre'];
+    dialog.componentInstance.title='updateEmployeeTitle';
+    dialog.componentInstance.inputLabels=['employeeTableEmail', 'employeeTablePassword'];
     dialog.componentInstance.values.push(new FormControl(item.email));
     dialog.componentInstance.values.push(new FormControl("******"));
 

@@ -2,22 +2,27 @@ import { Injectable } from '@angular/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ShelfService } from '../../modules/warehouse/service/shelf.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PdfService {
 
-  constructor() { (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs; }
+  constructor(
+    private translateService: TranslateService,
+  ) { (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs; }
 
   generatePdf(tableData: any[], columns: any[], fileName: string, tableTitle: string) {
     const tableBody = [];
     let title = tableTitle;
 
     // Tablo başlıkları
-    const tableHeaders = columns.map(column => {
-      return { text: column.label, style: 'tableHeader' };
+    let tableHeaders = columns.map(column => {
+      const translatedColumnLabel = this.translateService.instant(column.label);
+      return { text: translatedColumnLabel, style: 'tableHeader' };
     });
+    
     tableBody.push(tableHeaders);
 
     // Tablo satırları

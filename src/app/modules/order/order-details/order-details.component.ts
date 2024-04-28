@@ -12,14 +12,14 @@ import { PdfService } from '../../../core/service/pdf.service';
 export class OrderDetailsComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
-    { label: 'Sipariş Kodu', field: 'shortId' },
-    { label: 'Ürün Adı', field: 'productName' },
-    { label: 'Adet', field: 'quantity' },
-    { label: 'Birim Fiyatı', field: 'unitPrice' },
-    { label: 'Toplam Fiyat', field: 'totalPrice' },
+    { label: 'orderDetailsTableOrderCode', field: 'shortId' },
+    { label: 'orderDetailsTableProductName', field: 'productName' },
+    { label: 'orderDetailsTableQuantity', field: 'quantity' },
+    { label: 'orderDetailsTableUnitPrice', field: 'unitPrice' },
+    { label: 'orderDetailsTableTotalPrice', field: 'totalPrice' },
   ];
 
-  tableTitle = "Sipariş Detayları";
+  tableTitle = "orderDetailsTableTitle";
   currentPage: number = 1;
 
   constructor(
