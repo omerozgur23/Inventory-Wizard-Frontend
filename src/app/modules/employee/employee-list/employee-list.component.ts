@@ -9,7 +9,8 @@ import { UpdateModalComponent } from '../../../shared/components/update-modal/up
 import { CreateEmployeeRequest } from '../dto/createEmployeeRequest';
 import { UpdateEmployeeRequest } from '../dto/updateEmployeeRequest';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PdfService } from '../../../core/service/pdf.service';
+
+import { GenericService } from '../../../core/service/generic.service';
 
 @Component({
   selector: 'app-employee-list',
@@ -37,7 +38,7 @@ export class EmployeeListComponent implements OnInit{
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute,
-    private pdfService: PdfService,
+    private genericService: GenericService,
   ){}
 
   setSelectedEmployee(employeeId: string) {
@@ -179,7 +180,7 @@ export class EmployeeListComponent implements OnInit{
   generatePDF() {
     const fileName = 'employees.pdf';
     const tableTitle = 'Personel Listesi';
-    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+    this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
 
   onSearchInputChange(searchKeyword: string) {

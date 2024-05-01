@@ -3,6 +3,7 @@ import { LoginService } from '../../service/login.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,7 @@ export class LoginComponent {
     private router: Router,
     private toastr: ToastrService,
     private fb: FormBuilder,
+    private translateService: TranslateService,
   ){
   }
 
@@ -36,18 +38,24 @@ export class LoginComponent {
           setTimeout(() => {
             this.showLogoEffect = false; // Efekti gizle
             this.router.navigate(["/home/shelf"]);
-            this.toastr.success("Hoşgeldiniz")
+            const welcomeMessage = this.translateService.instant('loginSuccessMessage');
+            this.toastr.success(welcomeMessage)
           }, 800);
         },
         error: (err) => {
           setTimeout(() => { 
             this.showLogoEffect = false;
-            this.toastr.error("Email veya şifre hatalı")
+            this.showErrorMessage('loginErrorMessage')
             this.showLoginForm = true;
           }, 800);
           console.log(err);
         }
       }
     );
+  }
+
+  showErrorMessage(messageKey: string) {
+    const errorMessage = this.translateService.instant(messageKey);
+    this.toastr.error(errorMessage);
   }
 }
