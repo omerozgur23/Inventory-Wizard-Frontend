@@ -12,8 +12,12 @@
         <i data-feather="bar-chart-2" aria-hidden="true"></i>
       </div>
       <div class="stat-cards-info">
-        <p class="stat-cards-info__num">1478 286</p>
-        <p class="stat-cards-info__title">Total Sales</p>
+        <p class="stat-cards-info__num">
+          {{ totalSales | currency : "TRY" : "symbol" : "1.2-2" }}
+        </p>
+        <p class="stat-cards-info__title">
+          {{ "reportTotalSales" | translate }}
+        </p>
       </div>
     </article>
   </div>
@@ -30,8 +34,12 @@
         <i data-feather="file" aria-hidden="true"></i>
       </div>
       <div class="stat-cards-info">
-        <p class="stat-cards-info__num">1478 286</p>
-        <p class="stat-cards-info__title">Total Winnings</p>
+        <p class="stat-cards-info__num">
+          {{ winning | currency : "TRY" : "symbol" : "1.2-2" }}
+        </p>
+        <p class="stat-cards-info__title">
+          {{ "reportTotalWinning" | translate }}
+        </p>
       </div>
     </article>
   </div>
@@ -48,8 +56,12 @@
         <i data-feather="file" aria-hidden="true"></i>
       </div>
       <div class="stat-cards-info">
-        <p class="stat-cards-info__num">1478 286</p>
-        <p class="stat-cards-info__title">Total Expenses</p>
+        <p class="stat-cards-info__num">
+          {{ totalSalesCost | currency : "TRY" : "symbol" : "1.2-2" }}
+        </p>
+        <p class="stat-cards-info__title">
+          {{ "repotTotalSalesCost" | translate }}
+        </p>
       </div>
     </article>
   </div>
@@ -64,43 +76,19 @@
       <table class="table table-sm table-hover">
         <thead>
           <tr class="align-middle">
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
+            @for (column of lastOrdersColumns; track $index) {
+            <th scope="col">{{ column.label | translate }}</th>
+            }
           </tr>
         </thead>
         <tbody>
+          @for (item of tableLastFiveOrders; track $index) {
           <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
+            @for (column of lastOrdersColumns; track $index) {
+            <td>{{ item[column.field] }}</td>
+            }
           </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
+          }
         </tbody>
       </table>
     </article>
@@ -113,43 +101,19 @@
       <table class="table table-sm table-hover">
         <thead>
           <tr class="align-middle">
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
+            @for (column of ordersTheMostColumns; track $index) {
+            <th scope="col">{{ column.label | translate }}</th>
+            }
           </tr>
         </thead>
         <tbody>
+          @for (item of tableOrdersTheMost; track $index) {
           <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
+            @for (column of ordersTheMostColumns; track $index) {
+            <td>{{ item[column.field] }}</td>
+            }
           </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
+          }
         </tbody>
       </table>
     </article>
@@ -165,43 +129,19 @@
       <table class="table table-sm table-hover">
         <thead>
           <tr class="align-middle">
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
+            @for (column of mostOrderSendersColumns; track $index) {
+            <th scope="col">{{ column.label | translate }}</th>
+            }
           </tr>
         </thead>
         <tbody>
+          @for (item of tableMostOrderSenders; track $index) {
           <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
+            @for (column of mostOrderSendersColumns; track $index) {
+            <td>{{ item[column.field] }}</td>
+            }
           </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
+          }
         </tbody>
       </table>
     </article>
@@ -214,45 +154,22 @@
       <table class="table table-sm table-hover">
         <thead>
           <tr class="align-middle">
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
-            <th scope="col">Müşteri Ünvanı</th>
+            @for (column of bestSellingProductsColumns; track $index) {
+            <th scope="col">{{ column.label | translate }}</th>
+            }
           </tr>
         </thead>
         <tbody>
+          @for (item of tableBestSellingProducts; track $index) {
           <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
+            @for (column of bestSellingProductsColumns; track $index) {
+            <td>{{ item[column.field] }}</td>
+            }
           </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
-          <tr>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-            <td>Tobeto Bilişim</td>
-          </tr>
+          }
         </tbody>
       </table>
     </article>
   </div>
 </div>
+<button (click)="navigateRecentOrders()">recent orders</button>

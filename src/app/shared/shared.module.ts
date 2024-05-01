@@ -9,6 +9,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { CreateModalComponent } from './components/create-modal/create-modal.component';
 import { AcceptProductModalComponent } from './components/accept-product-modal/accept-product-modal.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { TestDialogComponent } from './components/test-dialog/test-dialog.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
     UpdateModalComponent,
     CreateModalComponent,
     AcceptProductModalComponent,
+    TestDialogComponent,
   ],
   imports: [
     CommonModule,

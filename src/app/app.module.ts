@@ -17,11 +17,14 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { AccountComponent } from './core/component/account/account.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TableComponent } from './shared/components/table/table.component';
+import { registerLocaleData } from '@angular/common';
+import localeTr from '@angular/common/locales/tr';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
+
+registerLocaleData(localeTr);
 
 @NgModule({
   declarations: [

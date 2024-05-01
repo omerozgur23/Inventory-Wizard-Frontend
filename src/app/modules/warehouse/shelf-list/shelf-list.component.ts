@@ -13,7 +13,6 @@ import { GetProductResponse } from '../../product/dto/getProductResponse';
 import { ProductService } from '../../product/service/product.service';
 import { forkJoin } from 'rxjs';
 import { AcceptProductModalComponent } from '../../../shared/components/accept-product-modal/accept-product-modal.component';
-import { PdfService } from '../../../core/service/pdf.service';
 import { GenericService } from '../../../core/service/generic.service';
 
 @Component({
@@ -49,7 +48,6 @@ export class ShelfListComponent implements OnInit{
     private dialog: MatDialog,
     private fb: FormBuilder,
     private productService: ProductService,
-    private pdfService: PdfService,
     private genericService: GenericService,
     // private cdr: ChangeDetectorRef,
   ){}
@@ -250,7 +248,7 @@ export class ShelfListComponent implements OnInit{
   generatePDF() {
     const fileName = 'shelves.pdf';
     const tableTitle = 'Raf Listesi';
-    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+    this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
   
   onSearchInputChange(searchKeyword: string) {

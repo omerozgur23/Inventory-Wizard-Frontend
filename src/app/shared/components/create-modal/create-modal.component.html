@@ -13,8 +13,19 @@
           inputLabels[$index] | translate
         }}</label>
       </div>
-      }
-      <div class="inputBox w100" *ngIf="showDropdown">
+      }<!-- @for (control of values.controls; track $index) {
+
+      <div appearance="fill" *ngIf="isDropdownControl(control)">
+        <label>Dropdown</label>
+        <select formControlName="dropdownValue">
+          <option value="option1">Option 1</option>
+          <option value="option2">Option 2</option>
+          <option value="option3">Option 3</option>
+        </select>
+      </div>
+      } -->
+
+      <!-- <div class="inputBox w100" *ngIf="showDropdown">
         <select>
           @for (option of dropdownOptions; track $index) {
           <option formControlName="{{ $index }}" [value]="dropdownOptions">
@@ -22,7 +33,7 @@
           </option>
           }
         </select>
-      </div>
+      </div> -->
     </div>
   </form>
 </mat-dialog-content>

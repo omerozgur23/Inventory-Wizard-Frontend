@@ -9,7 +9,8 @@ import { FormControl } from '@angular/forms';
 import { UpdateSupplierRequest } from '../dto/updateSupplierRequest';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateSupplierRequest } from '../dto/createSupplierRequest';
-import { PdfService } from '../../../core/service/pdf.service';
+
+import { GenericService } from '../../../core/service/generic.service';
 
 @Component({
   selector: 'app-supplier-list',
@@ -39,7 +40,7 @@ export class SupplierListComponent implements OnInit{
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private pdfService: PdfService,
+    private genericService: GenericService,
   ){}
 
   setSelectedSupplier(supplierId: string) {
@@ -182,7 +183,7 @@ export class SupplierListComponent implements OnInit{
   generatePDF() {
     const fileName = 'suppliers.pdf';
     const tableTitle = 'Tedarikçi Listesi';
-    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+    this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
   
   onSearchInputChange(searchKeyword: string) {
