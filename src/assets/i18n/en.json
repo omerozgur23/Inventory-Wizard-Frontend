@@ -77,6 +77,7 @@
     "orderTableDate": "Order Date",
     "orderTableTotalPrice": "Order Amount",
     "orderTableOrderDetails": "Order Detail",
+    "orderPeace": "Order Peace",
 
     "orderDetailsTableTitle": "Order Details",
     "orderDetailsTableOrderCode": "Order Code",
@@ -140,5 +141,12 @@
     "errorMessage": "An error occurred",
     "categoryCreatedMessage": "Category is created",
     "categoryUpdatedMessage": "Category is updated",
-    "categoryDeletedMessage": "Category is deleted"
+    "categoryDeletedMessage": "Category is deleted",
+
+    "loginSuccessMessage": "Welcome",
+    "loginErrorMessage": "E-mail or password is incorrect",
+
+    "reportTotalSales": "Total Sales",
+    "reportTotalWinning": "Total Winning",
+    "repotTotalSalesCost": "Total Sales Cost"
 }

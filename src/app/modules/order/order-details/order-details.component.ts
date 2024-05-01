@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { OrderService } from '../service/order.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PdfService } from '../../../core/service/pdf.service';
+
+import { GenericService } from '../../../core/service/generic.service';
 
 @Component({
   selector: 'app-order-details',
@@ -25,7 +26,7 @@ export class OrderDetailsComponent implements OnInit{
   constructor(
     private orderService: OrderService,
     private route: ActivatedRoute,
-    private pdfService: PdfService,
+    private genericService: GenericService,
     private router: Router,
   ){}
 
@@ -69,7 +70,7 @@ export class OrderDetailsComponent implements OnInit{
   generatePDF(){
     const fileName = 'orderDetails.pdf';
     const tableTitle = 'Sipariş Detayı';
-    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+    this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
 
   navigateSettings(){

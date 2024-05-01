@@ -11,7 +11,9 @@ import { CreateModalComponent } from '../../../shared/components/create-modal/cr
 import { CreateProductRequest } from '../dto/createProductRequest';
 import { CategoryService } from '../../category/service/category.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PdfService } from '../../../core/service/pdf.service';
+
+import { TestDialogComponent } from '../../../shared/components/test-dialog/test-dialog.component';
+import { GenericService } from '../../../core/service/generic.service';
 
 @Component({
   selector: 'app-product-list',
@@ -46,7 +48,7 @@ export class ProductListComponent implements OnInit{
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private pdfService: PdfService,
+    private genericService: GenericService,
   ){}
 
   setSelectedProduct(productId: string) {
@@ -96,8 +98,6 @@ export class ProductListComponent implements OnInit{
     this.categoryService.getAllCategory().subscribe({
       next: (result) => {
         this.categoryList = result;
-        console.log("test: ", this.categoryList);
-        
       },
       error: (err) => {
         console.log(err);
@@ -112,16 +112,18 @@ export class ProductListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
     });    
-    dialog.componentInstance.showDropdown = this.showDropdown;
+    // dialog.componentInstance.showDropdown = this.showDropdown;
     dialog.componentInstance.title = 'createProductTitle';
     dialog.componentInstance.inputLabels = ['productTableProductName', 'productTableCategory', 'productTableSupplier', 'productTableCriticalStock', 'productTablePurchasePrice', 'productTableUnitPrice'];
-    dialog.componentInstance.dropdownOptions = this.categoryList;
+    // dialog.componentInstance.dropdownOptions = this.categoryList;
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
     dialog.componentInstance.values.push(new FormControl(''));
+    // dialog.componentInstance.addValue(); // Input eklemek için
+    // dialog.componentInstance.addDropdown();
 
     dialog.afterClosed().subscribe({
       next: (data) => {
@@ -224,7 +226,7 @@ export class ProductListComponent implements OnInit{
   generatePDF() {
     const fileName = 'products.pdf';
     const tableTitle = 'Ürün Listesi';
-    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+    this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
   
   onSearchInputChange(searchKeyword: string) {
@@ -243,5 +245,50 @@ export class ProductListComponent implements OnInit{
     } else {
       this.loadProducts();
     }
+  }
+
+
+  openTestCreateProductDialog() {
+    let dialog = this.dialog.open(TestDialogComponent, {
+      width: '500px',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '250ms',
+    });    
+    dialog.componentInstance.title = 'createProductTitle';
+    dialog.componentInstance.inputLabels = ['productTableProductName', 'productTableSupplier', 'productTableCriticalStock', 'productTablePurchasePrice', 'productTableUnitPrice'];
+    dialog.componentInstance.dropdownOptions = this.categoryList;
+    dialog.componentInstance.addInput();
+    dialog.componentInstance.addInput();
+    dialog.componentInstance.addInput();
+    dialog.componentInstance.addInput();
+    dialog.componentInstance.addInput();
+    dialog.componentInstance.addDropdown();
+    
+    dialog.afterClosed().subscribe({
+      next: (data) => {
+        if (data?.result === 'yes') {
+          const formValues = dialog.componentInstance.createTestForm.value.values;
+          const productNameValue = formValues[0];
+          const supplierIdValue = formValues[1];
+          const criticalCountValue = formValues[2];
+          const purchasePriceValue = formValues[3];
+          const unitPriceValue = formValues[4];
+          const categoryIdValue = formValues[5];
+          console.log("productName: ",productNameValue);
+          console.log("supplierId: ",supplierIdValue);
+          console.log("criticalCount: ",criticalCountValue);
+          console.log("purchasePrice: ",purchasePriceValue);
+          console.log("unitPrice: ",unitPriceValue);
+          console.log("categoryId: ",categoryIdValue);
+          
+          
+          this.createProduct(productNameValue, categoryIdValue, supplierIdValue, criticalCountValue, purchasePriceValue, unitPriceValue);
+        }
+      },
+      error: (err) => {
+        console.log("Dialog Hatası " + err);
+        
+      }
+    });
   }
 }

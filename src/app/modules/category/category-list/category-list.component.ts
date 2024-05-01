@@ -9,8 +9,9 @@ import { CreateModalComponent } from '../../../shared/components/create-modal/cr
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
 import { UpdateCategoryRequest } from '../dto/updateCategoryRequest';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PdfService } from '../../../core/service/pdf.service';
+
 import { TranslateService } from '@ngx-translate/core';
+import { GenericService } from '../../../core/service/generic.service';
 
 @Component({
   selector: 'app-category-list',
@@ -37,7 +38,7 @@ export class CategoryListComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private pdfService: PdfService,
+    private genericService: GenericService,
     private translateService: TranslateService,
   ){}
 
@@ -179,7 +180,7 @@ export class CategoryListComponent implements OnInit {
   generatePDF() {
     const fileName = 'categories.pdf';
     const tableTitle = this.translateService.instant('categoryPdfTitle');
-    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+    this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
 
   onSearchInputChange(searchKeyword: string) {
