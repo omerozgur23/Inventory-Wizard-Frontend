@@ -9,7 +9,8 @@ import { UpdateModalComponent } from '../../../shared/components/update-modal/up
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateCustomerRequest } from '../dto/createCustomerRequest';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PdfService } from '../../../core/service/pdf.service';
+
+import { GenericService } from '../../../core/service/generic.service';
 
 @Component({
   selector: 'app-customer-list',
@@ -39,7 +40,7 @@ export class CustomerListComponent implements OnInit{
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private pdfService: PdfService,
+    private genericService: GenericService,
   ) {}
 
   setSelectedCustomer(customerId: string) {
@@ -189,7 +190,7 @@ export class CustomerListComponent implements OnInit{
   generatePDF() {
     const fileName = 'customers.pdf';
     const tableTitle = 'Müşteri Listesi';
-    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+    this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
   
   onSearchInputChange(searchKeyword: string) {

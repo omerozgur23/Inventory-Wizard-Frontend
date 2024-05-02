@@ -1,0 +1,9 @@
+<!-- TABLE MODAL -->
+<app-table
+  [tableTitle]="tableTitle"
+  [tableData]="tableData"
+  [columns]="columns"
+  (navigateSettingsEvent)="navigateSettings()"
+  (refreshEvent)="ngOnInit()"
+  (generatePdfEvent)="generatePDF()"
+></app-table>

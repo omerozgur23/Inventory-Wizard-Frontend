@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>{{ title | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="createTestForm">
+    <div class="formBox form-group" formArrayName="values">
+      @for (control of values.controls; track $index) {
+
+      <div [formGroupName]="$index">
+        <div class="inputBox w100" *ngIf="isInputControl(control)">
+          <input
+            type="text"
+            [formControlName]="'inputValue'"
+            required
+            style="margin-top: 5px"
+          />
+          <label [for]="'input_' + $index">{{
+            inputLabels[$index] | translate
+          }}</label>
+        </div>
+
+        <div class="inputBox w100" *ngIf="isDropdownControl(control)">
+          <label>Dropdown</label>
+          <select [formControlName]="'dropdownValue'">
+            @for (item of dropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      }
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="btn-dialog" align="end">
+  <div class="btn-modal">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      {{ "cancelButton" | translate }}
+    </button>
+    <button
+      (click)="create()"
+      type="submit"
+      class="btn btn-outline-primary"
+      [disabled]="!createTestForm.valid"
+    >
+      {{ "createButton" | translate }}
+    </button>
+  </div>
+</mat-dialog-actions>

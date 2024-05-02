@@ -3,7 +3,8 @@ import { TableColumn } from '../../../shared/components/table/dto/table';
 import { OrderService } from '../service/order.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PdfService } from '../../../core/service/pdf.service';
+
+import { GenericService } from '../../../core/service/generic.service';
 
 @Component({
   selector: 'app-order-list',
@@ -29,7 +30,7 @@ export class OrderListComponent implements OnInit{
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute,
-    private pdfService: PdfService,
+    private genericService: GenericService,
   ) {}
 
   ngOnInit(): void {
@@ -89,7 +90,7 @@ export class OrderListComponent implements OnInit{
   generatePDF() {
     const fileName = 'orders.pdf';
     const tableTitle = 'Sipariş Listesi';
-    this.pdfService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+    this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
   
   onSearchInputChange(searchKeyword: string) {
