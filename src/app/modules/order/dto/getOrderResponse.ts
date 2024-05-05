@@ -1,6 +1,11 @@
 export interface GetOrderResponse {
-    id: string,
-    customerCompanyName: string,
-    employeeFirstName: string,
-    orderDate: Date,
+    count: number,
+    data: [
+        {
+            id: string,
+            customerCompanyName: string,
+            employeeFirstName: string,
+            orderDate: Date,
+        }
+    ]
 }

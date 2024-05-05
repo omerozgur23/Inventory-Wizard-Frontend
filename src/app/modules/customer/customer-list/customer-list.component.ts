@@ -11,6 +11,7 @@ import { CreateCustomerRequest } from '../dto/createCustomerRequest';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { GenericService } from '../../../core/service/generic.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-customer-list',
@@ -31,7 +32,10 @@ export class CustomerListComponent implements OnInit{
   tableTitle = "customerTableTitle";
   deleteDialogDescription = 'deleteCustomerDialogDescription';
   id: string = '';
-  currentPage: number = 1;
+  itemPerPage = 15;
+  currentPage = 1;
+  totalShelvesCount = 0;
+  totalPages = 0;
   // totalPages: number = 10;
 
   constructor(
@@ -41,6 +45,7 @@ export class CustomerListComponent implements OnInit{
     private router: Router,
     private route: ActivatedRoute,
     private genericService: GenericService,
+    private translateService: TranslateService,
   ) {}
 
   setSelectedCustomer(customerId: string) {
@@ -54,7 +59,9 @@ export class CustomerListComponent implements OnInit{
   loadCustomer() {
     this.customerService.getCustomersByPage(this.currentPage, 18).subscribe({
       next: (result) => {
-        this.tableData = result;
+        this.tableData = result.data;
+        this.totalShelvesCount = result.count;
+        this.totalPages = Math.ceil(this.totalShelvesCount / this.itemPerPage) 
       },
       error: (err) => {
         console.log(err);
@@ -70,7 +77,7 @@ export class CustomerListComponent implements OnInit{
   getAllCustomer() {
     this.customerService.getAllCustomer().subscribe({
       next: (result) => {
-        this.tableData = result;
+        this.tableData = result.data;
       },
       error: (err) => {
         console.log(err);
@@ -87,22 +94,20 @@ export class CustomerListComponent implements OnInit{
 
     dialog.componentInstance.title = 'createCustomerTitle';
     dialog.componentInstance.inputLabels = ['customerTableCompanyName', 'customerTableCompanyOfficial', 'customerTableOfficialEmail', 'customerTableOfficialPhone', 'customerTableTaxNumber', 'customerTableAddress'];
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
+    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+      dialog.componentInstance.addInput();
+    }
 
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
-          const companyNameValue = dialog.componentInstance.createForm.value.values[0];
-          const contactNameValue = dialog.componentInstance.createForm.value.values[1];
-          const contactEmailValue = dialog.componentInstance.createForm.value.values[2];
-          const contactPhoneValue = dialog.componentInstance.createForm.value.values[3];
-          const taxNumber = dialog.componentInstance.createForm.value.values[4];
-          const addressValue = dialog.componentInstance.createForm.value.values[5];
+          const formValues = dialog.componentInstance.createForm.value.values;
+          const companyNameValue = formValues[0].inputValue;
+          const contactNameValue = formValues[1].inputValue;
+          const contactEmailValue = formValues[2].inputValue;
+          const contactPhoneValue = formValues[3].inputValue;
+          const taxNumber = formValues[4].inputValue;
+          const addressValue = formValues[5].inputValue;
           this.createCustomer(companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, taxNumber, addressValue);
         }
       },
@@ -113,15 +118,16 @@ export class CustomerListComponent implements OnInit{
   }
 
   createCustomer(companyName: string, contactName: string, contactEmail: string, contactPhone: string, taxNumber: string, address: string) {
+    const successCreatedMessage = this.translateService.instant("customerCreatedMessage");
     const customer = new CreateCustomerRequest(companyName, contactName, contactEmail, contactPhone, taxNumber, address);
     this.customerService.createCustomer(customer).subscribe({
       next: (result) => {
-        this.toastr.success('Müşteri Oluşturuldu');
+        this.toastr.success(successCreatedMessage);
         this.loadCustomer();
       },
       error: (err) => {
         console.log(err);
-        this.toastr.error("Hata oluştu");
+        this.genericService.showError("errorMessage");
       }
     });
   }
@@ -159,29 +165,31 @@ export class CustomerListComponent implements OnInit{
   }
 
   updateCustomer(id: string, companyName: string, contactName: string, contactEmail: string, contactPhone: string, address: string){
+    const successUpdatedMessage = this.translateService.instant("customerUpdatedMessage");
     const customer = new UpdateCustomerRequest(id, companyName, contactName, contactEmail, contactPhone, address);
     this.customerService.updateCustomer(customer).subscribe({
       next: (result) => {
-        this.toastr.success('Müşteri Güncellenmiştir');
+        this.toastr.success(successUpdatedMessage);
         this.loadCustomer();
       },
       error: (err) => {
         console.log(err);
-        this.toastr.error("Hata oluştu");
+        this.genericService.showError("errorMessage");
       }
     })
   }
 
   deleteCustomer(id: any){
+    const successDeletedMessage = this.translateService.instant("customerDeletedMessage");
     this.customerService.deleteCustomer(id).subscribe(
       {
         next: (result) =>{
-          this.toastr.success("Müşteri silinmiştir")
+          this.toastr.success(successDeletedMessage)
           this.loadCustomer();
         },
         error: (err) => {
           console.log(err);
-          this.toastr.error("Hata oluştu")
+          this.genericService.showError("errorMessage");
         }
       }
     );
@@ -189,7 +197,7 @@ export class CustomerListComponent implements OnInit{
 
   generatePDF() {
     const fileName = 'customers.pdf';
-    const tableTitle = 'Müşteri Listesi';
+    const tableTitle = this.translateService.instant("customerPdfTitle");
     this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
   

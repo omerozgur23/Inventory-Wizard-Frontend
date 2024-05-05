@@ -11,6 +11,7 @@ import { CreateModalComponent } from '../../../shared/components/create-modal/cr
 import { CreateSupplierRequest } from '../dto/createSupplierRequest';
 
 import { GenericService } from '../../../core/service/generic.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-supplier-list',
@@ -31,7 +32,10 @@ export class SupplierListComponent implements OnInit{
   tableTitle = "supplierTableTitle";
   deleteDialogDescription = 'deleteSupplierDialogDescription';
   id = '';
-  currentPage: number = 1;
+  itemPerPage = 15;
+  currentPage = 1;
+  totalShelvesCount = 0;
+  totalPages = 0;
   // totalPages: number = 10;
 
   constructor(
@@ -41,6 +45,7 @@ export class SupplierListComponent implements OnInit{
     private router: Router,
     private route: ActivatedRoute,
     private genericService: GenericService,
+    private translateService: TranslateService,
   ){}
 
   setSelectedSupplier(supplierId: string) {
@@ -57,10 +62,11 @@ export class SupplierListComponent implements OnInit{
   }
 
   loadSupplier() {
-    this.supplierService.getSuppliersByPage(this.currentPage, 18).subscribe({
+    this.supplierService.getSuppliersByPage(this.currentPage, this.itemPerPage).subscribe({
       next: (result) => {
-        this.tableData = result;
-        console.log(this.tableData);
+        this.tableData = result.data;
+        this.totalShelvesCount = result.count;
+        this.totalPages = Math.ceil(this.totalShelvesCount / this.itemPerPage) 
       },
       error: (err) => {
         console.log(err);
@@ -71,7 +77,7 @@ export class SupplierListComponent implements OnInit{
   getAllSuppliers() {
     this.supplierService.getAllSuppliers().subscribe({
       next: (result) => {
-        this.tableData = result;
+        this.tableData = result.data;
       },
       error: (err) => {
         console.log(err);
@@ -88,22 +94,20 @@ export class SupplierListComponent implements OnInit{
 
     dialog.componentInstance.title = 'createSupplierTitle';
     dialog.componentInstance.inputLabels = ['supplierTableCompanyName', 'supplierTableCompanyOfficial', 'supplierTableOfficialEmail', 'supplierTableOfficialPhone', 'supplierTableTaxNumber', 'supplierTableAddress'];
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
+    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+      dialog.componentInstance.addInput();
+    }
 
     dialog.afterClosed().subscribe({
       next: (data) => {
         if(data?.result === 'yes') {
-          const companyNameValue = dialog.componentInstance.createForm.value.values[0];
-          const contactNameValue = dialog.componentInstance.createForm.value.values[1];
-          const contactEmailValue = dialog.componentInstance.createForm.value.values[2];
-          const contactPhoneValue = dialog.componentInstance.createForm.value.values[3];
-          const taxNumberValue = dialog.componentInstance.createForm.value.values[4];
-          const addressValue = dialog.componentInstance.createForm.value.values[5];
+          const formValues = dialog.componentInstance.createForm.value.values;
+          const companyNameValue = formValues[0].inputValue;
+          const contactNameValue = formValues[1].inputValue;
+          const contactEmailValue = formValues[2].inputValue;
+          const contactPhoneValue = formValues[3].inputValue;
+          const taxNumberValue = formValues[4].inputValue;
+          const addressValue = formValues[5].inputValue;
           this.createSupplier(companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, taxNumberValue, addressValue);
         }
       }
@@ -111,15 +115,16 @@ export class SupplierListComponent implements OnInit{
   }
 
   createSupplier(companyName: string, contactName: string, contactEmail: string, contactPhone: string, taxNumber: string, address: string){
+    const successCreatedMessage = this.translateService.instant("supplierCreatedMessage");
     const supplier = new CreateSupplierRequest(companyName, contactName, contactEmail, contactPhone, taxNumber, address);
     this.supplierService.createSupplier(supplier).subscribe({
       next: (result) => {
-        this.toastr.success('Tedarikçi Kaydı Yapıldı');
+        this.toastr.success(successCreatedMessage);
         this.loadSupplier();
       },
       error: (err) => { 
         console.log(err);
-        this.toastr.error('hata oluştu');
+        this.genericService.showError("errorMessage");
       },
     });
   }
@@ -154,35 +159,37 @@ export class SupplierListComponent implements OnInit{
   }
 
   updateSupplier(id: string, companyName: string, contactName: string, contactEmail: string, contactPhone: string, address: string){
+    const successUpdatedMessage = this.translateService.instant("supplierUpdatedMessage");
     const supplier = new UpdateSupplierRequest(id, companyName, contactName, contactEmail, contactPhone, address);
     this.supplierService.updateSupplier(supplier).subscribe({
       next: (result) => {
-        this.toastr.success('Tedarikçi Güncellenmiştir');
+        this.toastr.success(successUpdatedMessage);
         this.loadSupplier();
       },
       error: (err) => {
         console.log(err);
-        this.toastr.error("Hata oluştu");
+        this.genericService.showError("errorMessage");
       }
     })
   }
 
   deleteSupplier(id: any) {
+    const successDeletedMessage = this.translateService.instant("supplierDeletedMessage");
     this.supplierService.deleteSupplier(id).subscribe({
       next: (result) => {
-        this.toastr.success("Tedarikçi silinmiştir.")
+        this.toastr.success(successDeletedMessage)
         this.ngOnInit();
       },
       error: (err) => {
         console.log(err);
-        this.toastr.error("Hata oluştu!")
+        this.genericService.showError("errorMessage");
       }
     })
   }
 
   generatePDF() {
     const fileName = 'suppliers.pdf';
-    const tableTitle = 'Tedarikçi Listesi';
+    const tableTitle = this.translateService.instant("supplierPdfTitle");
     this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
   
