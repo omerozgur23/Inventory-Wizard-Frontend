@@ -1,4 +1,9 @@
 export interface GetCategoryResponse{
-    id: string,
-    name: string
+    count: number,
+    data: [
+        {
+            id: string,
+            name: string
+        }
+    ]
 }

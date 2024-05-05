@@ -10,6 +10,8 @@ import { EmployeeService } from '../../employee/service/employee.service';
 import { CustomerService } from '../../customer/service/customer.service';
 import { GetProductResponse } from '../dto/getProductResponse';
 import { SaleProductRequest } from '../dto/saleProductRequest';
+import { GenericService } from '../../../core/service/generic.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-product-sale',
@@ -17,9 +19,9 @@ import { SaleProductRequest } from '../dto/saleProductRequest';
   styleUrl: './product-sale.component.scss'
 })
 export class ProductSaleComponent implements OnInit{
-  customerList: UpdateCustomerRequest[] = [];
-  employeeList: GetEmployeeResponse[] = [];
-  productList: GetProductResponse[] = [];
+  customerList: any[] = [];
+  employeeList: any[] = [];
+  productList: any[] = [];
   saleProductForm!: FormGroup;
   
   constructor(
@@ -30,6 +32,8 @@ export class ProductSaleComponent implements OnInit{
     private employeeService: EmployeeService,
     private router: Router,
     private route: ActivatedRoute,
+    private genericService: GenericService,
+    private translateService: TranslateService, 
   ) {}
 
   ngOnInit(): void{
@@ -39,9 +43,9 @@ export class ProductSaleComponent implements OnInit{
       products: this.productService.getAllProducts(),
     }).subscribe({
       next: (resp => {
-        this.customerList = resp.customers;
-        this.employeeList = resp.suppliers;
-        this.productList = resp.products;
+        this.customerList = resp.customers.data;
+        this.employeeList = resp.suppliers.data;
+        this.productList = resp.products.data;
       }),
       error: (err => {
         console.log(err);
@@ -75,15 +79,16 @@ export class ProductSaleComponent implements OnInit{
   }
 
   submit(): void {
+    const successSaleMessage = this.translateService.instant("productSaleMessage");
     if (this.saleProductForm.valid) {
       const saleRequest: SaleProductRequest = this.saleProductForm.value;
       this.productService.saleProduct(saleRequest).subscribe({
         next: (result) => {
-          this.toastr.success('Ürün Satışı Başarıyla Tamamlandı');
+          this.toastr.success(successSaleMessage);
         },
         error: (err) => {
           console.error(err);
-          this.toastr.error('Satış sırasında bir hata oluştu');
+          this.genericService.showError("errorMessage");
         }
       });
     } else {
