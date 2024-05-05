@@ -10,7 +10,7 @@ import { GetProductResponse } from '../../../modules/product/dto/getProductRespo
 })
 export class AcceptProductModalComponent {
   title = '';
-  productList: GetProductResponse[] = [];
+  productList: any[] = [];
   acceptProductForm: FormGroup;
 
   constructor(
@@ -20,9 +20,10 @@ export class AcceptProductModalComponent {
   ) {
     this.title = data.title;
     this.productList = data.productList;
-
+    console.log("accept component const: ", this.productList);
+    
     this.acceptProductForm = this.fb.group({
-      productId: ['', Validators.required],
+      productId: ['', Validators.required], 
       count: [, Validators.required]
     });
   }

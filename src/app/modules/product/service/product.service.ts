@@ -19,12 +19,12 @@ export class ProductService {
     private httpClient: HttpClient,
   ) { }
 
-  getAllProducts():Observable<GetProductResponse[]> {
-    return this.httpClient.get<GetProductResponse[]>('/product/getall');
+  getAllProducts():Observable<GetProductResponse> {
+    return this.httpClient.get<GetProductResponse>('/product/getall');
   }
 
-  getProductsByPage(pageNo: number, pageSize: number): Observable<GetProductResponse[]> {
-    return this.httpClient.get<GetProductResponse[]>(`/product/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getProductsByPage(pageNo: number, pageSize: number): Observable<GetProductResponse> {
+    return this.httpClient.get<GetProductResponse>(`/product/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
   createProduct(product: CreateProductRequest):Observable<CreateProductRequest> {

@@ -13,55 +13,59 @@ import { TranslateService } from '@ngx-translate/core';
 export class TableComponent implements OnInit{
   @Input() tableData: any[] = [];
   @Input() columns: TableColumn[] = [];
-  @Input() showAcceptProductButton: boolean = false;
   @Input() showOrderDetailButton = false;
   @Input() tableTitle = '';
-  @Output() navigateCreateDialogEvent = new EventEmitter();
+  @Input() totalPages = 0;
   @Output() navigateUpdateDialogEvent = new EventEmitter<any>();
   @Output() navigateDeleteDialogEvent = new EventEmitter<any>();
-  @Output() navigateAcceptProductEvent = new EventEmitter<any>();
   @Output() navigateOrderDetailsEvent = new EventEmitter<any>();
-  @Output() navigateSettingsEvent = new EventEmitter<any>();
-  @Output() refreshEvent = new EventEmitter();
   @Output() paginationEvent = new EventEmitter();
-  @Output() generatePdfEvent = new EventEmitter();
-  @Output() onSearchInputChangeEvent = new EventEmitter<any>();
-  private searchKeywordChange = new Subject<string>();
-
-  lang = "";
   currentPage = 1;
-
-  constructor(
-    // private router: Router,
-    // private route: ActivatedRoute,
-    private translateService: TranslateService,
-  ) {
-    this.searchKeywordChange.pipe(debounceTime(300)).subscribe({
-      next: (value) => {
-        this.onSearchInputChange(value);
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
-  }
+ 
+  constructor() {}
 
   ngOnInit(): void {
-    this.lang = localStorage.getItem("lang") || "en";
-
   }
 
   onPageChange(pageNo: number) {
+    if (pageNo < 1 || pageNo > this.totalPages) {
+      return; // Geçersiz sayfa numarası, işlemi durdur
+    }
     this.currentPage = pageNo;
     this.paginationEvent.emit(pageNo);
   }
 
-  refresh(){
-    this.refreshEvent.emit();
+  totalPagesArray(): number[] {
+    // return Array(this.totalPages).fill(0).map((x, i) => i + 1);
+    const numPagesToShow = 5; // Gösterilecek maksimum sayfa sayısı
+  const currentPage = this.currentPage;
+  const totalPages = this.totalPages;
+  
+  let startPage: number;
+  let endPage: number;
+
+  if (totalPages <= numPagesToShow) {
+    // Toplam sayfa sayısı, gösterilecek maksimum sayfa sayısından az veya eşitse
+    startPage = 1;
+    endPage = totalPages;
+  } else {
+    // Toplam sayfa sayısı, gösterilecek maksimum sayfa sayısından fazlaysa
+    if (currentPage <= Math.floor(numPagesToShow / 2)) {
+      // Mevcut sayfa ilk sayfalardaysa
+      startPage = 1;
+      endPage = numPagesToShow;
+    } else if (currentPage + Math.floor(numPagesToShow / 2) >= totalPages) {
+      // Mevcut sayfa son sayfalardaysa
+      startPage = totalPages - numPagesToShow + 1;
+      endPage = totalPages;
+    } else {
+      // Mevcut sayfa orta kısımdaysa
+      startPage = currentPage - Math.floor(numPagesToShow / 2);
+      endPage = currentPage + Math.floor(numPagesToShow / 2);
+    }
   }
 
-  navigateCreateDialog() {
-    this.navigateCreateDialogEvent.emit();
+  return Array(endPage - startPage + 1).fill(0).map((_, index) => startPage + index);
   }
 
   navigateUpdateDialog(item: any){
@@ -72,20 +76,10 @@ export class TableComponent implements OnInit{
     this.navigateDeleteDialogEvent.emit(id);    
   }
 
-  navigateAcceptProduct() {
-    if (this.showAcceptProductButton) {
-      this.navigateAcceptProductEvent.emit();
-    }
-  }
-  
   navigateOrderDetails(id: string) {
     if (this.showOrderDetailButton) {
       this.navigateOrderDetailsEvent.emit(id);
     }
-  }
-
-  navigateSettings(){
-    this.navigateSettingsEvent.emit();
   }
 
   isCritical(item: any, fieldName: string): boolean {
@@ -94,29 +88,5 @@ export class TableComponent implements OnInit{
       return item[fieldName] <= item[criticalField];
     }
     return false;
-  }
-
-  generatePDF(){
-    this.generatePdfEvent.emit();
-  }
-  
-  handleSearchInputChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (target instanceof HTMLInputElement) {
-      const keyword = target.value;
-      this.searchKeywordChange.next(keyword);
-    }
-  }
-
-  onSearchInputChange(keyword: string) {
-    this.onSearchInputChangeEvent.emit(keyword);
-  }
-
-  ChangeLang(lang: any) {
-    const selectedLanguage = lang.target.value;
-
-    localStorage.setItem('lang', selectedLanguage);
-
-    this.translateService.use(selectedLanguage);
   }
 }

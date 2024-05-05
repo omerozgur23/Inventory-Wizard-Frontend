@@ -30,13 +30,20 @@
     "goHomeButton": "Anasayfaya Dön",
     "signInButton": "Giriş",
 
+    "productPdfTitle": "Ürün Listesi",
+    "categoryPdfTitle": "Kategori Listesi",
+    "shelfPdfTitle": "Raf Listesi",
+    "orderPdfTitle": "Sipariş Listesi",
+    "orderDetailPdfTitle": "Sipariş Detayı",
+    "employeePdfTitle": "Personel Listesi",
+    "customerPdfTitle": "Müşteri Listesi",
+
     "deleteCategoryDialogDescription": "Kategori kaydını silmek istediğinizden emin misiniz?",
     "categoryTableTitle": "Kategoriler",
     "categoryTableCategoryCode": "Kategori Kodu",
     "categoryTableCategoryName": "Kategori Adı",
     "createCategoryTitle": "Yeni Kategori",
     "updateCategoryTitle": "Kategori Güncelle",
-    "categoryPdfTitle": "Kategori Listesi",
 
     "deleteShelfDialogDescription": "Raf kaydını silmek istediğinizden emin misiniz?",
     "shelfTableTitle": "Raflar",
@@ -107,6 +114,7 @@
     "supplierTableAddress": "Adres",
     "createSupplierTitle": "Yeni Tedarikçi",
     "updateSupplierTitle": "Tedarikçi Güncelle",
+    "supplierPdfTitle": "Tedarikçi Listesi",
 
     "deleteEmployeeDialogDescription": "Personel kaydını silmek istediğinizden emin misiniz?",
     "employeeTableTitle": "Personeller",
@@ -138,6 +146,10 @@
     "accessDeniedH1": "Bu sayfaya erişim kısıtlıdır",
     "accessDeniedP": "Bunun bir hata olduğunu düşünüyorsanız lütfen site yöneticisine danışın.",
 
+    "reportTotalSales": "Toplam Ciro",
+    "reportTotalWinning": "Toplam Kâr",
+    "repotTotalSalesCost": "Toplam Satış Maliyeti",
+
     "errorMessage": "Hata oluştu",
     "categoryCreatedMessage": "Kategori kaydı oluşturuldu",
     "categoryUpdatedMessage": "Kategori güncellendi",
@@ -146,7 +158,31 @@
     "loginSuccessMessage": "Hoşgeldiniz",
     "loginErrorMessage": "E-posta ya da şifre hatalı",
 
-    "reportTotalSales": "Toplam Ciro",
-    "reportTotalWinning": "Toplam Kâr",
-    "repotTotalSalesCost": "Toplam Satış Maliyeti"
+    "shelfCreatedMessage": "Yeni raf oluşturuldu",
+    "shelfUpdatedMessage": "Raf güncellendi",
+    "shelfDeletedMessage": "Raf silindi",
+    "successAcceptProductMessage": "Ürün girişi yapıldı",
+    "createShelfErrorCapacity": "Raf kapasitesi maksimum 5 olabilir!",
+    "createShelfErrorCount": "Tek seferde maksimum 10 raf oluşturulabilir!",
+
+    "supplierCreatedMessage": "Tedarikçi kaydı oluşturuldu",
+    "supplierUpdatedMessage": "Tedarikçi güncellendi",
+    "supplierDeletedMessage": "Tedarikçi silindi",
+
+    "productCreatedMessage": "Ürün kaydı oluşturuldu",
+    "productUpdatedMessage": "Ürün güncellendi",
+    "productDeletedMessage": "Ürün silindi",
+
+    "productSaleMessage": "Ürün satışı başarıyla tamamlandı",
+
+    "orderUpdateButtonMessage": "Siparişler güncellenemez!",
+    "orderDeleteButtonMessage": "Siparişler silinemez!",
+
+    "employeeCreatedMessage": "Personel kaydı oluşturuldu",
+    "employeeUpdatedMessage": "Personel güncellendi",
+    "employeeDeletedMessage": "Personel silindi",
+
+    "customerCreatedMessage": "Müşteri kaydı oluşturuldu",
+    "customerUpdatedMessage": "Müşteri güncellendi",
+    "customerDeletedMessage": "Müşteri silindi"
 }
