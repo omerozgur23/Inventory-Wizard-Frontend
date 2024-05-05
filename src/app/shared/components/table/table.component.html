@@ -1,112 +1,4 @@
 <div style="background: #f8faff">
-  <div class="pt-2 pb-2 nb">
-    <div class="ps-4 pe-4">
-      <!-- Ekleme, Yenileme ve Arama Butonları -->
-      <button class="btn primary img-button" (click)="refresh()">
-        <img src="../../../../assets/img/refresh.svg" title="Yenile" />
-        <span class="nb-btn-span"> {{ "refresh" | translate }} </span>
-      </button>
-      <button
-        (click)="navigateCreateDialog()"
-        class="btn btn primary img-button"
-      >
-        <img src="../../../../assets/img/createIcon.svg" title="Ekle" />
-        <span class="nb-btn-span"> {{ "create" | translate }} </span>
-      </button>
-      <button
-        *ngIf="showAcceptProductButton"
-        class="btn btn primary img-button"
-        (click)="navigateAcceptProduct()"
-      >
-        <img
-          src="../../../../assets/img/acceptProduct.png"
-          title="acceptProduct"
-        />
-        <span class="nb-btn-span"> {{ "acceptProduct" | translate }} </span>
-      </button>
-      <button class="btn btn primary img-button" (click)="generatePDF()">
-        <img
-          style="height: 30px; width: 33px"
-          src="./assets/img/pdf.svg"
-          alt=""
-        />
-        <span class="nb-btn-span"> {{ "pdf" | translate }} </span>
-      </button>
-
-      <!-- <div class="form">
-        <label for="search">
-          <input
-            class="input"
-            type="text"
-            required=""
-            placeholder="Ara"
-            id="search"
-            (input)="handleSearchInputChange($event)"
-          />
-          <div class="fancy-bg"></div>
-          <div class="search">
-            <img src="../../../../assets/img/search.svg" alt="" />
-          </div>
-        </label>
-      </div> -->
-
-      <span class="mt-1 me-3 nb-search-span">
-        <img src="../../../../assets/img/search.svg" alt="" />
-
-        <input
-          type="text"
-          class="nb-search-input"
-          placeholder="{{ 'search' | translate }}"
-          (input)="handleSearchInputChange($event)"
-        />
-      </span>
-
-      <div
-        class="flex-shrink-0 dropdown d-flex justify-content-between"
-        style="float: right"
-      >
-        <select
-          class="form-select me-3"
-          (change)="ChangeLang($event)"
-          name=""
-          id=""
-        >
-          <option [selected]="lang === 'en'" value="en">English</option>
-          <option [selected]="lang === 'tr'" value="tr">Türkçe</option>
-        </select>
-        <a
-          style="cursor: pointer"
-          class="d-block link-dark text-decoration-none dropdown-toggle"
-          id="dropdownUser2"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <img
-            src="../../../../assets/img/profile.svg"
-            alt="mdo"
-            width="32"
-            height="32"
-            class="rounded-circle"
-          />
-        </a>
-        <ul
-          class="dropdown-menu text-small shadow"
-          aria-labelledby="dropdownUser2"
-        >
-          <li>
-            <a
-              style="cursor: pointer; text-align: center"
-              class="dropdown-item"
-              (click)="navigateSettings()"
-              >{{ "settings" | translate }}</a
-            >
-          </li>
-          <li><hr class="dropdown-divider" /></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
   <div class="pe-4 ps-4 py-4">
     <div class="table-responsive tbodyDiv">
       <p style="font-weight: bold">{{ tableTitle | translate }}</p>
@@ -183,12 +75,12 @@
         /></a>
       </li>
       <li
-        *ngFor="let page of [1, 2, 3, 4, 5, 6, 7]"
+        *ngFor="let page of totalPagesArray()"
         [class.active]="currentPage === page"
       >
         <a (click)="onPageChange(page)">{{ page }}</a>
       </li>
-      <li>
+      <li [ngClass]="{ disabled: currentPage === totalPages }">
         <a (click)="onPageChange(currentPage + 1)">
           <img src="../../../../assets/img/backArrow.svg" alt="" />
         </a>

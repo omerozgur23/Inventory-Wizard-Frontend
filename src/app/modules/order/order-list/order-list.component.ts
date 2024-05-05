@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { GenericService } from '../../../core/service/generic.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-order-list',
@@ -22,7 +23,10 @@ export class OrderListComponent implements OnInit{
   ];
 
   tableTitle = "orderTableTitle";
-  currentPage: number = 1;
+  itemPerPage = 15;
+  currentPage = 1;
+  totalShelvesCount = 0;
+  totalPages = 0;
   // totalPages: number = 10;
 
   constructor(
@@ -31,6 +35,7 @@ export class OrderListComponent implements OnInit{
     private router: Router,
     private route: ActivatedRoute,
     private genericService: GenericService,
+    private translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -38,20 +43,15 @@ export class OrderListComponent implements OnInit{
   }
 
   loadOrder() {
-    this.orderService.getOrdersByPage(this.currentPage, 18).subscribe({
+    this.orderService.getOrdersByPage(this.currentPage, this.itemPerPage).subscribe({
       next: (result) => {
-        this.tableData = this.uuidSplit(result);
+        this.tableData = this.genericService.uuidSplit(result.data);
+        this.totalShelvesCount = result.count;
+        this.totalPages = Math.ceil(this.totalShelvesCount / this.itemPerPage) 
       },
       error: (err) => {
         console.log(err);
       }
-    });
-  }
-
-  uuidSplit(data: any[]): any[] {
-    return data.map(item => {
-      const shortId = '#' + item.id.split('-')[0];
-      return { ...item, shortId };
     });
   }
 
@@ -63,7 +63,7 @@ export class OrderListComponent implements OnInit{
   getAllOrders() {
     this.orderService.getAllOrders().subscribe({
       next: (result) => {
-        this.tableData = result
+        this.tableData = result.data
       },
       error: (err) => {
         console.log(err);
@@ -72,11 +72,13 @@ export class OrderListComponent implements OnInit{
   }
 
   updateOrder(){
-    this.toastr.info('Siparişler güncellenemez!')
+    const errorUpdateMessage = this.translateService.instant("orderUpdateButtonMessage");
+    this.toastr.info(errorUpdateMessage)
   }
 
   deleteOrder(){
-    this.toastr.info('Siparişler silinemez!');
+    const errorDeleteMessage = this.translateService.instant("orderDeleteButtonMessage");
+    this.toastr.info(errorDeleteMessage);
   }
 
   navigateOrderDetails(orderId: string) {
@@ -89,7 +91,7 @@ export class OrderListComponent implements OnInit{
 
   generatePDF() {
     const fileName = 'orders.pdf';
-    const tableTitle = 'Sipariş Listesi';
+    const tableTitle = this.translateService.instant("orderPdfTitle");
     this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
   
@@ -98,7 +100,7 @@ export class OrderListComponent implements OnInit{
       setTimeout(() => 
         this.orderService.search(searchKeyword).subscribe({
           next: (result) => {
-            this.tableData = this.uuidSplit(result);
+            this.tableData = this.genericService.uuidSplit(result);
           },
           error: (err) => {
             console.log(err);

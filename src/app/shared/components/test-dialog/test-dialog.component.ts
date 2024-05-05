@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -11,7 +11,8 @@ export class TestDialogComponent {
   title = '';
   inputLabels: string[] = [];
   createTestForm!: FormGroup;
-  dropdownOptions: any[] = [];
+  categoryDropdownOptions: any[] = [];
+  supplierDropdownOptions: any[] = [];
   // showDropdown = false;
 
   constructor(
@@ -31,24 +32,33 @@ export class TestDialogComponent {
     const inputFormControl = new FormGroup({
       inputValue: new FormControl('', Validators.required)
     });
-    // const inputFormControl = new FormControl('', Validators.required)
     this.values.push(inputFormControl);
   }
 
-  addDropdown() {
-    const dropdownFormGroup = new FormGroup({
-      dropdownValue: new FormControl('', Validators.required)
+  addCategoryDropdown() {
+    const categoryDropdownFormGroup = new FormGroup({
+      categoryDropdownValue: new FormControl('', Validators.required)
     });
-    // const dropdownFormGroup = new FormControl('', Validators.required)
-    this.values.push(dropdownFormGroup);
+    this.values.push(categoryDropdownFormGroup);
+  }
+
+  addSupplierDropdown() {
+    const supplierDropdownFormGroup = new FormGroup({
+      supplierDropdownValue: new FormControl('', Validators.required)
+    });
+    this.values.push(supplierDropdownFormGroup);
   }
 
   isInputControl(control: AbstractControl): boolean {
     return control.get('inputValue') instanceof FormControl;
   }
 
-  isDropdownControl(control: AbstractControl): boolean {
-    return control instanceof FormGroup && control.contains('dropdownValue');
+  isCategoryDropdownControl(control: AbstractControl): boolean {
+    return control instanceof FormGroup && control.contains('categoryDropdownValue');
+  }
+
+  isSupplierDropdownControl(control: AbstractControl): boolean {
+    return control instanceof FormGroup && control.contains('supplierDropdownValue');
   }
 
   create() {

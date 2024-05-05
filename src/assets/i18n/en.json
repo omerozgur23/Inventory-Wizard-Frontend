@@ -30,13 +30,20 @@
     "goHomeButton": "Go Home",
     "signInButton": "Sign In",
 
+    "productPdfTitle": "Product List",
+    "categoryPdfTitle": "Category List",
+    "shelfPdfTitle": "Shelf List",
+    "orderPdfTitle": "Order List",
+    "orderDetailPdfTitle": "Order Detail",
+    "employeePdfTitle": "Employee List",
+    "customerPdfTitle": "Customer List",
+
     "deleteCategoryDialogDescription": "Are you sure you want to delete the category?",
     "categoryTableTitle": "Categories",
     "categoryTableCategoryCode": "Category Code",
     "categoryTableCategoryName": "Category Name",
     "createCategoryTitle": "New Category",
     "updateCategoryTitle": "Update Category",
-    "categoryPdfTitle": "Category List",
 
     "deleteShelfDialogDescription": "Are you sure you want to delete the shelf?",
     "shelfTableTitle": "Shelves",
@@ -107,6 +114,7 @@
     "supplierTableAddress": "Address",
     "createSupplierTitle": "New Supplier",
     "updateSupplierTitle": "Update Supplier",
+    "supplierPdfTitle": "Supplier List",
 
     "deleteEmployeeDialogDescription": "Are you sure you want to delete the employee?",
     "employeeTableTitle": "Employees",
@@ -138,6 +146,10 @@
     "accessDeniedH1": "Access to this page is restricted",
     "accessDeniedP": "Please check with the site admin if you believe this is a mistake.",
 
+    "reportTotalSales": "Total Sales",
+    "reportTotalWinning": "Total Winning",
+    "repotTotalSalesCost": "Total Sales Cost",
+
     "errorMessage": "An error occurred",
     "categoryCreatedMessage": "Category is created",
     "categoryUpdatedMessage": "Category is updated",
@@ -146,7 +158,31 @@
     "loginSuccessMessage": "Welcome",
     "loginErrorMessage": "E-mail or password is incorrect",
 
-    "reportTotalSales": "Total Sales",
-    "reportTotalWinning": "Total Winning",
-    "repotTotalSalesCost": "Total Sales Cost"
+    "shelfCreatedMessage": "Shelf is created",
+    "shelfUpdatedMessage": "Shelf is updated",
+    "shelfDeletedMessage": "Shelf is deleted",
+    "successAcceptProductMessage": "Product entry has been made",
+    "createShelfErrorCapacity": "Shelf capacity can be a maximum of 5!",
+    "createShelfErrorCount": "A maximum of 10 shelves can be created at once!",
+
+    "supplierCreatedMessage": "Supplier is created",
+    "supplierUpdatedMessage": "Supplier is updated",
+    "supplierDeletedMessage": "Supplier is deleted",
+
+    "productCreatedMessage": "Product is created",
+    "productUpdatedMessage": "Product is updated",
+    "productDeletedMessage": "Product is deleted",
+
+    "productSaleMessage": "Product sale successfully",
+
+    "orderUpdateButtonMessage": "Orders cannot be updated!",
+    "orderDeleteButtonMessage": "Orders cannot be deleted!",
+
+    "employeeCreatedMessage": "Employee is created",
+    "employeeUpdatedMessage": "Employee is updated",
+    "employeeDeletedMessage": "Employee is deleted",
+
+    "customerCreatedMessage": "Employee is created",
+    "customerUpdatedMessage": "Employee is updated",
+    "customerDeletedMessage": "Employee is deleted"
 }

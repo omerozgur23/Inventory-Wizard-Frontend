@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 import { GenericService } from '../../../core/service/generic.service';
+import { TestDialogComponent } from '../../../shared/components/test-dialog/test-dialog.component';
 
 @Component({
   selector: 'app-category-list',
@@ -28,8 +29,10 @@ export class CategoryListComponent implements OnInit {
   tableTitle = 'categoryTableTitle'
   deleteDialogDescription = 'deleteCategoryDialogDescription';
   id = '';
+  itemPerPage = 15;
   currentPage = 1;
-  existingCategoryNames: string[] = [];
+  totalShelvesCount = 0;
+  totalPages = 0;
   // totalPages: number = 10;
 
   constructor(
@@ -53,20 +56,13 @@ export class CategoryListComponent implements OnInit {
   loadCategory() {
     this.categoryService.getCategoriesByPage(this.currentPage, 18).subscribe({
       next: (result) => {
-        this.tableData = this.uuidSplit(result)
-        console.log(this.tableData);
+        this.tableData = this.genericService.uuidSplit(result.data)
+        this.totalShelvesCount = result.count;
+        this.totalPages = Math.ceil(this.totalShelvesCount / this.itemPerPage) 
       },
       error: (err) => {
         console.log(err);
       }
-      // this.existingCategoryNames = this.tableData.map(item => item.name);
-    });
-  } 
-
-  uuidSplit(data: any[]): any[] {
-    return data.map(item => {
-      const shortId = '#' + item.id.split('-')[0];
-      return { ...item, shortId };
     });
   }
 
@@ -78,7 +74,7 @@ export class CategoryListComponent implements OnInit {
   getAllCategory(){
     this.categoryService.getAllCategory().subscribe({
       next: (result) => {
-        this.tableData = result;
+        this.tableData = result.data;
       },
       error: (err) => {
         console.log(err);
@@ -95,13 +91,17 @@ export class CategoryListComponent implements OnInit {
 
     dialog.componentInstance.title = 'createCategoryTitle';
     dialog.componentInstance.inputLabels = ['categoryTableCategoryName'];
-    dialog.componentInstance.values.push(new FormControl(''));
+    // dialog.componentInstance.values.push(new FormControl(''));
+    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+      dialog.componentInstance.addInput();
+    }
 
     dialog.afterClosed().subscribe({
       next: (data) => {
-        if (data?.result === 'yes') {            
-            const categoryNameValue = dialog.componentInstance.createForm.value.values[0];
-            this.createCategory(categoryNameValue);
+        if (data?.result === 'yes') {
+          const formValues = dialog.componentInstance.createForm.value.values;
+          const categoryNameValue = formValues[0].inputValue;
+          this.createCategory(categoryNameValue);
         }
       },
       error: (err) => {
@@ -111,8 +111,8 @@ export class CategoryListComponent implements OnInit {
   }
 
   createCategory(categoryName: string) {
-    const category = new CreateCategoryRequest(categoryName);
     const successCreatedMessage = this.translateService.instant('categoryCreatedMessage');
+    const category = new CreateCategoryRequest(categoryName);
     this.categoryService.createCategory(category).subscribe({
       next: (result) => {
         this.toastr.success(successCreatedMessage);
@@ -120,7 +120,7 @@ export class CategoryListComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        this.showError('errorMessage')
+        this.genericService.showError("errorMessage");
       }
     });
   }
@@ -147,8 +147,8 @@ export class CategoryListComponent implements OnInit {
   }
 
   updateCategory(id: string, categoryName: string){
-    const category = new UpdateCategoryRequest(id, categoryName);
     const successUpdatedMessage = this.translateService.instant('categoryUpdatedMessage');
+    const category = new UpdateCategoryRequest(id, categoryName);
     this.categoryService.updateCategory(category).subscribe({ 
       next: (result) => {
         this.toastr.success(successUpdatedMessage);
@@ -156,7 +156,7 @@ export class CategoryListComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        this.showError('errorMessage')
+        this.genericService.showError("errorMessage");
       }
     })
   }
@@ -171,7 +171,7 @@ export class CategoryListComponent implements OnInit {
         },
         error: (err) => {
           console.log(err);
-          this.showError('errorMessage')
+          this.genericService.showError("errorMessage");
         }
       }
     );
@@ -188,7 +188,7 @@ export class CategoryListComponent implements OnInit {
       setTimeout(() => 
         this.categoryService.search(searchKeyword).subscribe({
           next: (result) => {
-            this.tableData = this.uuidSplit(result);
+            this.tableData = this.genericService.uuidSplit(result);
           },
           error: (err) => {
             console.log(err);
@@ -203,10 +203,5 @@ export class CategoryListComponent implements OnInit {
 
   navigateSettings(){
     this.router.navigate(['/home/settings']);
-  }
-
-  showError(messageKey: string) {
-    const errorMessage = this.translateService.instant(messageKey);
-    this.toastr.error(errorMessage);
   }
 }

@@ -1,16 +1,19 @@
+<app-navbar
+  (refreshEvent)="ngOnInit()"
+  (generatePdfEvent)="generatePDF()"
+  (navigateCreateDialogEvent)="openCreateEmployeeDialog()"
+  (onSearchInputChangeEvent)="onSearchInputChange($event)"
+></app-navbar>
+
 <!-- TABLE MODAL -->
 <app-table
+  [totalPages]="totalPages"
   [tableTitle]="tableTitle"
   [tableData]="tableData"
   [columns]="columns"
-  (navigateCreateDialogEvent)="openCreateEmployeeDialog()"
   (navigateUpdateDialogEvent)="openUpdateEmployeeDialog($event)"
   (navigateDeleteDialogEvent)="setSelectedEmployee($event.id)"
-  (navigateSettingsEvent)="navigateSettings()"
-  (refreshEvent)="ngOnInit()"
   (paginationEvent)="onPageChange($event)"
-  (onSearchInputChangeEvent)="onSearchInputChange($event)"
-  (generatePdfEvent)="generatePDF()"
 ></app-table>
 
 <!-- DELETE MODAL -->

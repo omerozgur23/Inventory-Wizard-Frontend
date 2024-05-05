@@ -7,6 +7,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { AppModule } from '../../app.module';
+import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({

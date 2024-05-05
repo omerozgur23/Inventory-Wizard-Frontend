@@ -4,6 +4,7 @@ import { GetEmployeeResponse } from '../dto/getEmployeeResponse';
 import { Observable } from 'rxjs';
 import { CreateEmployeeRequest } from '../dto/createEmployeeRequest';
 import { UpdateEmployeeRequest } from '../dto/updateEmployeeRequest';
+import { GetRolesResponse } from '../dto/getRolesResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +18,12 @@ export class EmployeeService {
     private httpClient: HttpClient,
   ) { }
 
-  getAllEmployee():Observable<GetEmployeeResponse[]> {
-    return this.httpClient.get<GetEmployeeResponse[]>('/user/getall');
+  getAllEmployee():Observable<GetEmployeeResponse> {
+    return this.httpClient.get<GetEmployeeResponse>('/user/getall');
   }
 
-  getEmployeesByPage(pageNo: number, pageSize: number): Observable<GetEmployeeResponse[]> {
-    return this.httpClient.get<GetEmployeeResponse[]>(`/user/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getEmployeesByPage(pageNo: number, pageSize: number): Observable<GetEmployeeResponse> {
+    return this.httpClient.get<GetEmployeeResponse>(`/user/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
   createEmployee(employee: CreateEmployeeRequest):Observable<CreateEmployeeRequest>{
@@ -40,5 +41,9 @@ export class EmployeeService {
   search(keyword: string): Observable<GetEmployeeResponse[]> {
     const params = new HttpParams().set('keyword', keyword);
     return this.httpClient.get<GetEmployeeResponse[]>(`/user/search`, { params: params });
+  }
+
+  getAllRoles(): Observable<GetRolesResponse[]>{
+    return this.httpClient.get<GetRolesResponse[]>('/user/roles');
   }
 }

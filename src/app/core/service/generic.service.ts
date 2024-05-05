@@ -3,6 +3,7 @@ import { ShelfService } from '../../modules/warehouse/service/shelf.service';
 import { TranslateService } from '@ngx-translate/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class GenericService {
   constructor(
     // private shelfService: ShelfService,
     private translateService: TranslateService,
+    private toastr: ToastrService
   ) { (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs; }
 
   uuidSplit(data: any[]): any[] {
@@ -59,6 +61,11 @@ export class GenericService {
     };
 
     pdfMake.createPdf(docDefinition as any).download(fileName);
+  }
+
+  showError(messageKey: string) {
+    const errorMessage = this.translateService.instant(messageKey);
+    this.toastr.error(errorMessage);
   }
 
   // tableData: any[] = []

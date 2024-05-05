@@ -17,12 +17,12 @@ export class CustomerService {
     private httpClient: HttpClient,
   ) { }
 
-  getAllCustomer(): Observable<GetCustomerResponse[]>{
-    return this.httpClient.get<GetCustomerResponse[]>('/customer/getall');
+  getAllCustomer(): Observable<GetCustomerResponse>{
+    return this.httpClient.get<GetCustomerResponse>('/customer/getall');
   }
 
-  getCustomersByPage(pageNo: number, pageSize: number): Observable<GetCustomerResponse[]> {
-    return this.httpClient.get<GetCustomerResponse[]>(`/customer/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getCustomersByPage(pageNo: number, pageSize: number): Observable<GetCustomerResponse> {
+    return this.httpClient.get<GetCustomerResponse>(`/customer/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
   
   createCustomer(customer: CreateCustomerRequest): Observable<CreateCustomerRequest> {

@@ -26,11 +26,15 @@
         {{ "deleteDialogDescription2" | translate }} <br />
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
           {{ "cancelButton" | translate }}
         </button>
         <button
-          class="btn btn-danger img-button"
+          class="btn btn-outline-danger img-button"
           data-bs-dismiss="modal"
           (click)="delete(selectedId)"
         >

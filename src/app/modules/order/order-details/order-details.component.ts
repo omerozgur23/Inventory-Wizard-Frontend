@@ -4,6 +4,7 @@ import { OrderService } from '../service/order.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { GenericService } from '../../../core/service/generic.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-order-details',
@@ -28,6 +29,7 @@ export class OrderDetailsComponent implements OnInit{
     private route: ActivatedRoute,
     private genericService: GenericService,
     private router: Router,
+    private translateService: TranslateService,
   ){}
 
   ngOnInit(): void {
@@ -52,7 +54,7 @@ export class OrderDetailsComponent implements OnInit{
   getOrderDetails(orderId: string) {
     this.orderService.getOrderDetails(orderId).subscribe({
       next: (result) => {
-        this.tableData = this.uuidSplit(result);
+        this.tableData = this.genericService.uuidSplit(result);
       },
       error: (err) => {
         console.error('Error fetching order details:', err);
@@ -60,16 +62,9 @@ export class OrderDetailsComponent implements OnInit{
     });
   }
 
-  uuidSplit(data: any[]): any[] {
-    return data.map(item => {
-      const shortId = '#' + item.orderId.split('-')[0];
-      return { ...item, shortId };
-    });
-  }
-
   generatePDF(){
     const fileName = 'orderDetails.pdf';
-    const tableTitle = 'Sipariş Detayı';
+    const tableTitle = this.translateService.instant("orderDetailPdfTitle");
     this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
 

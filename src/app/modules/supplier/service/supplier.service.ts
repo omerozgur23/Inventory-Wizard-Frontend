@@ -17,12 +17,12 @@ export class SupplierService {
     private httpClient: HttpClient,
   ) { }
 
-  getAllSuppliers(): Observable<GetSupplierResponse[]>{
-    return this.httpClient.get<GetSupplierResponse[]>('/supplier/getall');
+  getAllSuppliers(): Observable<GetSupplierResponse>{
+    return this.httpClient.get<GetSupplierResponse>('/supplier/getall');
   }
 
-  getSuppliersByPage(pageNo: number, pageSize: number): Observable<GetSupplierResponse[]> {
-    return this.httpClient.get<GetSupplierResponse[]>(`/supplier/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getSuppliersByPage(pageNo: number, pageSize: number): Observable<GetSupplierResponse> {
+    return this.httpClient.get<GetSupplierResponse>(`/supplier/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
   createSupplier(supplier: CreateSupplierRequest):Observable<CreateSupplierRequest> {
