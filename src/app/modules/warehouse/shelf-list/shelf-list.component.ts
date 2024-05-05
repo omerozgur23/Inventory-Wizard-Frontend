@@ -9,11 +9,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateShelfRequest } from '../dto/createShelfRequest';
 import { UpdateShelfRequest } from '../dto/updateShelfRequest';
-import { GetProductResponse } from '../../product/dto/getProductResponse';
 import { ProductService } from '../../product/service/product.service';
-import { forkJoin } from 'rxjs';
 import { AcceptProductModalComponent } from '../../../shared/components/accept-product-modal/accept-product-modal.component';
 import { GenericService } from '../../../core/service/generic.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-shelf-list',
@@ -30,11 +29,13 @@ export class ShelfListComponent implements OnInit{
   ];
 
   tableTitle = "shelfTableTitle"
-  productList: GetProductResponse[] = [];
+  productList: any[] = [];
   deleteDialogDescription = 'deleteShelfDialogDescription';
   id = '';
-  currentPage: number = 1;
-  // totalPages: number = 10;
+  itemPerPage = 15;
+  currentPage = 1;
+  totalShelvesCount = 0;
+  totalPages = 0;
   acceptProductForm = this.fb.group({
     productId: '',
     count: 0,
@@ -49,7 +50,7 @@ export class ShelfListComponent implements OnInit{
     private fb: FormBuilder,
     private productService: ProductService,
     private genericService: GenericService,
-    // private cdr: ChangeDetectorRef,
+    private translateService: TranslateService,
   ){}
 
   setSelectedShelf(shelfId: string) {
@@ -58,12 +59,13 @@ export class ShelfListComponent implements OnInit{
 
   ngOnInit(): void { 
     this.loadShelves();
+    this.getAllProducts();
+  }
 
-    forkJoin({
-      products: this.productService.getAllProducts(),
-    }).subscribe({
+  getAllProducts(){
+    this.productService.getAllProducts().subscribe({
       next: (result) => {
-        this.productList = result.products;
+        this.productList = result.data;
       },
       error: (err) => {
         console.log(err);
@@ -72,22 +74,17 @@ export class ShelfListComponent implements OnInit{
   }
 
   loadShelves() {
-    this.shelfService.getShelvesByPage(this.currentPage, 15).subscribe({
+    this.shelfService.getShelvesByPage(this.currentPage, this.itemPerPage).subscribe({
       next: (result) => {
-        this.tableData = this.genericService.uuidSplit(result);
+        this.tableData = this.genericService.uuidSplit(result.data);
+        this.totalShelvesCount = result.count;
+        this.totalPages = Math.ceil(this.totalShelvesCount / this.itemPerPage) 
       },
       error: (err) => {
         console.log(err);
       }
     });
   }
-
-  // uuidSplit(data: any[]): any[] {
-  //   return data.map(item => {
-  //     const shortId = '#' + item.id.split('-')[0];
-  //     return { ...item, shortId };
-  //   });
-  // }
 
   onPageChange(pageNo: number) {
     this.currentPage = pageNo;
@@ -97,16 +94,12 @@ export class ShelfListComponent implements OnInit{
   getAllShelves(){
     this.shelfService.getAllShelves().subscribe({
       next: (result) => {
-        this.tableData = result;
+        this.tableData = result.data;
       },
       error: (err) => {
         console.log(err);
       }
     });
-  }
-
-  navigateAcceptProduct(){
-    this.router.navigate(['./accept-product'], {relativeTo: this.route});
   }
 
   openCreateShelfDialog(){
@@ -118,14 +111,16 @@ export class ShelfListComponent implements OnInit{
 
     dialog.componentInstance.title = 'createShelfTitle';
     dialog.componentInstance.inputLabels = ['shelfTableCapacity', 'shelfInputsPeace'];
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
+    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+      dialog.componentInstance.addInput();
+    }
 
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
-          const capacityValue = dialog.componentInstance.createForm.value.values[0];
-          const countValue = dialog.componentInstance.createForm.value.values[1];
+          const formValues = dialog.componentInstance.createForm.value.values;
+          const capacityValue = formValues[0].inputValue;
+          const countValue = formValues[1].inputValue;
           this.createShelf(capacityValue, countValue);
         }
       }
@@ -133,17 +128,20 @@ export class ShelfListComponent implements OnInit{
   }
 
   createShelf(capacity: number, count: number){
+    const successCreatedMessage = this.translateService.instant("shelfCreatedMessage");
+    const errorCapacityMessage = this.translateService.instant("createShelfErrorCapacity");
+    const errorCountMessage = this.translateService.instant("createShelfErrorCount");
     const shelf = new CreateShelfRequest(capacity, count);
     this.shelfService.createShelf(shelf).subscribe({
       next: (resp) => {
-        this.toastr.success('Yeni raf oluşturuldu');
+        this.toastr.success(successCreatedMessage);
         this.loadShelves();
       },
-      error: (err) => {
+      error: (err) => {    
         if (capacity > 5) {
-          this.toastr.error('Raf kapasitesi maksimum 5 olabilir!');
+          this.toastr.error(errorCapacityMessage);
         }if (count > 2) {
-          this.toastr.info('Tek seferde maksimum 10 raf oluşturulabilir!')
+          this.toastr.info(errorCountMessage)
         }
         console.log(err);
         // else{
@@ -178,15 +176,17 @@ export class ShelfListComponent implements OnInit{
   }
 
   updateShelf(id: string, capacity: number){
+    const successUpdatedMessage = this.translateService.instant("shelfUpdatedMessage");
+    const errorCapacityMessage = this.translateService.instant("createShelfErrorCapacity");
     const shelf = new UpdateShelfRequest(id, capacity)
     this.shelfService.updateShelf(shelf).subscribe({
       next: (result) => {
-        this.toastr.success('Raf Bilgileri Güncellendi');
+        this.toastr.success(successUpdatedMessage);
         this.loadShelves();
       },
       error: (err) => {
         if (capacity > 5) {
-          this.toastr.error('Raf kapasitesi maksimum 5 olabilir!')
+          this.toastr.error(errorCapacityMessage)
         }
         console.log(err);
       }
@@ -194,14 +194,15 @@ export class ShelfListComponent implements OnInit{
   }
   
   deleteShelf(id: any){
+    const successDeletedMessage = this.translateService.instant("shelfDeletedMessage");
     this.shelfService.deleteShelf(id).subscribe(
       {
         next: () =>{
-          this.toastr.success("Raf silinmiştir")
+          this.toastr.success(successDeletedMessage)
           this.ngOnInit();
         },
         error: () => {
-          this.toastr.error("Hata oluştu")
+          this.genericService.showError("errorMessage");
         }
       }
     );
@@ -213,10 +214,12 @@ export class ShelfListComponent implements OnInit{
       enterAnimationDuration: '400ms',
       exitAnimationDuration: '250ms',
       data : {
-        title: 'acceptProductTitle',
+        title: 'acceptProductTitle', 
         productList: this.productList,
       }
     });
+    // dialogRef.componentInstance.productList = this.productList
+  console.log("accept dialog: ", this.productList);
   
     dialogRef.afterClosed().subscribe({
       next: (data) => {
@@ -233,21 +236,22 @@ export class ShelfListComponent implements OnInit{
   
 
   acceptProduct(formValue: any) {
+    const successAcceptProductMessage = this.translateService.instant("successAcceptProductMessage");
     this.shelfService.acceptProduct(formValue).subscribe({
       next: (result) => {
-        this.toastr.success('Ürün Girişi Yapıldı');
+        this.toastr.success(successAcceptProductMessage);
         this.loadShelves();
       },
       error: (err) => {
         console.log(err);
-        this.toastr.error("Hata oluştu");
+        this.genericService.showError("errorMessage");
       }
     });
   }
 
   generatePDF() {
     const fileName = 'shelves.pdf';
-    const tableTitle = 'Raf Listesi';
+    const tableTitle = this.translateService.instant("shelfPdfTitle");
     this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
   
@@ -268,10 +272,6 @@ export class ShelfListComponent implements OnInit{
       this.loadShelves();
     }
   }
-  // onSearchInputChange(searchKeyword: string) {
-  //   this.genericService.onSearchInputChange(searchKeyword, this.loadShelves.bind(this));
-  //   this.tableData = this.genericService.getSearchResponse();
-  // }
 
   navigateSettings(){
     this.router.navigate(['/home/settings']);

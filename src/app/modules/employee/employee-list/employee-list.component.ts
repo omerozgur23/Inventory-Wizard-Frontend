@@ -11,6 +11,9 @@ import { UpdateEmployeeRequest } from '../dto/updateEmployeeRequest';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { GenericService } from '../../../core/service/generic.service';
+import { TranslateService } from '@ngx-translate/core';
+import { GetRolesResponse } from '../dto/getRolesResponse';
+import { RoleDTO } from '../dto/RoleDTO';
 
 @Component({
   selector: 'app-employee-list',
@@ -29,7 +32,11 @@ export class EmployeeListComponent implements OnInit{
   tableTitle = "employeeTableTitle";
   deleteDialogDescription = 'deleteEmployeeDialogDescription';
   id: string = '';
-  currentPage: number = 1;
+  itemPerPage = 15;
+  currentPage = 1;
+  totalShelvesCount = 0;
+  totalPages = 0;
+  roleList: GetRolesResponse[] = [];
   // totalPages: number = 10;
 
   constructor(
@@ -39,6 +46,7 @@ export class EmployeeListComponent implements OnInit{
     private router: Router,
     private route: ActivatedRoute,
     private genericService: GenericService,
+    private translateService: TranslateService,
   ){}
 
   setSelectedEmployee(employeeId: string) {
@@ -47,12 +55,15 @@ export class EmployeeListComponent implements OnInit{
 
   ngOnInit(): void {
     this.loadEmployee();
+    this.getAllRoles();
   }
   
   loadEmployee() {
     this.employeeService.getEmployeesByPage(this.currentPage, 18).subscribe({
       next: (result) => {
-        this.tableData = result;
+        this.tableData = result.data;
+        this.totalShelvesCount = result.count;
+        this.totalPages = Math.ceil(this.totalShelvesCount / this.itemPerPage) 
       },
       error: (err) => {
         console.log(err);
@@ -68,7 +79,18 @@ export class EmployeeListComponent implements OnInit{
   getAllEmployee() {
     this.employeeService.getAllEmployee().subscribe({
       next: (result) => {
-        this.tableData = result;
+        this.tableData = result.data;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  getAllRoles(){
+    this.employeeService.getAllRoles().subscribe({
+      next: (result) => {
+        this.roleList = result;
       },
       error: (err) => {
         console.log(err);
@@ -84,22 +106,23 @@ export class EmployeeListComponent implements OnInit{
     });
 
     dialog.componentInstance.title = 'createEmployeeTitle';
-    dialog.componentInstance.inputLabels = ['employeeTableFirstName', 'employeeTableLastName', 'employeeTableEmail', 'employeeTablePassword', 'employeeTableRoles'];
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
-    dialog.componentInstance.values.push(new FormControl(''));
+    dialog.componentInstance.inputLabels = ['employeeTableFirstName', 'employeeTableLastName', 'employeeTableEmail', 'employeeTablePassword'];
+    dialog.componentInstance.roleDropdownOptions = this.roleList;
+    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+      dialog.componentInstance.addInput();
+    }
+    dialog.componentInstance.addRoleDropdown();
 
     dialog.afterClosed().subscribe({
       next: (data) => {
         if (data?.result === 'yes') {
-          const firstNameValue = dialog.componentInstance.createForm.value.values[0];
-          const lastNameValue =  dialog.componentInstance.createForm.value.values[1];
-          const emailValue =  dialog.componentInstance.createForm.value.values[2];
-          const passwordValue =  dialog.componentInstance.createForm.value.values[3];
-          const roleValue =  dialog.componentInstance.createForm.value.values[4];
-          this.createEmployee(firstNameValue, lastNameValue, emailValue, passwordValue, roleValue);
+          const formValues = dialog.componentInstance.createForm.value.values;
+          const firstNameValue = formValues[0].inputValue;
+          const lastNameValue =  formValues[1].inputValue;
+          const emailValue =  formValues[2].inputValue;
+          const passwordValue =  formValues[3].inputValue;
+          const roleIdValue =  formValues[4].roleDropdownValue;
+          this.createEmployee(firstNameValue, lastNameValue, emailValue, passwordValue, roleIdValue);
         }
       },
       error: (err) => {
@@ -108,16 +131,21 @@ export class EmployeeListComponent implements OnInit{
     });
   }
 
-  createEmployee(firstName: string, lastName: string, email: string, password: string, role: string){
-    const employee = new CreateEmployeeRequest(firstName, lastName, email, password, role);
+  createEmployee(firstName: string, lastName: string, email: string, password: string, roleId: string){
+    const successCreatedMessage = this.translateService.instant("employeeCreatedMessage");
+
+    const role = new RoleDTO(roleId);
+    const rolesArray: RoleDTO[] = [role];
+    
+    const employee = new CreateEmployeeRequest(firstName, lastName, email, password, rolesArray);
     this.employeeService.createEmployee(employee).subscribe({
       next: (resp) => {
-        this.toastr.success('Personel Oluşturuldu');
+        this.toastr.success(successCreatedMessage);
         this.loadEmployee();
       },
       error: (err) => {
         console.log(err);
-        this.toastr.error('Hata oluştu');
+        this.genericService.showError("errorMessage");
       }
     });
   }
@@ -149,29 +177,31 @@ export class EmployeeListComponent implements OnInit{
   }
 
   updateEmployee(id: string, email: string, password: string){
+    const successUpdatedMessage = this.translateService.instant("employeeUpdatedMessage");
     const employee = new UpdateEmployeeRequest(id, email, password);
     this.employeeService.updateEmployee(employee).subscribe({
       next: (resp) => {
-        this.toastr.success('Kullanıcı Güncellenmiştir');
+        this.toastr.success(successUpdatedMessage);
         this.loadEmployee();
       },
       error: (err) => {
         console.log(err);
-        this.toastr.error("Hata oluştu");
+        this.genericService.showError("errorMessage");
       }
     })
   }
 
   deleteEmployee(id: any) {
+    const successDeletedMessage = this.translateService.instant("employeeDeletedMessage");
     this.employeeService.deleteEmployee(id).subscribe(
       {
         next: (result) => {
-          this.toastr.success("Personel silinmiştir");
+          this.toastr.success(successDeletedMessage);
           this.ngOnInit();
         },
         error: (err) => {
           console.log(err);
-          this.toastr.error("Hata oluştu");
+          this.genericService.showError("errorMessage");
         }
       }
     );
@@ -179,7 +209,7 @@ export class EmployeeListComponent implements OnInit{
 
   generatePDF() {
     const fileName = 'employees.pdf';
-    const tableTitle = 'Personel Listesi';
+    const tableTitle = this.translateService.instant("employeePdfTitle");
     this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
 

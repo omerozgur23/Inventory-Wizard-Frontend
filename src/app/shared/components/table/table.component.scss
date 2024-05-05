@@ -1,8 +1,4 @@
-.nb {
-  background: #fff;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
+/* TABLE */
 table {
   border-collapse: collapse;
   margin: auto;
@@ -42,24 +38,6 @@ button:active {
 }
 
 button{
-  border: none;
-}
-
-.nb-btn-span{
-  vertical-align: middle;
-}
-
-.nb-search-span{
-  margin-left: 7rem;
-  background-color: white;
-}
-
-.nb-search-input{
-  border: 1px solid #E2E5FF;
-  border-radius: 50px;
-}
-
-.nb-search-input:active{
   border: none;
 }
 

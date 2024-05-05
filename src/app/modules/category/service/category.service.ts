@@ -18,12 +18,12 @@ export class CategoryService {
     private httpClient: HttpClient,
   ) {}
 
-  getAllCategory():Observable<GetCategoryResponse[]> {
-    return this.httpClient.get<GetCategoryResponse[]>('/category/getall');
+  getAllCategory():Observable<GetCategoryResponse> {
+    return this.httpClient.get<GetCategoryResponse>('/category/getall');
   }
 
-  getCategoriesByPage(pageNo: number, pageSize: number): Observable<GetCategoryResponse[]> {
-    return this.httpClient.get<GetCategoryResponse[]>(`/category/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getCategoriesByPage(pageNo: number, pageSize: number): Observable<GetCategoryResponse> {
+    return this.httpClient.get<GetCategoryResponse>(`/category/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
   createCategory(category: CreateCategoryRequest): Observable<CreateCategoryRequest> {

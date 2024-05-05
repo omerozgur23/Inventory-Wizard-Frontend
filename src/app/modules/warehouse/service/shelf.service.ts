@@ -18,16 +18,16 @@ export class ShelfService {
     private httpClient: HttpClient,
   ) { }
 
-  getAllShelves():Observable<GetShelfResponse[]> {
-    return this.httpClient.get<GetShelfResponse[]>('/shelf/getall');
+  getAllShelves():Observable<GetShelfResponse> {
+    return this.httpClient.get<GetShelfResponse>('/shelf/getall');
   }
 
-  getShelvesByPage(pageNo: number, pageSize: number): Observable<GetShelfResponse[]> {
-    return this.httpClient.get<GetShelfResponse[]>(`/shelf/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getShelvesByPage(pageNo: number, pageSize: number): Observable<GetShelfResponse> {
+    return this.httpClient.get<GetShelfResponse>(`/shelf/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
   createShelf(shelf: CreateShelfRequest):Observable<CreateShelfRequest> {
-    return this.httpClient.post<GetShelfResponse>('/shelf/create', shelf, this.httpOptions);
+    return this.httpClient.post<CreateShelfRequest>('/shelf/create', shelf, this.httpOptions);
   }
 
   updateShelf(shelf: UpdateShelfRequest): Observable<any> {

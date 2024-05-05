@@ -16,12 +16,12 @@ export class OrderService {
     private httpClient: HttpClient,
   ) { }
 
-  getAllOrders(): Observable<GetOrderResponse[]>{
-    return this.httpClient.get<GetOrderResponse[]>('/orders/getall');
+  getAllOrders(): Observable<GetOrderResponse>{
+    return this.httpClient.get<GetOrderResponse>('/orders/getall');
   }
   
-  getOrdersByPage(pageNo: number, pageSize: number): Observable<GetOrderResponse[]> {
-    return this.httpClient.get<GetOrderResponse[]>(`/orders/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getOrdersByPage(pageNo: number, pageSize: number): Observable<GetOrderResponse> {
+    return this.httpClient.get<GetOrderResponse>(`/orders/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
   getOrderDetails(orderId: string): Observable<GetOrderDetailsResponse[]>{

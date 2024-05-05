@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ title | translate }}</h2>
+<!-- <h2 mat-dialog-title>{{ title | translate }}</h2>
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="createForm">
     <div class="formBox form-group" formArrayName="values">
@@ -13,27 +13,65 @@
           inputLabels[$index] | translate
         }}</label>
       </div>
-      }<!-- @for (control of values.controls; track $index) {
+      }
+    </div>
+  </form>
+</mat-dialog-content> -->
+<h2 mat-dialog-title>{{ title | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="createForm">
+    <div class="formBox form-group" formArrayName="values">
+      @for (control of values.controls; track $index) {
 
-      <div appearance="fill" *ngIf="isDropdownControl(control)">
-        <label>Dropdown</label>
-        <select formControlName="dropdownValue">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
-        </select>
+      <div class="inputBox w100" [formGroupName]="$index">
+        <div class="" *ngIf="isInputControl(control)">
+          <input
+            type="text"
+            [formControlName]="'inputValue'"
+            required
+            style="margin-top: 5px"
+          />
+          <label [for]="'input_' + $index">{{
+            inputLabels[$index] | translate
+          }}</label>
+        </div>
+
+        <div *ngIf="isCategoryDropdownControl(control)">
+          <input
+            id="mycategories"
+            placeholder="Type category here..."
+            list="categories"
+            [formControlName]="'categoryDropdownValue'"
+          />
+          <datalist id="categories">
+            @for (item of categoryDropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.name }}</option>
+            }
+          </datalist>
+        </div>
+
+        <div class="dropdown" *ngIf="isSupplierDropdownControl(control)">
+          <select
+            class="form-select"
+            [formControlName]="'supplierDropdownValue'"
+          >
+            <option selected>Supplier List</option>
+            @for (item of supplierDropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.companyName }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="dropdown" *ngIf="isRoleDropdownControl(control)">
+          <select class="form-select" [formControlName]="'roleDropdownValue'">
+            <option selected>Role List</option>
+            @for (item of roleDropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.role }}</option>
+            }
+          </select>
+        </div>
       </div>
-      } -->
-
-      <!-- <div class="inputBox w100" *ngIf="showDropdown">
-        <select>
-          @for (option of dropdownOptions; track $index) {
-          <option formControlName="{{ $index }}" [value]="dropdownOptions">
-            {{ option.name }}
-          </option>
-          }
-        </select>
-      </div> -->
+      }
     </div>
   </form>
 </mat-dialog-content>

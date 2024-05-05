@@ -12,8 +12,9 @@ export class CreateModalComponent {
   title = '';
   inputLabels: string[] = [];
   createForm!: FormGroup;
-  // dropdownOptions: any[] = [];
-  showDropdown = false;
+  categoryDropdownOptions: any[] = [];
+  supplierDropdownOptions: any[] = [];
+  roleDropdownOptions: any[] = [];
   
   constructor(
     private fb: FormBuilder,
@@ -30,10 +31,53 @@ export class CreateModalComponent {
   }
 
   // Yeni bir FormControl eklemek için addValue fonksiyonu
-  addValue() {
-    const value = new FormControl('', Validators.required);
-    this.values.push(value); // values FormArray'ine yeni bir FormControl eklendi
-    console.log(this.values.value);
+  // addValue() {
+  //   const value = new FormControl('', Validators.required);
+  //   this.values.push(value); // values FormArray'ine yeni bir FormControl eklendi
+  //   console.log(this.values.value);
+  // }
+  addInput() {
+    const inputFormControl = new FormGroup({
+      inputValue: new FormControl('', Validators.required)
+    });
+    this.values.push(inputFormControl);
+  }
+
+  addCategoryDropdown() {
+    const categoryDropdownFormGroup = new FormGroup({
+      categoryDropdownValue: new FormControl('', Validators.required)
+    });
+    this.values.push(categoryDropdownFormGroup);
+  }
+
+  addSupplierDropdown() {
+    const supplierDropdownFormGroup = new FormGroup({
+      supplierDropdownValue: new FormControl('', Validators.required)
+    });
+    this.values.push(supplierDropdownFormGroup);
+  }
+
+  addRoleDropdown() {
+    const roleDropdownFormGroup = new FormGroup({
+      roleDropdownValue: new FormControl('', Validators.required)
+    });
+    this.values.push(roleDropdownFormGroup);
+  }
+
+  isInputControl(control: AbstractControl): boolean {
+    return control.get('inputValue') instanceof FormControl;
+  }
+
+  isCategoryDropdownControl(control: AbstractControl): boolean {
+    return control instanceof FormGroup && control.contains('categoryDropdownValue');
+  }
+
+  isSupplierDropdownControl(control: AbstractControl): boolean {
+    return control instanceof FormGroup && control.contains('supplierDropdownValue');
+  }
+
+  isRoleDropdownControl(control: AbstractControl): boolean {
+    return control instanceof FormGroup && control.contains('roleDropdownValue');
   }
  
   // Formun geçerli olup olmadığını kontrol edip modalı kapatmak için create fonksiyonu

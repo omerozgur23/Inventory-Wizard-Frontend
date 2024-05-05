@@ -1,8 +1,13 @@
 export interface GetEmployeeResponse{
-    id: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    password: string,
-    role: string,
+    count: number,
+    data: [
+        {
+            id: string,
+            firstName: string,
+            lastName: string,
+            email: string,
+            password: string,
+            role: string,
+        }
+    ]
 }

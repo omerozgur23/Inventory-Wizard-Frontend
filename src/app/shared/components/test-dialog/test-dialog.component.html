@@ -4,8 +4,8 @@
     <div class="formBox form-group" formArrayName="values">
       @for (control of values.controls; track $index) {
 
-      <div [formGroupName]="$index">
-        <div class="inputBox w100" *ngIf="isInputControl(control)">
+      <div class="inputBox w100" [formGroupName]="$index">
+        <div class="" *ngIf="isInputControl(control)">
           <input
             type="text"
             [formControlName]="'inputValue'"
@@ -17,11 +17,39 @@
           }}</label>
         </div>
 
-        <div class="inputBox w100" *ngIf="isDropdownControl(control)">
-          <label>Dropdown</label>
-          <select [formControlName]="'dropdownValue'">
-            @for (item of dropdownOptions; track $index) {
+        <!-- <div class="dropdown" *ngIf="isCategoryDropdownControl(control)">
+          <select
+            class="form-select"
+            [formControlName]="'categoryDropdownValue'"
+          >
+            <option selected>Category List</option>
+            @for (item of categoryDropdownOptions; track $index) {
             <option value="{{ item.id }}">{{ item.name }}</option>
+            }
+          </select>
+        </div> -->
+        <div *ngIf="isCategoryDropdownControl(control)">
+          <input
+            id="mycategories"
+            placeholder="Type category here..."
+            list="categories"
+            [formControlName]="'categoryDropdownValue'"
+          />
+          <datalist id="categories">
+            @for (item of categoryDropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.name }}</option>
+            }
+          </datalist>
+        </div>
+
+        <div class="dropdown" *ngIf="isSupplierDropdownControl(control)">
+          <select
+            class="form-select"
+            [formControlName]="'supplierDropdownValue'"
+          >
+            <option selected>Supplier List</option>
+            @for (item of supplierDropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.companyName }}</option>
             }
           </select>
         </div>
