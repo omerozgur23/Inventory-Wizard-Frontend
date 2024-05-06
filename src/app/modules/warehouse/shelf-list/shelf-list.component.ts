@@ -1,94 +1,279 @@
-import { Component } from '@angular/core';
+import { UpdateModalComponent } from './../../../shared/components/update-modal/update-modal.component';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ShelfService } from '../service/shelf.service';
-import { Shelf } from '../dto/shelf';
 import { TableColumn } from '../../../shared/components/table/dto/table';
-// import { YesNoDialogComponent } from '../../../shared/yes-no-dialog/yes-no-dialog/yes-no-dialog.component';
-// import { MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
+import { CreateShelfRequest } from '../dto/createShelfRequest';
+import { UpdateShelfRequest } from '../dto/updateShelfRequest';
+import { ProductService } from '../../product/service/product.service';
+import { AcceptProductModalComponent } from '../../../shared/components/accept-product-modal/accept-product-modal.component';
+import { GenericService } from '../../../core/service/generic.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-shelf-list',
   templateUrl: './shelf-list.component.html',
   styleUrl: './shelf-list.component.scss'
 })
-export class ShelfListComponent {
-  shelfList: Shelf[] = [];
-  // tableData: any[] = [];
-  // columns: TableColumn[] = [
-  //   { label: 'Ürün Adı', field: 'productName' },
-  //   { label: 'Ürün Adedi', field: 'count' },
-  //   { label: 'Kapasite', field: 'capacity' },
-  // ];
+export class ShelfListComponent implements OnInit{
+  tableData: any[] = [];
+  columns: TableColumn[] = [
+    { label: 'shelfTableShelfCode', field: 'shortId' },
+    { label: 'shelfTableProductName', field: 'productName' },
+    { label: 'shelfTableProductQuantity', field: 'count' },
+    { label: 'shelfTableCapacity', field: 'capacity' },
+  ];
+
+  tableTitle = "shelfTableTitle"
+  productList: any[] = [];
+  deleteDialogDescription = 'deleteShelfDialogDescription';
+  id = '';
+  itemPerPage = 15;
+  currentPage = 1;
+  totalShelvesCount = 0;
+  totalPages = 0;
+  acceptProductForm = this.fb.group({
+    productId: '',
+    count: 0,
+  });
 
   constructor(
     private toastr: ToastrService,
     private shelfService: ShelfService,
     private router: Router,
     private route: ActivatedRoute,
-    // private dialog: MatDialog,
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private productService: ProductService,
+    private genericService: GenericService,
+    private translateService: TranslateService,
   ){}
 
-  ngOnInit(): void {
-    this.getShelfs();
+  setSelectedShelf(shelfId: string) {
+    this.id = shelfId;
   }
 
-  // getShelfs() {
-  //   this.shelfService.getShelf().subscribe((shelves: any[]) => {
-  //     this.tableData = shelves;
-  //   });
-  // }
-
-  navigateCreate(){
-    this.router.navigate(['./shelf-create'], { relativeTo: this.route });
+  ngOnInit(): void { 
+    this.loadShelves();
+    this.getAllProducts();
   }
 
-  navigateAcceptProduct(){
-    this.router.navigate(['./accept-product'], {relativeTo: this.route});
-  }
-
-  getShelfs(){
-    this.shelfService.getShelf().subscribe({
+  getAllProducts(){
+    this.productService.getAllProducts().subscribe({
       next: (result) => {
-        this.shelfList = result;
+        this.productList = result.data;
       },
       error: (err) => {
         console.log(err);
-        
+      }
+    })
+  }
+
+  loadShelves() {
+    this.shelfService.getShelvesByPage(this.currentPage, this.itemPerPage).subscribe({
+      next: (result) => {
+        this.tableData = this.genericService.uuidSplit(result.data);
+        this.totalShelvesCount = result.count;
+        this.totalPages = Math.ceil(this.totalShelvesCount / this.itemPerPage) 
+      },
+      error: (err) => {
+        console.log(err);
       }
     });
   }
-  // ngOnInit(): void {
-  //   this.getShelfs();
-  // }
 
+  onPageChange(pageNo: number) {
+    this.currentPage = pageNo;
+    this.loadShelves();
+  }
+
+  getAllShelves(){
+    this.shelfService.getAllShelves().subscribe({
+      next: (result) => {
+        this.tableData = result.data;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  openCreateShelfDialog(){
+    let dialog = this.dialog.open(CreateModalComponent, {
+      width: '500px',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '250ms',
+    });
+
+    dialog.componentInstance.title = 'createShelfTitle';
+    dialog.componentInstance.inputLabels = ['shelfTableCapacity', 'shelfInputsPeace'];
+    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+      dialog.componentInstance.addInput();
+    }
+
+    dialog.afterClosed().subscribe({
+      next: (data) => {
+        if (data?.result === 'yes') {
+          const formValues = dialog.componentInstance.createForm.value.values;
+          const capacityValue = formValues[0].inputValue;
+          const countValue = formValues[1].inputValue;
+          this.createShelf(capacityValue, countValue);
+        }
+      }
+    });
+  }
+
+  createShelf(capacity: number, count: number){
+    const successCreatedMessage = this.translateService.instant("shelfCreatedMessage");
+    const errorCapacityMessage = this.translateService.instant("createShelfErrorCapacity");
+    const errorCountMessage = this.translateService.instant("createShelfErrorCount");
+    const shelf = new CreateShelfRequest(capacity, count);
+    this.shelfService.createShelf(shelf).subscribe({
+      next: (resp) => {
+        this.toastr.success(successCreatedMessage);
+        this.loadShelves();
+      },
+      error: (err) => {    
+        if (capacity > 5) {
+          this.toastr.error(errorCapacityMessage);
+        }if (count > 2) {
+          this.toastr.info(errorCountMessage)
+        }
+        console.log(err);
+        // else{
+        //   this.toastr.error('Hata oluştu!');
+        // }
+      }
+    });
+  }
+
+  openUpdateShelfDialog(item: any){
+    let dialog =  this.dialog.open(UpdateModalComponent, {
+      width: '500px',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '250ms',
+    });
+
+    dialog.componentInstance.title='updateShelfTitle';
+    dialog.componentInstance.inputLabels=['shelfTableCapacity'];
+    dialog.componentInstance.values.push(new FormControl(item.capacity));
+
+    dialog.afterClosed().subscribe({
+      next: (data) => {
+        if (data?.result === 'yes') {
+        const capacityValue = dialog.componentInstance.updateForm.value.values[0];
+        this.updateShelf(item.id, capacityValue);
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  updateShelf(id: string, capacity: number){
+    const successUpdatedMessage = this.translateService.instant("shelfUpdatedMessage");
+    const errorCapacityMessage = this.translateService.instant("createShelfErrorCapacity");
+    const shelf = new UpdateShelfRequest(id, capacity)
+    this.shelfService.updateShelf(shelf).subscribe({
+      next: (result) => {
+        this.toastr.success(successUpdatedMessage);
+        this.loadShelves();
+      },
+      error: (err) => {
+        if (capacity > 5) {
+          this.toastr.error(errorCapacityMessage)
+        }
+        console.log(err);
+      }
+    })
+  }
+  
   deleteShelf(id: any){
+    const successDeletedMessage = this.translateService.instant("shelfDeletedMessage");
     this.shelfService.deleteShelf(id).subscribe(
       {
-        next: (id) =>{
-          this.toastr.success("Raf silinmiştir")
+        next: () =>{
+          this.toastr.success(successDeletedMessage)
           this.ngOnInit();
         },
-        error: (id) => {
-          this.toastr.error("Hata oluştu")
+        error: () => {
+          this.genericService.showError("errorMessage");
         }
       }
     );
   }
 
-  // deleteShelfButtonClicked(id: any) {
-  //   let dialog =  this.dialog.open(YesNoDialogComponent, {
-  //     width: '300px',
-  //     enterAnimationDuration: '250ms',
-  //     exitAnimationDuration: '250ms',
-  //   });
-  //   dialog.afterClosed().subscribe({
-  //     next: (data) => {
-  //       if (data?.result === 'yes') {
-  //         this.deleteShelf(id);
-  //       }
-  //     }
-  //   });
-  //   dialog.componentInstance.question = 'Are you sure for delete this shelf?';
-  // }
+  openAcceptProductDialog(item: any) {
+    const dialogRef = this.dialog.open(AcceptProductModalComponent, {
+      width: '500px',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '250ms',
+      data : {
+        title: 'acceptProductTitle', 
+        productList: this.productList,
+      }
+    });
+    // dialogRef.componentInstance.productList = this.productList
+  console.log("accept dialog: ", this.productList);
+  
+    dialogRef.afterClosed().subscribe({
+      next: (data) => {
+        if (data?.result === 'yes') {
+          const formValue = data.formValue;
+          this.acceptProduct(formValue);
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+  
+
+  acceptProduct(formValue: any) {
+    const successAcceptProductMessage = this.translateService.instant("successAcceptProductMessage");
+    this.shelfService.acceptProduct(formValue).subscribe({
+      next: (result) => {
+        this.toastr.success(successAcceptProductMessage);
+        this.loadShelves();
+      },
+      error: (err) => {
+        console.log(err);
+        this.genericService.showError("errorMessage");
+      }
+    });
+  }
+
+  generatePDF() {
+    const fileName = 'shelves.pdf';
+    const tableTitle = this.translateService.instant("shelfPdfTitle");
+    this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+  }
+  
+  onSearchInputChange(searchKeyword: string) {
+    if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      setTimeout(() => 
+        this.shelfService.search(searchKeyword).subscribe({
+          next: (result) => {
+            this.tableData = this.genericService.uuidSplit(result);
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        }),
+        300
+      );
+    } else {
+      this.loadShelves();
+    }
+  }
+
+  navigateSettings(){
+    this.router.navigate(['/home/settings']);
+  }
 }

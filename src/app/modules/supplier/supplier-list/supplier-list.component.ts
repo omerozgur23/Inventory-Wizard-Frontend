@@ -1,68 +1,217 @@
-import { Component } from '@angular/core';
-import { Supplier } from '../dto/supplier';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupplierService } from '../service/supplier.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
+import { MatDialog } from '@angular/material/dialog';
+import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
+import { FormControl } from '@angular/forms';
+import { UpdateSupplierRequest } from '../dto/updateSupplierRequest';
+import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
+import { CreateSupplierRequest } from '../dto/createSupplierRequest';
+
+import { GenericService } from '../../../core/service/generic.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-supplier-list',
   templateUrl: './supplier-list.component.html',
   styleUrl: './supplier-list.component.scss'
 })
-export class SupplierListComponent {
-  // supplierList: Supplier[] = [];
+export class SupplierListComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
-    { label: 'Company Name', field: 'companyName' },
-    { label: 'Firma Yetkilisi', field: 'contactName' },
-    { label: 'Yetkili Telefon', field: 'contactPhone' },
-    { label: 'Vergi No', field: 'taxNumber' },
-    { label: 'Adres', field: 'address' },
+    { label: 'supplierTableCompanyName', field: 'companyName' },
+    { label: 'supplierTableCompanyOfficial', field: 'contactName' },
+    { label: 'supplierTableOfficialEmail', field: 'contactEmail' },
+    { label: 'supplierTableOfficialPhone', field: 'contactPhone' },
+    { label: 'supplierTableTaxNumber', field: 'taxNumber' },
+    { label: 'supplierTableAddress', field: 'address' },
   ];
+
+  tableTitle = "supplierTableTitle";
+  deleteDialogDescription = 'deleteSupplierDialogDescription';
+  id = '';
+  itemPerPage = 15;
+  currentPage = 1;
+  totalShelvesCount = 0;
+  totalPages = 0;
+  // totalPages: number = 10;
 
   constructor(
     private supplierService: SupplierService,
     private toastr: ToastrService,
+    private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
+    private genericService: GenericService,
+    private translateService: TranslateService,
   ){}
 
-  ngOnInit(): void {
-    this.getSupplier();
+  setSelectedSupplier(supplierId: string) {
+    this.id = supplierId;
   }
 
-  getSupplier() {
-    this.supplierService.getSupplier().subscribe((customers: any[]) => {
-      this.tableData = customers;
+  ngOnInit(): void {
+    this.loadSupplier();
+  }
+
+  onPageChange(pageNo: number) {
+    this.currentPage = pageNo;
+    this.loadSupplier();
+  }
+
+  loadSupplier() {
+    this.supplierService.getSuppliersByPage(this.currentPage, this.itemPerPage).subscribe({
+      next: (result) => {
+        this.tableData = result.data;
+        this.totalShelvesCount = result.count;
+        this.totalPages = Math.ceil(this.totalShelvesCount / this.itemPerPage) 
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
   }
 
-  // ngOnInit(): void {
-  //   this.supplierService.getSupplier().subscribe({
-  //     next: (resp) => {
-  //       this.supplierList = resp;
-  //     },
-  //     error: (err) => {
-  //       console.log(err);
-  //     }
-  //   })
-  // }
+  getAllSuppliers() {
+    this.supplierService.getAllSuppliers().subscribe({
+      next: (result) => {
+        this.tableData = result.data;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
 
-  navigateCreate(){
-    this.router.navigate(['./supplier-create'], { relativeTo: this.route });
+  openCreateSupplierDialog(){
+    let dialog = this.dialog.open(CreateModalComponent, {
+      width: '500px',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '250ms,'
+    });
+
+    dialog.componentInstance.title = 'createSupplierTitle';
+    dialog.componentInstance.inputLabels = ['supplierTableCompanyName', 'supplierTableCompanyOfficial', 'supplierTableOfficialEmail', 'supplierTableOfficialPhone', 'supplierTableTaxNumber', 'supplierTableAddress'];
+    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+      dialog.componentInstance.addInput();
+    }
+
+    dialog.afterClosed().subscribe({
+      next: (data) => {
+        if(data?.result === 'yes') {
+          const formValues = dialog.componentInstance.createForm.value.values;
+          const companyNameValue = formValues[0].inputValue;
+          const contactNameValue = formValues[1].inputValue;
+          const contactEmailValue = formValues[2].inputValue;
+          const contactPhoneValue = formValues[3].inputValue;
+          const taxNumberValue = formValues[4].inputValue;
+          const addressValue = formValues[5].inputValue;
+          this.createSupplier(companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, taxNumberValue, addressValue);
+        }
+      }
+    });
+  }
+
+  createSupplier(companyName: string, contactName: string, contactEmail: string, contactPhone: string, taxNumber: string, address: string){
+    const successCreatedMessage = this.translateService.instant("supplierCreatedMessage");
+    const supplier = new CreateSupplierRequest(companyName, contactName, contactEmail, contactPhone, taxNumber, address);
+    this.supplierService.createSupplier(supplier).subscribe({
+      next: (result) => {
+        this.toastr.success(successCreatedMessage);
+        this.loadSupplier();
+      },
+      error: (err) => { 
+        console.log(err);
+        this.genericService.showError("errorMessage");
+      },
+    });
+  }
+
+  openUpdateSupplierDialog(item: any){    
+    let dialog =  this.dialog.open(UpdateModalComponent, {
+      width: '500px',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '250ms',
+    });
+
+    dialog.componentInstance.title='updateSupplierTitle';
+    dialog.componentInstance.inputLabels = ['supplierTableCompanyName', 'supplierTableCompanyOfficial', 'supplierTableOfficialEmail', 'supplierTableOfficialPhone', 'supplierTableAddress'];
+    dialog.componentInstance.values.push(new FormControl(item.companyName));
+    dialog.componentInstance.values.push(new FormControl(item.contactName));
+    dialog.componentInstance.values.push(new FormControl(item.contactEmail));
+    dialog.componentInstance.values.push(new FormControl(item.contactPhone));
+    dialog.componentInstance.values.push(new FormControl(item.address));
+
+    dialog.afterClosed().subscribe({
+      next: (data) => {
+        if (data?.result === 'yes') {
+          const companyNameValue = dialog.componentInstance.updateForm.value.values[0];
+          const contactNameValue = dialog.componentInstance.updateForm.value.values[1];
+          const contactEmailValue = dialog.componentInstance.updateForm.value.values[2];
+          const contactPhoneValue = dialog.componentInstance.updateForm.value.values[3];
+          const addressValue = dialog.componentInstance.updateForm.value.values[4];
+          this.updateSupplier(item.id, companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, addressValue);
+        }
+      }
+    });
+  }
+
+  updateSupplier(id: string, companyName: string, contactName: string, contactEmail: string, contactPhone: string, address: string){
+    const successUpdatedMessage = this.translateService.instant("supplierUpdatedMessage");
+    const supplier = new UpdateSupplierRequest(id, companyName, contactName, contactEmail, contactPhone, address);
+    this.supplierService.updateSupplier(supplier).subscribe({
+      next: (result) => {
+        this.toastr.success(successUpdatedMessage);
+        this.loadSupplier();
+      },
+      error: (err) => {
+        console.log(err);
+        this.genericService.showError("errorMessage");
+      }
+    })
   }
 
   deleteSupplier(id: any) {
+    const successDeletedMessage = this.translateService.instant("supplierDeletedMessage");
     this.supplierService.deleteSupplier(id).subscribe({
-      next: (resp) => {
-        this.toastr.success("Tedarikçi silinmiştir.")
+      next: (result) => {
+        this.toastr.success(successDeletedMessage)
         this.ngOnInit();
       },
       error: (err) => {
         console.log(err);
-        this.toastr.error("Hata oluştu!")
+        this.genericService.showError("errorMessage");
       }
     })
+  }
+
+  generatePDF() {
+    const fileName = 'suppliers.pdf';
+    const tableTitle = this.translateService.instant("supplierPdfTitle");
+    this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
+  }
+  
+  onSearchInputChange(searchKeyword: string) {
+    if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      setTimeout(() => 
+        this.supplierService.search(searchKeyword).subscribe({
+          next: (result) => {
+            this.tableData = result;
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        }),
+        300
+      );
+    } else {
+      this.loadSupplier();
+    }
+  }
+
+  navigateSettings(){
+    this.router.navigate(['/home/settings']);
   }
 }

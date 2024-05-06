@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,39 +11,48 @@ export class LoginService {
   token = "";
   email = "";
   password = "";
-  //kullanicilarId = "";
-  roller: string[] = [];
+  roles: string[] = [];
 
   constructor(
     private httpClient: HttpClient,
-  ) { }
+  ) {
+    this.loadSessionData();
+    }
 
+  private loadSessionData(): void{
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      this.token = storedToken;
+      this.loggedIn = true;
+      this.email = localStorage.getItem('email') || '';
+      this.password = localStorage.getItem('password') || '';
+      this.roles = JSON.parse(localStorage.getItem('roles') || '[]');
+    }
+  }
 
   login(email: string, password: string): Observable<any> {
     return this.httpClient.post<any>('/login', {email, password}).pipe(
       map(data => this.parseLoginResponse(data, email, password))
     );
   }
-
-  // signup(email: string, password: string): Observable<any> {
-  //   return this.httpClient.post<any>('/signup', {email, password}).pipe(
-  //     map(data => this.parseLoginResponse(data, email, password))
-  //   );
-  // }
-
+  
   // login olunursa çalışıyor
   parseLoginResponse(data: any, email: string, password: string){
     this.loggedIn = true;
         this.token = data.token;
         this.email = email;
         this.password = password;
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("email", email);
-        localStorage.setItem("password", password);
         let payload = this.parseJwt(this.token);
-        this.roller = payload.roller;
-        //this.kullanicilarId = payload.kullanicilarId;
+        this.roles = payload.roles;
+        this.saveSessionData();
         return data;
+  }
+
+  saveSessionData(): void {
+    localStorage.setItem("token", this.token);
+        localStorage.setItem("email", this.email);
+        localStorage.setItem("password", this.password);
+        localStorage.setItem('roles', JSON.stringify(this.roles));
   }
 
   reLogin(): Observable<any>{
@@ -55,9 +64,12 @@ export class LoginService {
     this.token = "";
     this.email = "";
     this.password = "";
-    //this.kullanicilarId = "";
-    this.roller = [];
-    localStorage.clear();
+    this.roles = [];
+    for (let key in localStorage) {
+      if (key !== 'lang') {
+        localStorage.removeItem(key);
+      }
+    }
   }
 
   parseJwt (token: string) {
@@ -70,10 +82,10 @@ export class LoginService {
     return JSON.parse(jsonPayload);
   }
 
-  userHasRole(roleAdi: string): boolean{
+  userHasRole(roleName: string): boolean{
     let hasRole = false;
-    this.roller.forEach(rol => {
-      if(rol === roleAdi){
+    this.roles.forEach(rol => {
+      if(rol === roleName){
         hasRole = true;
       }
     })

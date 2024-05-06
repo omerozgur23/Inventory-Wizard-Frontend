@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>{{ title | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="createTestForm">
+    <div class="formBox form-group" formArrayName="values">
+      @for (control of values.controls; track $index) {
+
+      <div class="inputBox w100" [formGroupName]="$index">
+        <div class="" *ngIf="isInputControl(control)">
+          <input
+            type="text"
+            [formControlName]="'inputValue'"
+            required
+            style="margin-top: 5px"
+          />
+          <label [for]="'input_' + $index">{{
+            inputLabels[$index] | translate
+          }}</label>
+        </div>
+
+        <!-- <div class="dropdown" *ngIf="isCategoryDropdownControl(control)">
+          <select
+            class="form-select"
+            [formControlName]="'categoryDropdownValue'"
+          >
+            <option selected>Category List</option>
+            @for (item of categoryDropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.name }}</option>
+            }
+          </select>
+        </div> -->
+        <div *ngIf="isCategoryDropdownControl(control)">
+          <input
+            id="mycategories"
+            placeholder="Type category here..."
+            list="categories"
+            [formControlName]="'categoryDropdownValue'"
+          />
+          <datalist id="categories">
+            @for (item of categoryDropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.name }}</option>
+            }
+          </datalist>
+        </div>
+
+        <div class="dropdown" *ngIf="isSupplierDropdownControl(control)">
+          <select
+            class="form-select"
+            [formControlName]="'supplierDropdownValue'"
+          >
+            <option selected>Supplier List</option>
+            @for (item of supplierDropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.companyName }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      }
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="btn-dialog" align="end">
+  <div class="btn-modal">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      {{ "cancelButton" | translate }}
+    </button>
+    <button
+      (click)="create()"
+      type="submit"
+      class="btn btn-outline-primary"
+      [disabled]="!createTestForm.valid"
+    >
+      {{ "createButton" | translate }}
+    </button>
+  </div>
+</mat-dialog-actions>

@@ -1,39 +1,50 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
-import { Category } from '../../category/dto/category';
-import { Product } from '../dto/product';
-import { Supplier } from '../../supplier/dto/supplier';
+import { Observable } from 'rxjs';
+import { GetProductResponse } from '../dto/getProductResponse';
 import { HttpHeaders } from '@angular/common/http';
+import { UpdateProductRequest } from '../dto/updateProductRequest';
+import { CreateProductRequest } from '../dto/createProductRequest';
+import { SaleProductRequest } from '../dto/saleProductRequest';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
+  private httpOptions = {
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
+  }
 
   constructor(
     private httpClient: HttpClient,
   ) { }
 
-  createProduct(create: any):Observable<any> {
-    return this.httpClient.post<any>('/product/create', create);
+  getAllProducts():Observable<GetProductResponse> {
+    return this.httpClient.get<GetProductResponse>('/product/getall');
   }
 
-  updateProduct(update: any): Observable<any>{
-    return this.httpClient.post<any>('/product/update', update);
+  getProductsByPage(pageNo: number, pageSize: number): Observable<GetProductResponse> {
+    return this.httpClient.get<GetProductResponse>(`/product/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
-  getProducts():Observable<Product[]> {
-    return this.httpClient.get<Product[]>('/product/getallByPage');
+  createProduct(product: CreateProductRequest):Observable<CreateProductRequest> {
+    return this.httpClient.post<CreateProductRequest>('/product/create', product, this.httpOptions);
   }
 
-  getAllProductsByPage(pageNo: number, pageSize: number): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(`/product/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  updateProduct(product: UpdateProductRequest):Observable<UpdateProductRequest>{
+    return this.httpClient.put<UpdateProductRequest>('/product/update', product, this.httpOptions);
   }
-  
 
   deleteProduct(id: string):Observable<any> {
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.post('/product/delete', JSON.stringify(id), { headers });
+    return this.httpClient.post('/product/delete', JSON.stringify(id), this.httpOptions);
+  }
+
+  saleProduct(saleRequest: SaleProductRequest):Observable<any> {
+    return this.httpClient.post<any>('/product/sale', saleRequest);
+  }
+  
+  search(keyword: string): Observable<GetProductResponse[]> {
+    const params = new HttpParams().set('keyword', keyword);
+    return this.httpClient.get<GetProductResponse[]>(`/product/search`, { params: params });
   }
 }

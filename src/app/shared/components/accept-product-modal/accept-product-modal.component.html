@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>{{ title | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="acceptProductForm">
+    <div class="formBox form-group">
+      <label for="productId">
+        {{ "shelfDropdownsProductList" | translate }}
+      </label>
+      <div class="inputBox w100">
+        <select formControlName="productId" class="form-select my-2 mb-3">
+          @for (item of productList; track $index) {
+          <option [value]="item.id">
+            {{ item.productName }}
+          </option>
+          }
+        </select>
+      </div>
+      <div class="inputBox w100">
+        <input formControlName="count" required />
+        <label for="txtCount"> {{ "shelfInputsPeace" | translate }} </label>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="btn-dialog" align="end">
+  <div class="btn-modal">
+    <button class="btn btn-outline-secondary" (click)="close()">
+      {{ "cancelButton" | translate }}
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      [disabled]="!acceptProductForm.valid"
+      (click)="create()"
+    >
+      {{ "createButton" | translate }}
+    </button>
+  </div>
+</mat-dialog-actions>

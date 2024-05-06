@@ -1,7 +1,23 @@
+<app-navbar
+  (refreshEvent)="ngOnInit()"
+  (generatePdfEvent)="generatePDF()"
+  (navigateCreateDialogEvent)="openCreateCustomerDialog()"
+  (onSearchInputChangeEvent)="onSearchInputChange($event)"
+></app-navbar>
+
+<!-- TABLE MODAL -->
 <app-table
+  [totalPages]="totalPages"
+  [tableTitle]="tableTitle"
   [tableData]="tableData"
   [columns]="columns"
-  (navigateCreateEvent)="navigateCreate()"
-  (deleteEvent)="deleteCustomer($event.id)"
-  (refreshEvent)="ngOnInit()"
+  (navigateUpdateDialogEvent)="openUpdateCustomerDialog($event)"
+  (navigateDeleteDialogEvent)="setSelectedCustomer($event.id)"
+  (paginationEvent)="onPageChange($event)"
 ></app-table>
+
+<!-- DELETE MODAL -->
+<app-delete-modal
+  [description]="deleteDialogDescription"
+  (deleteEvent)="deleteCustomer(id)"
+></app-delete-modal>

@@ -1,0 +1,90 @@
+.input{
+    position: relative;
+    width: 100%;
+    margin: 10px auto;
+    
+    span{
+      position: absolute;
+      display: block;
+      color: darken(#EDEDED, 10%);
+      left: 15px;
+      top: 12px;
+      font-size: 20px;
+    }
+    
+    input{
+      width: 100%;
+      height: 3.5rem;
+      background-color: #F5F8FF;
+      padding: 10px 5px 10px 55px;
+      display: block;
+      border: 2px solid rgba(90, 87, 255, 0.12);
+      border-radius: 50px;
+      transition: border-color 0.3s ease;
+      color: darken(#EDEDED, 30%);
+      
+      &:focus{
+        outline: 0;
+        border-color: #000;
+      }
+    }
+}
+
+.btn{
+    width: 55%;
+    height: 3rem;
+    display: block;
+    margin: 20px auto auto auto;
+    background: #1346C7;
+    border-radius: 50px;
+    border: 1px solid #1346C7;
+    color: #fff;
+    font-size: 24px;
+    
+    &:hover, &:focus{
+      background: #2a55c0;
+      outline: 0;
+    }
+}
+  
+#forgotten{
+  font-size: 15px;
+  color: #AE0C00;
+  display: flex;
+  justify-content: center;
+  top: 8px;
+  cursor: pointer;
+}
+
+.logo-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.logo-container img {
+  animation: shakeLogo 0.3s ease-in-out infinite;
+  // -webkit-animation: rotateLogo 2s linear infinite;
+}
+
+@keyframes shakeLogo {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-3px, 0);
+  }
+  50% {
+    transform: translate(0, 0);
+  }
+  75% {
+    transform: translate(3px, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+  
+ 

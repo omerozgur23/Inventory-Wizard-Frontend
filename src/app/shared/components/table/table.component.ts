@@ -1,30 +1,92 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TableColumn } from './dto/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, filter } from 'rxjs';
+import { debounceTime } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-export class TableComponent {
+export class TableComponent implements OnInit{
   @Input() tableData: any[] = [];
   @Input() columns: TableColumn[] = [];
-  @Output() navigateCreateEvent = new EventEmitter();
-  @Output() deleteEvent = new EventEmitter<any>();
-  @Output() refreshEvent = new EventEmitter();
-
+  @Input() showOrderDetailButton = false;
+  @Input() tableTitle = '';
+  @Input() totalPages = 0;
+  @Output() navigateUpdateDialogEvent = new EventEmitter<any>();
+  @Output() navigateDeleteDialogEvent = new EventEmitter<any>();
+  @Output() navigateOrderDetailsEvent = new EventEmitter<any>();
+  @Output() paginationEvent = new EventEmitter();
+  currentPage = 1;
+ 
   constructor() {}
 
-  refresh(){
-    this.refreshEvent.emit();
+  ngOnInit(): void {
   }
 
-  navigateCreate() {
-    this.navigateCreateEvent.emit();
+  onPageChange(pageNo: number) {
+    if (pageNo < 1 || pageNo > this.totalPages) {
+      return; // Geçersiz sayfa numarası, işlemi durdur
+    }
+    this.currentPage = pageNo;
+    this.paginationEvent.emit(pageNo);
   }
 
-  deleteData(id: any){
-    this.deleteEvent.emit(id);
+  totalPagesArray(): number[] {
+    // return Array(this.totalPages).fill(0).map((x, i) => i + 1);
+    const numPagesToShow = 5; // Gösterilecek maksimum sayfa sayısı
+  const currentPage = this.currentPage;
+  const totalPages = this.totalPages;
+  
+  let startPage: number;
+  let endPage: number;
+
+  if (totalPages <= numPagesToShow) {
+    // Toplam sayfa sayısı, gösterilecek maksimum sayfa sayısından az veya eşitse
+    startPage = 1;
+    endPage = totalPages;
+  } else {
+    // Toplam sayfa sayısı, gösterilecek maksimum sayfa sayısından fazlaysa
+    if (currentPage <= Math.floor(numPagesToShow / 2)) {
+      // Mevcut sayfa ilk sayfalardaysa
+      startPage = 1;
+      endPage = numPagesToShow;
+    } else if (currentPage + Math.floor(numPagesToShow / 2) >= totalPages) {
+      // Mevcut sayfa son sayfalardaysa
+      startPage = totalPages - numPagesToShow + 1;
+      endPage = totalPages;
+    } else {
+      // Mevcut sayfa orta kısımdaysa
+      startPage = currentPage - Math.floor(numPagesToShow / 2);
+      endPage = currentPage + Math.floor(numPagesToShow / 2);
+    }
+  }
+
+  return Array(endPage - startPage + 1).fill(0).map((_, index) => startPage + index);
+  }
+
+  navigateUpdateDialog(item: any){
+    this.navigateUpdateDialogEvent.emit(item);
+  }
+
+  navigateDeleteDialog(id: any){
+    this.navigateDeleteDialogEvent.emit(id);    
+  }
+
+  navigateOrderDetails(id: string) {
+    if (this.showOrderDetailButton) {
+      this.navigateOrderDetailsEvent.emit(id);
+    }
+  }
+
+  isCritical(item: any, fieldName: string): boolean {
+    if (fieldName === 'quantity') {
+      const criticalField = 'criticalCount';
+      return item[fieldName] <= item[criticalField];
+    }
+    return false;
   }
 }

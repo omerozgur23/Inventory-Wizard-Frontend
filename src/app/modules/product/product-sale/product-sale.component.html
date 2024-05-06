@@ -1,0 +1,79 @@
+<div class="container">
+  <h1>{{ "productSale" | translate }}</h1>
+  <!-- <p>Have any questions or suggestions? Drop us a message</p> -->
+  <form [formGroup]="saleProductForm" (ngSubmit)="submit()">
+    <div class="row">
+      <div class="column">
+        <label for="customerId">
+          {{ "productSaleDropdownCustomer" | translate }}
+        </label>
+        <select formControlName="customerId" class="form-select my-2 mb-3">
+          <option *ngFor="let item of customerList" [value]="item.id">
+            {{ item.companyName }}
+          </option>
+        </select>
+      </div>
+      <div class="column">
+        <label for="userId">
+          {{ "productSaleDropdownEmployee" | translate }}
+        </label>
+        <select formControlName="userId" class="form-select my-2 mb-3">
+          <option *ngFor="let item of employeeList" [value]="item.id">
+            {{ item.firstName + " " + item.lastName }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="row" formArrayName="productItems">
+      <div
+        *ngFor="let productGroup of productItems.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <div class="column">
+          <label for="productId">
+            {{ "productSaleDropdownProduct" | translate }}
+          </label>
+          <select formControlName="productId" class="form-select my-2 mb-3">
+            <option *ngFor="let item of productList" [value]="item.id">
+              {{ item.productName }}
+            </option>
+          </select>
+        </div>
+        <div class="column">
+          <label for="txtCount" class="form-label">
+            {{ "productSaleInputQuantity" | translate }}
+          </label>
+          <input
+            formControlName="count"
+            type="number"
+            class="form-control"
+            id="txtCount"
+            aria-describedby="count"
+          />
+        </div>
+
+        <div class="column">
+          <button type="button" (click)="removeProduct(i)">
+            {{ "removeProductButton" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column">
+        <label for="issue">
+          {{ "productSaleInputOrderNote" | translate }}
+        </label>
+        <textarea
+          id="issue"
+          placeholder="{{ 'productSaleDescOrderNote' | translate }}"
+          rows="3"
+        ></textarea>
+      </div>
+    </div>
+    <button type="button" (click)="addProduct()">
+      {{ "addProductButton" | translate }}
+    </button>
+    <button type="submit">{{ "completeOrderButton" | translate }}</button>
+  </form>
+</div>

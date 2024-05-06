@@ -1,0 +1,175 @@
+<div style="background: #faf9ff" class="row stat-cards me-5 ms-5">
+  <div class="col-md-6 col-xl-4">
+    <article
+      style="
+        border-radius: 2rem;
+        border: 1px solid #e2e5ff;
+        box-shadow: 0px 2px 4px rgba(221, 221, 221, 0.8);
+      "
+      class="stat-cards-item"
+    >
+      <div class="stat-cards-icon primary">
+        <i data-feather="bar-chart-2" aria-hidden="true"></i>
+      </div>
+      <div class="stat-cards-info">
+        <p class="stat-cards-info__num">
+          {{ totalSales | currency : "TRY" : "symbol" : "1.2-2" }}
+        </p>
+        <p class="stat-cards-info__title">
+          {{ "reportTotalSales" | translate }}
+        </p>
+      </div>
+    </article>
+  </div>
+  <div class="col-md-6 col-xl-4">
+    <article
+      style="
+        border-radius: 2rem;
+        border: 1px solid #e2e5ff;
+        box-shadow: 0px 2px 4px rgba(221, 221, 221, 0.8);
+      "
+      class="stat-cards-item"
+    >
+      <div class="stat-cards-icon warning">
+        <i data-feather="file" aria-hidden="true"></i>
+      </div>
+      <div class="stat-cards-info">
+        <p class="stat-cards-info__num">
+          {{ winning | currency : "TRY" : "symbol" : "1.2-2" }}
+        </p>
+        <p class="stat-cards-info__title">
+          {{ "reportTotalWinning" | translate }}
+        </p>
+      </div>
+    </article>
+  </div>
+  <div class="col-md-6 col-xl-4">
+    <article
+      style="
+        border-radius: 2rem;
+        border: 1px solid #e2e5ff;
+        box-shadow: 0px 2px 4px rgba(221, 221, 221, 0.8);
+      "
+      class="stat-cards-item"
+    >
+      <div class="stat-cards-icon purple">
+        <i data-feather="file" aria-hidden="true"></i>
+      </div>
+      <div class="stat-cards-info">
+        <p class="stat-cards-info__num">
+          {{ totalSalesCost | currency : "TRY" : "symbol" : "1.2-2" }}
+        </p>
+        <p class="stat-cards-info__title">
+          {{ "repotTotalSalesCost" | translate }}
+        </p>
+      </div>
+    </article>
+  </div>
+</div>
+
+<div style="height: 20rem" class="row stat-cards me-5 ms-5">
+  <div class="col-md-6 col-xl-6">
+    <article
+      style="border-radius: 2rem; border: 1px solid #e2e5ff"
+      class="stat-cards-item"
+    >
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr class="align-middle">
+            @for (column of lastOrdersColumns; track $index) {
+            <th scope="col">{{ column.label | translate }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of tableLastFiveOrders; track $index) {
+          <tr>
+            @for (column of lastOrdersColumns; track $index) {
+            <td>{{ item[column.field] }}</td>
+            }
+          </tr>
+          }
+        </tbody>
+      </table>
+    </article>
+  </div>
+  <div class="col-md-6 col-xl-6">
+    <article
+      style="border-radius: 2rem; border: 1px solid #e2e5ff"
+      class="stat-cards-item"
+    >
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr class="align-middle">
+            @for (column of ordersTheMostColumns; track $index) {
+            <th scope="col">{{ column.label | translate }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of tableOrdersTheMost; track $index) {
+          <tr>
+            @for (column of ordersTheMostColumns; track $index) {
+            <td>{{ item[column.field] }}</td>
+            }
+          </tr>
+          }
+        </tbody>
+      </table>
+    </article>
+  </div>
+</div>
+
+<div style="height: 20rem" class="row stat-cards mt-5 me-5 ms-5">
+  <div class="col-md-6 col-xl-6">
+    <article
+      style="border-radius: 2rem; border: 1px solid #e2e5ff"
+      class="stat-cards-item"
+    >
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr class="align-middle">
+            @for (column of mostOrderSendersColumns; track $index) {
+            <th scope="col">{{ column.label | translate }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of tableMostOrderSenders; track $index) {
+          <tr>
+            @for (column of mostOrderSendersColumns; track $index) {
+            <td>{{ item[column.field] }}</td>
+            }
+          </tr>
+          }
+        </tbody>
+      </table>
+    </article>
+  </div>
+  <div class="col-md-6 col-xl-6">
+    <article
+      style="border-radius: 2rem; border: 1px solid #e2e5ff"
+      class="stat-cards-item"
+    >
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr class="align-middle">
+            @for (column of bestSellingProductsColumns; track $index) {
+            <th scope="col">{{ column.label | translate }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of tableBestSellingProducts; track $index) {
+          <tr>
+            @for (column of bestSellingProductsColumns; track $index) {
+            <td>{{ item[column.field] }}</td>
+            }
+          </tr>
+          }
+        </tbody>
+      </table>
+    </article>
+  </div>
+</div>
+<button (click)="navigateRecentOrders()">recent orders</button>

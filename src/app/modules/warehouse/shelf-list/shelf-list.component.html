@@ -1,96 +1,82 @@
-<!-- <app-table
+<app-navbar
+  [showAcceptProductButton]="true"
+  (refreshEvent)="ngOnInit()"
+  (navigateCreateDialogEvent)="openCreateShelfDialog()"
+  (navigateAcceptProductEvent)="openAcceptProductDialog($event)"
+  (generatePdfEvent)="generatePDF()"
+  (onSearchInputChangeEvent)="onSearchInputChange($event)"
+></app-navbar>
+
+<!-- TABLE MODAL -->
+<app-table
+  [totalPages]="totalPages"
+  [tableTitle]="tableTitle"
   [tableData]="tableData"
   [columns]="columns"
-  (navigateCreateEvent)="navigateCreate()"
-  (deleteEvent)="deleteShelf($event.id)"
-  (refreshEvent)="ngOnInit()"
-></app-table> -->
+  (navigateUpdateDialogEvent)="openUpdateShelfDialog($event)"
+  (navigateDeleteDialogEvent)="setSelectedShelf($event.id)"
+  (paginationEvent)="onPageChange($event)"
+></app-table>
 
-<div>
-  <div class="pt-2 pb-2" style="background-color: #f8f9fc">
-    <div class="ps-4 pe-4">
-      <button class="btn primary img-button">
-        <img src="../../../../assets/img/refreshIcon.png" title="Yenile" />
-        <span class="nb-btn-span"> Yenile </span>
-      </button>
-      <button
-        class="btn btn primary img-button"
-        (click)="navigateCreate()"
-      >
-        <img src="../../../../assets/img/createIcon.png" title="Ekle" />
-        <span class="nb-btn-span"> Raf Ekle </span>
-      </button>
-      <button
-        class="btn btn primary img-button"
-        (click)="navigateAcceptProduct()"
-      >
-        <img
-          src="../../../../assets/img/acceptProduct.png"
-          title="acceptProduct"
-        />
-        <span class="nb-btn-span"> Ürün Girişi </span>
-      </button>
-      <span class="mt-1 me-3 nb-search-span">
-        <img src="../../../../assets/img/searchIcon.png" alt="" />
-        <input type="text" class="nb-search-input" placeholder="Ara" />
-      </span>
+<!-- DELETE MODAL -->
+<app-delete-modal
+  [description]="deleteDialogDescription"
+  (deleteEvent)="deleteShelf(id)"
+></app-delete-modal>
+
+<!-- ACCEPT PRODUCT MODAL -->
+<!-- <div
+  class="modal fade"
+  id="acceptProductModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Ürün Girişi</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form [formGroup]="acceptProductForm">
+        <div style="margin: 20px" class="mb-3">
+          <label for="">Ürün Seçiniz</label>
+          <select formControlName="productId" class="form-select my-2 mb-3">
+            @for (item of productList; track $index) {
+            <option [value]="item.id">{{ item.productName }}</option>
+            }
+          </select>
+
+          <label for="txtCount" class="form-label">Adet</label>
+          <input
+            formControlName="count"
+            type="number"
+            class="form-control"
+            id="txtCount"
+            aria-describedby="count"
+          />
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Vazgeç
+        </button>
+        <button
+          type="submit"
+          class="btn btn-danger img-button"
+          data-bs-dismiss="modal"
+          (click)="acceptProduct()"
+        >
+          Ekle
+        </button>
+      </div>
     </div>
   </div>
-
-  <div class="pe-4 ps-4 py-4">
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th scope="col" style="width: 10px"></th>
-          <th scope="col">Ürün Adı</th>
-          <th scope="col">Ürün Adedi</th>
-          <th scope="col">Kapasite</th>
-          <th scope="col" style="width: 10px"></th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (shelf of shelfList; track $index) {
-        <tr>
-          <td scope="row">
-            <button class="btn btn primary img-button">
-              <img
-                style="width: 24px"
-                src="../../../../assets/img/Pencil.png"
-                title="Düzenle"
-              />
-            </button>
-          </td>
-
-          <td>{{ shelf.productName }}</td>
-          <td>{{ shelf.count }}</td>
-          <td>{{ shelf.capacity }}</td>
-
-          <td scope="row">
-            <button
-              class="btn btn primary img-button"
-              (click)="deleteShelf(shelf.id)"
-            >
-              <img src="../../../../assets/img/deleteIcon.png" title="Delete" />
-            </button>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-  <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-      <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
-          >Previous</a
-        >
-      </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#">Next</a>
-      </li>
-    </ul>
-  </nav>
-</div>
+</div> -->
