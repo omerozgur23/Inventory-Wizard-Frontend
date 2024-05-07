@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { InvoiceService } from '../service/invoice.service';
 import { GenericService } from '../../../core/service/generic.service';
-import { TranslateService } from '@ngx-translate/core';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { Router } from '@angular/router';
 
@@ -84,5 +82,4 @@ export class InvoiceComponent implements OnInit{
   openUpdateInvoiceDialog(item: any){};
 
   setSelectedInvoice(id: any){};
-
 }
