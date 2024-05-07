@@ -47,6 +47,10 @@
     "orderDetailPdfTitle": "Sipariş Detayı",
     "employeePdfTitle": "Personel Listesi",
     "customerPdfTitle": "Müşteri Listesi",
+    "bestSellingProductsPdfTitle": "Çok Satan Ürünler",
+    "mostOrderSendersPdfTitle": "En Çok Sipariş Alan Personel",
+    "recentOrdersPdfTitle": "Son 5 Sipariş",
+    "topOrderersPdfTitle": "En Çok Sipariş Veren Müşteri",
 
     "deleteCategoryDialogDescription": "Kategori kaydını silmek istediğinizden emin misiniz?",
     "categoryTableTitle": "Kategoriler",

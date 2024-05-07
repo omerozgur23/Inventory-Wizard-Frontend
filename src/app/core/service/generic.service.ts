@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ShelfService } from '../../modules/warehouse/service/shelf.service';
 import { TranslateService } from '@ngx-translate/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';

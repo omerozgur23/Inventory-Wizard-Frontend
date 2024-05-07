@@ -47,6 +47,10 @@
     "orderDetailPdfTitle": "Order Detail",
     "employeePdfTitle": "Employee List",
     "customerPdfTitle": "Customer List",
+    "bestSellingProductsPdfTitle": "Best Selling Products",
+    "mostOrderSendersPdfTitle": "Most Order Senders",
+    "recentOrdersPdfTitle": "Recent Orders",
+    "topOrderersPdfTitle": "Top Orderers",
 
     "deleteCategoryDialogDescription": "Are you sure you want to delete the category?",
     "categoryTableTitle": "Categories",
