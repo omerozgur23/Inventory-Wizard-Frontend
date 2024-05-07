@@ -30,8 +30,6 @@ export class ProductSaleComponent implements OnInit{
     private productService: ProductService,
     private customerService: CustomerService,
     private employeeService: EmployeeService,
-    private router: Router,
-    private route: ActivatedRoute,
     private genericService: GenericService,
     private translateService: TranslateService, 
   ) {}
@@ -85,6 +83,11 @@ export class ProductSaleComponent implements OnInit{
       this.productService.saleProduct(saleRequest).subscribe({
         next: (result) => {
           this.toastr.success(successSaleMessage);
+          this.saleProductForm.reset({
+            customerId: '',
+            userId: '',
+            productItems: [this.createProductGroup()]
+          });
         },
         error: (err) => {
           console.error(err);

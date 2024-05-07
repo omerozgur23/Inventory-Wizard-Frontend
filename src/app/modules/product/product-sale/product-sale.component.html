@@ -1,6 +1,7 @@
+<app-navbar (refreshEvent)="ngOnInit()"></app-navbar>
+
 <div class="container">
   <h1>{{ "productSale" | translate }}</h1>
-  <!-- <p>Have any questions or suggestions? Drop us a message</p> -->
   <form [formGroup]="saleProductForm" (ngSubmit)="submit()">
     <div class="row">
       <div class="column">

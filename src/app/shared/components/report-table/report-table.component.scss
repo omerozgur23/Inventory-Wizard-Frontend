@@ -1,0 +1,28 @@
+table {
+    border-collapse: collapse;
+    margin: auto;
+  }
+  
+  .tbodyDiv{
+    max-height: clamp(5em,70vh,100%);
+    overflow: auto;
+  }
+   
+  td {
+    border: 1px solid rgba(90, 87, 255, 0.1);
+    background-color: #fff;
+    vertical-align: middle;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+  }
+  
+  th {
+    border: 1px solid #dddddd;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    color: #353535;
+  }
+  
+  tr {
+    border-bottom: 1px solid #dddddd;
+  }

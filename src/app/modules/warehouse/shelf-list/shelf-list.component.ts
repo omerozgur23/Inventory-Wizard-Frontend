@@ -1,5 +1,5 @@
 import { UpdateModalComponent } from './../../../shared/components/update-modal/update-modal.component';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ShelfService } from '../service/shelf.service';
@@ -13,6 +13,7 @@ import { ProductService } from '../../product/service/product.service';
 import { AcceptProductModalComponent } from '../../../shared/components/accept-product-modal/accept-product-modal.component';
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
   selector: 'app-shelf-list',
@@ -44,13 +45,12 @@ export class ShelfListComponent implements OnInit{
   constructor(
     private toastr: ToastrService,
     private shelfService: ShelfService,
-    private router: Router,
-    private route: ActivatedRoute,
     private dialog: MatDialog,
     private fb: FormBuilder,
     private productService: ProductService,
     private genericService: GenericService,
     private translateService: TranslateService,
+    private authService: AuthService,
   ){}
 
   setSelectedShelf(shelfId: string) {
@@ -103,6 +103,7 @@ export class ShelfListComponent implements OnInit{
   }
 
   openCreateShelfDialog(){
+      if (this.authService.isAdmin()) {
     let dialog = this.dialog.open(CreateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -126,6 +127,10 @@ export class ShelfListComponent implements OnInit{
       }
     });
   }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
+  }
 
   createShelf(capacity: number, count: number){
     const successCreatedMessage = this.translateService.instant("shelfCreatedMessage");
@@ -144,14 +149,12 @@ export class ShelfListComponent implements OnInit{
           this.toastr.info(errorCountMessage)
         }
         console.log(err);
-        // else{
-        //   this.toastr.error('Hata oluştu!');
-        // }
       }
     });
   }
 
   openUpdateShelfDialog(item: any){
+      if (this.authService.isAdmin()) {
     let dialog =  this.dialog.open(UpdateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -174,6 +177,10 @@ export class ShelfListComponent implements OnInit{
       }
     });
   }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
+  }
 
   updateShelf(id: string, capacity: number){
     const successUpdatedMessage = this.translateService.instant("shelfUpdatedMessage");
@@ -194,6 +201,7 @@ export class ShelfListComponent implements OnInit{
   }
   
   deleteShelf(id: any){
+      if (this.authService.isAdmin()) {
     const successDeletedMessage = this.translateService.instant("shelfDeletedMessage");
     this.shelfService.deleteShelf(id).subscribe(
       {
@@ -207,8 +215,13 @@ export class ShelfListComponent implements OnInit{
       }
     );
   }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
+  }
 
   openAcceptProductDialog(item: any) {
+      if (this.authService.isAdmin() || this.authService.isWarehouseSupervisor()) {
     const dialogRef = this.dialog.open(AcceptProductModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -218,8 +231,6 @@ export class ShelfListComponent implements OnInit{
         productList: this.productList,
       }
     });
-    // dialogRef.componentInstance.productList = this.productList
-  console.log("accept dialog: ", this.productList);
   
     dialogRef.afterClosed().subscribe({
       next: (data) => {
@@ -232,6 +243,10 @@ export class ShelfListComponent implements OnInit{
         console.log(err);
       }
     });
+  }
+  else{
+    this.genericService.showAuthError("authorizationError");
+  }
   }
   
 
@@ -271,9 +286,5 @@ export class ShelfListComponent implements OnInit{
     } else {
       this.loadShelves();
     }
-  }
-
-  navigateSettings(){
-    this.router.navigate(['/home/settings']);
   }
 }

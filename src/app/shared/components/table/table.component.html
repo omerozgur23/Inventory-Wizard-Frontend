@@ -14,6 +14,12 @@
             <th scope="col" style="width: 120px">
               {{ "orderTableOrderDetails" | translate }}
             </th>
+            } @if (showInvoiceDetailButton) {
+            <th scope="col" style="width: 120px">
+              {{ "invoiceTableInvoiceDetails" | translate }}
+            </th>
+            } @if (showCreateInvoiceButton) {
+            <th scope="col" style="width: 10px"></th>
             }
             <th scope="col" style="width: 10px"></th>
           </tr>
@@ -23,11 +29,14 @@
           <tr>
             <td scope="row">
               <button
-                title="Düzenle"
                 (click)="navigateUpdateDialog(item)"
                 class="btn btn primary img-button"
               >
-                <img src="../../../../assets/img/editTest.svg" alt="" />
+                <img
+                  [title]="'updateButtonTitle' | translate"
+                  src="../../../../assets/img/editTest.svg"
+                  alt=""
+                />
               </button>
             </td>
             @for (column of columns; track $index) {
@@ -41,13 +50,37 @@
             } @if (showOrderDetailButton) {
             <td scope="row">
               <button (click)="navigateOrderDetails(item.id)">
-                <img src="../../../../assets/img/orderDetails.svg" alt="" />
+                <img
+                  [title]="'orderDetailsButtonTitle' | translate"
+                  src="/assets/img/view.svg"
+                  alt=""
+                />
+              </button>
+            </td>
+            } @if (showCreateInvoiceButton) {
+            <td scope="row">
+              <button
+                data-bs-toggle="modal"
+                data-bs-target="#invoiceModal"
+                (click)="navigateCreateInvoice(item)"
+              >
+                <img
+                  [title]="'createInvioceButtonTitle' | translate"
+                  src="/assets/img/invoice.svg"
+                  alt=""
+                />
+              </button>
+            </td>
+            } @if (showInvoiceDetailButton) {
+            <td scope="row">
+              <button (click)="navigateInvoiceDetails(item.id)">
+                <img src="/assets/img/invoice.svg" alt="" />
               </button>
             </td>
             }
             <td scope="row">
               <button
-                title="Sil"
+                [title]="'deleteButtonTitle' | translate"
                 class="btn btn primary img-button"
                 data-bs-toggle="modal"
                 data-bs-target="#deleteModal"

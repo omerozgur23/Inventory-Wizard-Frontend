@@ -1,4 +1,4 @@
-import { ProductItemDTO } from "./ProductItemDTO";
+import { ProductItemDTO } from "./productItemDTO";
 
 export interface SaleProductRequest {
     customerId: string;

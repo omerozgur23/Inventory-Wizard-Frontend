@@ -6,6 +6,7 @@ export interface GetOrderResponse {
             customerCompanyName: string,
             employeeFirstName: string,
             orderDate: Date,
+            invoiceGenerated: boolean,
         }
     ]
 }
