@@ -7,10 +7,10 @@ export function roleControlGuard(...roles: string[]): CanActivateFn {
      let loginService = inject(LoginService);
      let router = inject(Router);
  
-     let sonuc = loginService.roles.find(rol => roles.find(rol2 => rol2 === rol)!=undefined) != undefined;
-     if (!sonuc) {
+     let result = loginService.roles.find(role => roles.find(role2 => role2 === role)!=undefined) != undefined;
+     if (!result) {
        router.navigate(["/home/access-denied"]);
      }
-     return sonuc;
+     return result;
   }
 };

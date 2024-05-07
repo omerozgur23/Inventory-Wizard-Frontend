@@ -1,0 +1,29 @@
+<div style="background: #f8faff">
+  <div class="pe-4 ps-4 py-4">
+    <div class="table-responsive tbodyDiv">
+      <p style="font-weight: bold">{{ tableTitle | translate }}</p>
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr class="align-middle">
+            @for (column of columns; track $index) {
+            <th scope="col">
+              {{ column.label | translate }}
+            </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of tableData; track item; let i = $index) {
+          <tr>
+            @for (column of columns; track $index) {
+            <td>
+              {{ item[column.field] }}
+            </td>
+            }
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -14,9 +14,16 @@
   (navigateUpdateDialogEvent)="updateOrder()"
   (navigateDeleteDialogEvent)="deleteOrder()"
   [showOrderDetailButton]="true"
+  [showCreateInvoiceButton]="true"
   (navigateOrderDetailsEvent)="navigateOrderDetails($event)"
+  (navigateCreateInvoiceEvent)="setSelectedOrder($event.id)"
   (paginationEvent)="onPageChange($event)"
 ></app-table>
+
+<!-- CREATE INVOICE MODAL -->
+<app-create-invoice-modal
+  (createInvoiceEvent)="createInvoice(id)"
+></app-create-invoice-modal>
 
 <!-- DELETE MODAL -->
 <!-- <app-delete-modal></app-delete-modal> -->

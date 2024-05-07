@@ -25,7 +25,7 @@ export class RecentOrdersComponent implements OnInit {
     private reportService: ReportService,
     private genericService: GenericService,
     private translateService: TranslateService,
-    private router: Router,
+    // private router: Router,
   ){}
 
   ngOnInit(): void {
@@ -43,12 +43,10 @@ export class RecentOrdersComponent implements OnInit {
     });
   }
 
-  navigateSettings(){
-    this.router.navigate(['/home/settings']);
-  }
-
   generatePDF(){
-
+    const fileName = 'recent-orders.pdf';
+    const tableTitle = this.translateService.instant("recentOrdersPdfTitle");
+    this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
   }
 
 }
