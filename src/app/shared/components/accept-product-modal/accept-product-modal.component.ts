@@ -20,7 +20,6 @@ export class AcceptProductModalComponent {
   ) {
     this.title = data.title;
     this.productList = data.productList;
-    console.log("accept component const: ", this.productList);
     
     this.acceptProductForm = this.fb.group({
       productId: ['', Validators.required], 

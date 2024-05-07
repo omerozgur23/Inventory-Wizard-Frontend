@@ -22,13 +22,15 @@ export class OrderDetailsComponent implements OnInit{
   ];
 
   tableTitle = "orderDetailsTableTitle";
-  currentPage: number = 1;
+  itemPerPage = 15;
+  currentPage = 1;
+  totalShelvesCount = 0;
+  totalPages = 0;
 
   constructor(
     private orderService: OrderService,
     private route: ActivatedRoute,
     private genericService: GenericService,
-    private router: Router,
     private translateService: TranslateService,
   ){}
 
@@ -66,9 +68,5 @@ export class OrderDetailsComponent implements OnInit{
     const fileName = 'orderDetails.pdf';
     const tableTitle = this.translateService.instant("orderDetailPdfTitle");
     this.genericService.generatePdf(this.tableData, this.columns, fileName, tableTitle);
-  }
-
-  navigateSettings(){
-    this.router.navigate(['/home/settings']);
   }
 }

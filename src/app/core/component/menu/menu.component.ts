@@ -11,24 +11,17 @@ import { LoginService } from '../../service/login.service';
 
 export class MenuComponent {
   @Input() isExpanded = false;
-  // @Output() toggleSidebar: EventEmitter<boolean> = new EventEmitter<boolean>();
   
-  
-
   constructor(
     private loginService: LoginService,
     private router: Router,
     public route: ActivatedRoute,
   ) {}
 
-  // handleSidebarToggle = () => this.toggleSidebar.emit(!this.isExpanded);
-
   logout(){
     this.loginService.logout();
     this.router.navigate(["/"]);
   }
-
-  // isExpandedd: boolean = false;
 
   toggleSidebarr() {
     this.isExpanded = !this.isExpanded;
