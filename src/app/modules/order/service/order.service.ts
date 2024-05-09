@@ -24,9 +24,9 @@ export class OrderService {
     return this.httpClient.get<GetOrderResponse>(`/orders/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
-  getOrderDetails(orderId: string): Observable<GetOrderDetailsResponse[]>{
-    const params = { orderId: orderId };
-    return this.httpClient.get<GetOrderDetailsResponse[]>('/orderDetails/getByOrderId', { params });
+  getOrderDetails(orderId: string, pageNo: number, pageSize: number): Observable<GetOrderDetailsResponse>{
+    const params = { orderId: orderId, pageNo: pageNo, pageSize: pageSize };
+    return this.httpClient.get<GetOrderDetailsResponse>('/orderDetails/getByOrderId', { params });
   }
 
   search(keyword: string): Observable<GetOrderResponse[]> {
