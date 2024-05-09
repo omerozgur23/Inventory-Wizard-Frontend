@@ -8,6 +8,7 @@
     "suppliers": "Suppliers",
     "employees": "Employees",
     "reports": "Reports",
+    "invoices": "Invoices",
 
     "refresh": "Refresh",
     "create": "Create",
@@ -20,15 +21,24 @@
     "deleteDialogDescriptionTitle": "Delete",
     "deleteDialogDescription2": "This action cannot be undone!",
 
+    "createInvioceDialogDescriptionTitle": "Create Invoice",
+    "createInvioceDialogDescription": "Are you sure you want to create an invoice?",
+
     "deleteButton": "Delete",
     "cancelButton": "Cancel",
     "saveButton": "Save",
     "createButton": "Create",
+    "createInvoiceButton": "Create Invoice",
     "addProductButton": "Add Product",
     "removeProductButton": "Remove Product",
     "completeOrderButton": "Complete",
     "goHomeButton": "Go Home",
     "signInButton": "Sign In",
+
+    "deleteButtonTitle": "Delete",
+    "updateButtonTitle": "Update",
+    "createInvioceButtonTitle": "Create Invoice",
+    "orderDetailsButtonTitle": "Show Order Detail",
 
     "productPdfTitle": "Product List",
     "categoryPdfTitle": "Category List",
@@ -37,6 +47,10 @@
     "orderDetailPdfTitle": "Order Detail",
     "employeePdfTitle": "Employee List",
     "customerPdfTitle": "Customer List",
+    "bestSellingProductsPdfTitle": "Best Selling Products",
+    "mostOrderSendersPdfTitle": "Most Order Senders",
+    "recentOrdersPdfTitle": "Recent Orders",
+    "topOrderersPdfTitle": "Top Orderers",
 
     "deleteCategoryDialogDescription": "Are you sure you want to delete the category?",
     "categoryTableTitle": "Categories",
@@ -83,6 +97,7 @@
     "orderTableEmployee": "Order Creator",
     "orderTableDate": "Order Date",
     "orderTableTotalPrice": "Order Amount",
+    "orderTableInvoiceGenerated": "Invoice",
     "orderTableOrderDetails": "Order Detail",
     "orderPeace": "Order Peace",
 
@@ -126,6 +141,20 @@
     "createEmployeeTitle": "New Employee",
     "updateEmployeeTitle": "Update Employee",
 
+    "invoiceTableTitle": "Invoices",
+    "invoiceTableInvoiceCode": "Invoice Code",
+    "invoiceTableCompanyName": "Customer",
+    "invoiceTableTotalAmount": "Invoice Amount",
+    "invoiceTableWaybillDate": "Invoice Date",
+    "invoiceTableInvoiceDetails": "Invoice Details",
+
+    "invoiceDetailsTableTitle": "Invoice Detail",
+    "invoiceDetailsTableInvoiceCode": "Invoice Code",
+    "invoiceDetailsTableProductName": "Product Name",
+    "invoiceDetailsTableQuantity": "Quantity",
+    "invoiceDetailsTableUnitPrice": "Unit Price",
+    "invoiceDetailsTableTotalPrice": "Total Price",
+
     "settingsFormEmail": "E-Mail",
     "settingsFormCurrentPassword": "Current Password",
     "settingsFormNewPassword": "New Password",
@@ -151,6 +180,7 @@
     "repotTotalSalesCost": "Total Sales Cost",
 
     "errorMessage": "An error occurred",
+    "authorizationError": "You are not authorized for this operation",
     "categoryCreatedMessage": "Category is created",
     "categoryUpdatedMessage": "Category is updated",
     "categoryDeletedMessage": "Category is deleted",
@@ -184,5 +214,8 @@
 
     "customerCreatedMessage": "Employee is created",
     "customerUpdatedMessage": "Employee is updated",
-    "customerDeletedMessage": "Employee is deleted"
+    "customerDeletedMessage": "Employee is deleted",
+
+    "invoiceCreatedMessage": "Invoice Created",
+    "createdInvoiceInfoMessage": "This order already has an invoice"
 }

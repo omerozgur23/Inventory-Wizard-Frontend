@@ -6,12 +6,18 @@ import { ReportComponent } from './report/report.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { RecentOrdersComponent } from './recent-orders/recent-orders.component';
 import { SharedModule } from '../../shared/shared.module';
+import { TopOrderersComponent } from './top-orderers/top-orderers.component';
+import { MostOrderSendersComponent } from './most-order-senders/most-order-senders.component';
+import { BestSellingProductsComponent } from './best-selling-products/best-selling-products.component';
 
 
 @NgModule({
   declarations: [
     ReportComponent,
-    RecentOrdersComponent
+    RecentOrdersComponent,
+    TopOrderersComponent,
+    MostOrderSendersComponent,
+    BestSellingProductsComponent
   ],
   imports: [
     CommonModule,

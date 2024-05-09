@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
   selector: 'app-customer-list',
@@ -36,16 +37,14 @@ export class CustomerListComponent implements OnInit{
   currentPage = 1;
   totalShelvesCount = 0;
   totalPages = 0;
-  // totalPages: number = 10;
 
   constructor(
     private customerService: CustomerService,
     private toastr: ToastrService,
     private dialog: MatDialog,
-    private router: Router,
-    private route: ActivatedRoute,
     private genericService: GenericService,
     private translateService: TranslateService,
+    private authService: AuthService,
   ) {}
 
   setSelectedCustomer(customerId: string) {
@@ -86,6 +85,7 @@ export class CustomerListComponent implements OnInit{
   }
   
   openCreateCustomerDialog() {
+      if (this.authService.isAdmin()) {
     let dialog = this.dialog.open(CreateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -116,6 +116,10 @@ export class CustomerListComponent implements OnInit{
       }
     });
   }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
+  }
 
   createCustomer(companyName: string, contactName: string, contactEmail: string, contactPhone: string, taxNumber: string, address: string) {
     const successCreatedMessage = this.translateService.instant("customerCreatedMessage");
@@ -133,6 +137,7 @@ export class CustomerListComponent implements OnInit{
   }
 
   openUpdateCustomerDialog(item: any){
+      if (this.authService.isAdmin()) {
     let dialog =  this.dialog.open(UpdateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -163,6 +168,10 @@ export class CustomerListComponent implements OnInit{
       }
     });
   }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
+  }
 
   updateCustomer(id: string, companyName: string, contactName: string, contactEmail: string, contactPhone: string, address: string){
     const successUpdatedMessage = this.translateService.instant("customerUpdatedMessage");
@@ -180,6 +189,7 @@ export class CustomerListComponent implements OnInit{
   }
 
   deleteCustomer(id: any){
+      if (this.authService.isAdmin()) {
     const successDeletedMessage = this.translateService.instant("customerDeletedMessage");
     this.customerService.deleteCustomer(id).subscribe(
       {
@@ -193,6 +203,10 @@ export class CustomerListComponent implements OnInit{
         }
       }
     );
+  }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
   }
 
   generatePDF() {
@@ -217,9 +231,5 @@ export class CustomerListComponent implements OnInit{
     } else {
       this.loadCustomer();
     }
-  }
-
-  navigateSettings(){
-    this.router.navigate(['/home/settings']);
   }
 }

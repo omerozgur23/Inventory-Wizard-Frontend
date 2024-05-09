@@ -12,6 +12,7 @@ import { CreateSupplierRequest } from '../dto/createSupplierRequest';
 
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
   selector: 'app-supplier-list',
@@ -36,16 +37,14 @@ export class SupplierListComponent implements OnInit{
   currentPage = 1;
   totalShelvesCount = 0;
   totalPages = 0;
-  // totalPages: number = 10;
 
   constructor(
     private supplierService: SupplierService,
     private toastr: ToastrService,
     private dialog: MatDialog,
-    private router: Router,
-    private route: ActivatedRoute,
     private genericService: GenericService,
     private translateService: TranslateService,
+    private authService: AuthService,
   ){}
 
   setSelectedSupplier(supplierId: string) {
@@ -86,6 +85,7 @@ export class SupplierListComponent implements OnInit{
   }
 
   openCreateSupplierDialog(){
+      if (this.authService.isAdmin()) {
     let dialog = this.dialog.open(CreateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -113,6 +113,10 @@ export class SupplierListComponent implements OnInit{
       }
     });
   }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
+  }
 
   createSupplier(companyName: string, contactName: string, contactEmail: string, contactPhone: string, taxNumber: string, address: string){
     const successCreatedMessage = this.translateService.instant("supplierCreatedMessage");
@@ -129,7 +133,8 @@ export class SupplierListComponent implements OnInit{
     });
   }
 
-  openUpdateSupplierDialog(item: any){    
+  openUpdateSupplierDialog(item: any){
+      if (this.authService.isAdmin()) {  
     let dialog =  this.dialog.open(UpdateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -157,6 +162,10 @@ export class SupplierListComponent implements OnInit{
       }
     });
   }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  } 
+  }
 
   updateSupplier(id: string, companyName: string, contactName: string, contactEmail: string, contactPhone: string, address: string){
     const successUpdatedMessage = this.translateService.instant("supplierUpdatedMessage");
@@ -174,6 +183,7 @@ export class SupplierListComponent implements OnInit{
   }
 
   deleteSupplier(id: any) {
+      if (this.authService.isAdmin()) {
     const successDeletedMessage = this.translateService.instant("supplierDeletedMessage");
     this.supplierService.deleteSupplier(id).subscribe({
       next: (result) => {
@@ -184,7 +194,11 @@ export class SupplierListComponent implements OnInit{
         console.log(err);
         this.genericService.showError("errorMessage");
       }
-    })
+    });
+  }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  } 
   }
 
   generatePDF() {
@@ -209,9 +223,5 @@ export class SupplierListComponent implements OnInit{
     } else {
       this.loadSupplier();
     }
-  }
-
-  navigateSettings(){
-    this.router.navigate(['/home/settings']);
   }
 }

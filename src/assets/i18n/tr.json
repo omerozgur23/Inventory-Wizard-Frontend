@@ -8,6 +8,7 @@
     "suppliers": "Tedarikçiler",
     "employees": "Personeller",
     "reports": "Raporlar",
+    "invoices": "Faturalar",
 
     "refresh": "Yenile",
     "create": "Ekle",
@@ -20,15 +21,24 @@
     "deleteDialogDescriptionTitle": "Sil",
     "deleteDialogDescription2": "Bu işlem geri alınamaz!",
 
+    "createInvioceDialogDescriptionTitle": "Fatura Oluştur",
+    "createInvioceDialogDescription": "Fatura oluşturmak istediğinizden emin misiniz?",
+
     "deleteButton": "Sil",
     "cancelButton": "Vazgeç",
     "saveButton": "Kaydet",
     "createButton": "Ekle",
+    "createInvoiceButton": "Fatura Oluştur",
     "addProductButton": "Ürün Ekle",
     "removeProductButton": "Ürün Kaldır",
     "completeOrderButton": "Tamamla",
     "goHomeButton": "Anasayfaya Dön",
     "signInButton": "Giriş",
+
+    "deleteButtonTitle": "Sil",
+    "updateButtonTitle": "Güncelle",
+    "createInvioceButtonTitle": "Fatura Oluştur",
+    "orderDetailsButtonTitle": "Sipariş Detayı Görüntüle",
 
     "productPdfTitle": "Ürün Listesi",
     "categoryPdfTitle": "Kategori Listesi",
@@ -37,6 +47,10 @@
     "orderDetailPdfTitle": "Sipariş Detayı",
     "employeePdfTitle": "Personel Listesi",
     "customerPdfTitle": "Müşteri Listesi",
+    "bestSellingProductsPdfTitle": "Çok Satan Ürünler",
+    "mostOrderSendersPdfTitle": "En Çok Sipariş Alan Personel",
+    "recentOrdersPdfTitle": "Son 5 Sipariş",
+    "topOrderersPdfTitle": "En Çok Sipariş Veren Müşteri",
 
     "deleteCategoryDialogDescription": "Kategori kaydını silmek istediğinizden emin misiniz?",
     "categoryTableTitle": "Kategoriler",
@@ -83,6 +97,7 @@
     "orderTableEmployee": "Sipariş Oluşturan",
     "orderTableDate": "Sipariş Tarihi",
     "orderTableTotalPrice": "Sipariş Tutarı",
+    "orderTableInvoiceGenerated": "Fatura",
     "orderTableOrderDetails": "Sipariş Detayı",
     "orderPeace": "Sipariş Adedi",
 
@@ -126,6 +141,20 @@
     "createEmployeeTitle": "Yeni Personel",
     "updateEmployeeTitle": "Personel Güncelle",
 
+    "invoiceTableTitle": "Faturalar",
+    "invoiceTableInvoiceCode": "Fatura No",
+    "invoiceTableCompanyName": "Müşteri Ünvanı",
+    "invoiceTableTotalAmount": "Fatura Tutarı",
+    "invoiceTableWaybillDate": "Fatura Tarihi",
+    "invoiceTableInvoiceDetails": "Fatura Detayı",
+
+    "invoiceDetailsTableTitle": "Fatura Detayı",
+    "invoiceDetailsTableInvoiceCode": "Fatura Kodu",
+    "invoiceDetailsTableProductName": "Ürün Adı",
+    "invoiceDetailsTableQuantity": "Adet",
+    "invoiceDetailsTableUnitPrice": "Birim Fiyatı",
+    "invoiceDetailsTableTotalPrice": "Toplam Fiyat",
+
     "settingsFormEmail": "E-Posta",
     "settingsFormCurrentPassword": "Mevcut Şifre",
     "settingsFormNewPassword": "Şifre",
@@ -151,6 +180,7 @@
     "repotTotalSalesCost": "Toplam Satış Maliyeti",
 
     "errorMessage": "Hata oluştu",
+    "authorizationError": "Bu işlem için yetkiniz yok",
     "categoryCreatedMessage": "Kategori kaydı oluşturuldu",
     "categoryUpdatedMessage": "Kategori güncellendi",
     "categoryDeletedMessage": "Kategori silindi",
@@ -184,5 +214,8 @@
 
     "customerCreatedMessage": "Müşteri kaydı oluşturuldu",
     "customerUpdatedMessage": "Müşteri güncellendi",
-    "customerDeletedMessage": "Müşteri silindi"
+    "customerDeletedMessage": "Müşteri silindi",
+
+    "invoiceCreatedMessage": "Fatura Oluşturudu",
+    "createdInvoiceInfoMessage": "Bu siparişin faturası zaten var"
 }
