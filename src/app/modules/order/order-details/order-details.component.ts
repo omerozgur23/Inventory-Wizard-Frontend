@@ -24,7 +24,7 @@ export class OrderDetailsComponent implements OnInit{
   tableTitle = "orderDetailsTableTitle";
   itemPerPage = 15;
   currentPage = 1;
-  totalShelvesCount = 0;
+  totalOrderDetailsCount = 0;
   totalPages = 0;
 
   constructor(
@@ -54,9 +54,11 @@ export class OrderDetailsComponent implements OnInit{
   }
 
   getOrderDetails(orderId: string) {
-    this.orderService.getOrderDetails(orderId).subscribe({
+    this.orderService.getOrderDetails(orderId, this.currentPage, this.itemPerPage).subscribe({
       next: (result) => {
-        this.tableData = this.genericService.uuidSplit(result);
+        this.tableData = this.genericService.uuidSplit(result.data);
+        this.totalOrderDetailsCount = result.count;
+        this.totalPages = Math.ceil(this.totalOrderDetailsCount / this.itemPerPage) 
       },
       error: (err) => {
         console.error('Error fetching order details:', err);
