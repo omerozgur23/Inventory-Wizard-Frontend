@@ -21,13 +21,17 @@ export class InvoiceService {
     return this.httpClient.get<GetInvoiceResponse>(`/invoice/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
-  getInvoiceDetail(invoiceId: string): Observable<GetInvoiceDetailResponse>{
-    const params = { invoiceId: invoiceId };
+  getInvoiceDetail(invoiceId: string, pageNo: number, pageSize: number): Observable<GetInvoiceDetailResponse>{
+    const params = { invoiceId: invoiceId, pageNo: pageNo, pageSize: pageSize };
     return this.httpClient.get<GetInvoiceDetailResponse>('/invoiceDetail/getByInvoiceId', { params });
   }
 
   createInvoice(id: string):Observable<any> {
     return this.httpClient.post('/invoice/create', JSON.stringify(id), this.httpOptions);
+  }
+
+  invoiceCancellation(id: string):Observable<any> {
+    return this.httpClient.post('/invoice/cancellation', JSON.stringify(id), this.httpOptions);
   }
 
   search(keyword: string): Observable<GetInvoiceResponse[]> {

@@ -22,6 +22,9 @@ export class InvoiceDetailComponent implements OnInit{
 
   tableTitle = "invoiceDetailsTableTitle";
   currentPage: number = 1;
+  itemPerPage = 15;
+  totalInvoiceDetailsCount = 0;
+  totalPages = 0;
 
   constructor(
     private invoiceService: InvoiceService,
@@ -34,7 +37,7 @@ export class InvoiceDetailComponent implements OnInit{
       next: (result) => {
         const invoiceId = result['id'];
         if (invoiceId) {
-          this.getInvoiceDetail(invoiceId);
+          this.loadInvoiceDetail(invoiceId);
         }
       },
       error: (err) => {
@@ -48,15 +51,16 @@ export class InvoiceDetailComponent implements OnInit{
     this.ngOnInit();
   }
 
-  getInvoiceDetail(invoiceId: string) {
-    this.invoiceService.getInvoiceDetail(invoiceId).subscribe({
+  loadInvoiceDetail(invoiceId: string) {
+    this.invoiceService.getInvoiceDetail(invoiceId, this.currentPage, this.itemPerPage).subscribe({
       next: (result) => {
         this.tableData = this.genericService.uuidSplit(result.data);
+        this.totalInvoiceDetailsCount = result.count;
+        this.totalPages = Math.ceil(this.totalInvoiceDetailsCount / this.itemPerPage) 
       },
       error: (err) => {
         console.error('Error fetching invoice details:', err);
       }
     });
   }
-
 }

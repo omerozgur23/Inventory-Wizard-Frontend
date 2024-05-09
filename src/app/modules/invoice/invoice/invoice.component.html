@@ -9,8 +9,14 @@
   [tableTitle]="tableTitle"
   [tableData]="tableData"
   [columns]="columns"
-  (navigateUpdateDialogEvent)="openUpdateInvoiceDialog($event)"
+  (navigateUpdateDialogEvent)="openUpdateInvoiceDialog()"
   (navigateDeleteDialogEvent)="setSelectedInvoice($event.id)"
   (navigateInvoiceDetailsEvent)="navigateInvoiceDetails($event)"
   (paginationEvent)="onPageChange($event)"
+  (navigateDeleteDialogEvent)="setSelectedInvoice($event.id)"
 ></app-table>
+
+<app-delete-modal
+  [description]="invoiceCancellationDescription"
+  (deleteEvent)="invoiceCancellation(id)"
+></app-delete-modal>

@@ -12,6 +12,7 @@ export class TableComponent implements OnInit{
   @Input() showOrderDetailButton = false;
   @Input() showInvoiceDetailButton = false;
   @Input() showCreateInvoiceButton = false;
+  @Input() IsOrderStatus = true;
   @Input() tableTitle = '';
   @Input() totalPages = 0;
   @Output() navigateUpdateDialogEvent = new EventEmitter<any>();

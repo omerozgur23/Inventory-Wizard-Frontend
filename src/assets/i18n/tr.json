@@ -97,7 +97,8 @@
     "orderTableEmployee": "Sipariş Oluşturan",
     "orderTableDate": "Sipariş Tarihi",
     "orderTableTotalPrice": "Sipariş Tutarı",
-    "orderTableInvoiceGenerated": "Fatura",
+    "orderTableStatus": "Durum",
+    "orderTableInvoiceGenerated": "Fatura Durumu",
     "orderTableOrderDetails": "Sipariş Detayı",
     "orderPeace": "Sipariş Adedi",
 
@@ -141,11 +142,14 @@
     "createEmployeeTitle": "Yeni Personel",
     "updateEmployeeTitle": "Personel Güncelle",
 
+    "invoiceCancellationDialogDescription": "Faturayı iptal etmek istediğinizden emin misiniz?",
     "invoiceTableTitle": "Faturalar",
     "invoiceTableInvoiceCode": "Fatura No",
+    "invoiceTableOrderCode": "Sipariş Kodu",
     "invoiceTableCompanyName": "Müşteri Ünvanı",
     "invoiceTableTotalAmount": "Fatura Tutarı",
     "invoiceTableWaybillDate": "Fatura Tarihi",
+    "invoiceTableStatus": "Durum",
     "invoiceTableInvoiceDetails": "Fatura Detayı",
 
     "invoiceDetailsTableTitle": "Fatura Detayı",
@@ -217,5 +221,7 @@
     "customerDeletedMessage": "Müşteri silindi",
 
     "invoiceCreatedMessage": "Fatura Oluşturudu",
-    "createdInvoiceInfoMessage": "Bu siparişin faturası zaten var"
+    "createdInvoiceInfoMessage": "Bu siparişin faturası zaten var",
+    "cancellationInvoiceErrorMessage": "Bu fatura zaten iptal edildi",
+    "cancellationInvoiceMessage": "Fatura iptal edildi"
 }
