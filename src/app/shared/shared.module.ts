@@ -11,6 +11,8 @@ import { AcceptProductModalComponent } from './components/accept-product-modal/a
 import { TranslateModule } from '@ngx-translate/core';
 import { TestDialogComponent } from './components/test-dialog/test-dialog.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { ReportTableComponent } from './components/report-table/report-table.component';
+import { CreateInvoiceModalComponent } from './components/create-invoice-modal/create-invoice-modal.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     AcceptProductModalComponent,
     NavbarComponent,
     TestDialogComponent,
+    ReportTableComponent,
+    CreateInvoiceModalComponent,
   ],
   imports: [
     CommonModule,
@@ -35,6 +39,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     DeleteModalComponent,
     UpdateModalComponent,
     NavbarComponent,
+    ReportTableComponent,
+    CreateInvoiceModalComponent,
   ]
 })
 export class SharedModule { }

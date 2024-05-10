@@ -1,114 +1,3 @@
-<!-- <div class="container-fluid">
-  <div class="row">
-    <div class="col-md-2 sidebar">
-      <ul>
-        <strong
-          [routerLink]="['/menu']"
-          [relativeTo]="route"
-          class="bd-links-heading d-flex w-100 align-items-center fw-semibold mt-3"
-          ><img src="../assets/img/logo.png" alt=""
-        /></strong>
-        <li class="bd-links-group py-4">
-          <ul class="list-unstyled fw-normal pb-2 small">
-            <li class="bd-links-group py-2">
-              <a
-                [routerLink]="['./shelf']"
-                [relativeTo]="route"
-                [routerLinkActive]="'active'"
-                >Raflar</a
-              >
-            </li>
-            <li class="bd-links-group py-2">
-              <a
-                [routerLink]="['./category']"
-                [relativeTo]="route"
-                [routerLinkActive]="'active'"
-                >Kategoriler</a
-              >
-            </li>
-            <li class="bd-links-group py-2">
-              <a
-                [routerLink]="['./product']"
-                [relativeTo]="route"
-                [routerLinkActive]="'active'"
-                class="bd-links-group py-2"
-                >Ürünler</a
-              >
-            </li>
-            <li class="bd-links-group py-2">
-              <a
-                [routerLink]="['./product-sale']"
-                [relativeTo]="route"
-                [routerLinkActive]="'active'"
-                class="bd-links-group py-2"
-                >Ürün Satışı</a
-              >
-            </li>
-            <li class="bd-links-group py-2">
-              <a
-                [routerLink]="['./order']"
-                [relativeTo]="route"
-                [routerLinkActive]="'active'"
-                >Siparişler</a
-              >
-            </li>
-            <li class="bd-links-group py-2">
-              <a
-                [routerLink]="['./customer']"
-                [relativeTo]="route"
-                [routerLinkActive]="'active'"
-                >Müşteriler</a
-              >
-            </li>
-            <li class="bd-links-group py-2">
-              <a
-                [routerLink]="['./supplier']"
-                [relativeTo]="route"
-                [routerLinkActive]="'active'"
-                >Tedarikçiler</a
-              >
-            </li>
-            <li class="bd-links-group py-2">
-              <a
-                [routerLink]="['./employee']"
-                [relativeTo]="route"
-                [routerLinkActive]="'active'"
-                >Personeller</a
-              >
-            </li>
-            <li class="bd-links-group py-2">
-              <a
-                [routerLink]="['./report']"
-                [relativeTo]="route"
-                [routerLinkActive]="'active'"
-                >Raporlar</a
-              >
-            </li>
-          </ul>
-        </li>
-      </ul>
-
-      <div class="dropup-center dropup">
-        <button
-          class="btn btn-secondary dropdown-toggle w-50"
-          type="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          Ayarlar
-        </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item">Kullanıcı Ayarları</a></li>
-          <li><a class="dropdown-item" (click)="logout()">Çıkış</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="col-md-10" style="padding: 0px">
-      <router-outlet />
-    </div>
-  </div>
-</div> -->
-
 <div class="wrapper">
   <aside id="sidebar" [ngClass]="{ expand: isExpanded }">
     <div class="d-flex">
@@ -231,6 +120,18 @@
           <span>{{ "reports" | translate }}</span>
         </a>
       </li>
+
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link"
+          [routerLink]="['./invoice']"
+          [relativeTo]="route"
+          [routerLinkActive]="'active'"
+        >
+          <img src="./assets/img/sidebarInvoice.svg" alt="ınvoice" />
+          <span>{{ "invoices" | translate }}</span>
+        </a>
+      </li>
     </ul>
     <div class="sidebar-footer" (click)="logout()">
       <a class="sidebar-link">
@@ -245,7 +146,6 @@
   </aside>
 
   <div style="background: #fbfaff" class="main">
-    <app-navbar />
     <router-outlet />
   </div>
 </div>

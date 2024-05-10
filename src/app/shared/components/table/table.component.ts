@@ -1,9 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TableColumn } from './dto/table';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, filter } from 'rxjs';
-import { debounceTime } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-table',
@@ -14,11 +10,16 @@ export class TableComponent implements OnInit{
   @Input() tableData: any[] = [];
   @Input() columns: TableColumn[] = [];
   @Input() showOrderDetailButton = false;
+  @Input() showInvoiceDetailButton = false;
+  @Input() showCreateInvoiceButton = false;
+  @Input() IsOrderStatus = true;
   @Input() tableTitle = '';
   @Input() totalPages = 0;
   @Output() navigateUpdateDialogEvent = new EventEmitter<any>();
   @Output() navigateDeleteDialogEvent = new EventEmitter<any>();
   @Output() navigateOrderDetailsEvent = new EventEmitter<any>();
+  @Output() navigateCreateInvoiceEvent = new EventEmitter<any>();
+  @Output() navigateInvoiceDetailsEvent = new EventEmitter<any>();
   @Output() paginationEvent = new EventEmitter();
   currentPage = 1;
  
@@ -36,7 +37,6 @@ export class TableComponent implements OnInit{
   }
 
   totalPagesArray(): number[] {
-    // return Array(this.totalPages).fill(0).map((x, i) => i + 1);
     const numPagesToShow = 5; // Gösterilecek maksimum sayfa sayısı
   const currentPage = this.currentPage;
   const totalPages = this.totalPages;
@@ -79,6 +79,18 @@ export class TableComponent implements OnInit{
   navigateOrderDetails(id: string) {
     if (this.showOrderDetailButton) {
       this.navigateOrderDetailsEvent.emit(id);
+    }
+  }
+
+  navigateCreateInvoice(id: string) {
+    if (this.showCreateInvoiceButton) {
+      this.navigateCreateInvoiceEvent.emit(id);
+    }
+  }
+
+  navigateInvoiceDetails(id: string) {
+    if (this.showInvoiceDetailButton) {
+      this.navigateInvoiceDetailsEvent.emit(id);
     }
   }
 

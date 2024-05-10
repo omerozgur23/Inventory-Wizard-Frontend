@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
+import { InvoiceService } from '../../invoice/service/invoice.service';
+import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
   selector: 'app-order-list',
@@ -20,22 +22,23 @@ export class OrderListComponent implements OnInit{
     { label: 'orderTableEmployee', field: 'employeeFirstName' },
     { label: 'orderTableDate', field: 'orderDate' },
     { label: 'orderTableTotalPrice', field: 'orderPrice' },
+    { label: 'orderTableStatus', field: 'orderStatus' },
+    { label: 'orderTableInvoiceGenerated', field: 'invoiceGenerated' },
   ];
-
   tableTitle = "orderTableTitle";
   itemPerPage = 15;
   currentPage = 1;
   totalShelvesCount = 0;
   totalPages = 0;
-  // totalPages: number = 10;
 
   constructor(
     private orderService: OrderService,
     private toastr: ToastrService,
     private router: Router,
-    private route: ActivatedRoute,
     private genericService: GenericService,
     private translateService: TranslateService,
+    private invoiceService: InvoiceService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -113,7 +116,30 @@ export class OrderListComponent implements OnInit{
     }
   }
   
-  navigateSettings(){
-    this.router.navigate(['/home/settings']);
+  id = '';
+  setSelectedOrder(orderId: string) {
+    this.id = orderId;
   }
+
+  createInvoice(id: any){
+    if (this.authService.isAdmin() || this.authService.isWarehouseSupervisor()) {
+      const successCreatedMessage = this.translateService.instant('invoiceCreatedMessage');
+      this.invoiceService.createInvoice(id).subscribe(
+        {
+          next: (result) =>{
+            this.toastr.success(successCreatedMessage)
+            this.loadOrder();
+          },
+          error: (err) => {
+            console.log(err);
+            this.genericService.showError("errorMessage");
+          }
+        }
+      );
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
+  }
+
 }

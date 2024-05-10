@@ -1,0 +1,10 @@
+<app-navbar (refreshEvent)="ngOnInit()"></app-navbar>
+
+<!-- TABLE MODAL -->
+<app-table
+  [totalPages]="totalPages"
+  [tableTitle]="tableTitle"
+  [tableData]="tableData"
+  [columns]="columns"
+  (paginationEvent)="onPageChange($event)"
+></app-table>
