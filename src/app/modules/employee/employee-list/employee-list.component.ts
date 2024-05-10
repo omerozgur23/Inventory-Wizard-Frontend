@@ -14,6 +14,7 @@ import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
 import { GetRolesResponse } from '../dto/getRolesResponse';
 import { RoleDTO } from '../dto/RoleDTO';
+import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
   selector: 'app-employee-list',
@@ -37,16 +38,14 @@ export class EmployeeListComponent implements OnInit{
   totalShelvesCount = 0;
   totalPages = 0;
   roleList: GetRolesResponse[] = [];
-  // totalPages: number = 10;
 
   constructor(
     private employeeService: EmployeeService,
     private dialog: MatDialog,
     private toastr: ToastrService,
-    private router: Router,
-    private route: ActivatedRoute,
     private genericService: GenericService,
     private translateService: TranslateService,
+    private authService: AuthService,
   ){}
 
   setSelectedEmployee(employeeId: string) {
@@ -99,6 +98,7 @@ export class EmployeeListComponent implements OnInit{
   }
 
   openCreateEmployeeDialog(){
+      if (this.authService.isAdmin()) {
     let dialog = this.dialog.open(CreateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -130,6 +130,10 @@ export class EmployeeListComponent implements OnInit{
       }
     });
   }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  } 
+  }
 
   createEmployee(firstName: string, lastName: string, email: string, password: string, roleId: string){
     const successCreatedMessage = this.translateService.instant("employeeCreatedMessage");
@@ -151,6 +155,7 @@ export class EmployeeListComponent implements OnInit{
   }
  
   openUpdateEmployeeDialog(item: any){
+      if (this.authService.isAdmin()) {
     let dialog =  this.dialog.open(UpdateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -175,6 +180,10 @@ export class EmployeeListComponent implements OnInit{
       }
     });
   }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  } 
+  }
 
   updateEmployee(id: string, email: string, password: string){
     const successUpdatedMessage = this.translateService.instant("employeeUpdatedMessage");
@@ -192,6 +201,7 @@ export class EmployeeListComponent implements OnInit{
   }
 
   deleteEmployee(id: any) {
+      if (this.authService.isAdmin()) {
     const successDeletedMessage = this.translateService.instant("employeeDeletedMessage");
     this.employeeService.deleteEmployee(id).subscribe(
       {
@@ -205,6 +215,10 @@ export class EmployeeListComponent implements OnInit{
         }
       }
     );
+  }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
   }
 
   generatePDF() {
@@ -229,9 +243,5 @@ export class EmployeeListComponent implements OnInit{
     } else {
       this.loadEmployee();
     }
-  }
-
-  navigateSettings(){
-    this.router.navigate(['/home/settings']);
   }
 }

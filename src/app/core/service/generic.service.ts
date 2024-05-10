@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ShelfService } from '../../modules/warehouse/service/shelf.service';
 import { TranslateService } from '@ngx-translate/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -11,7 +10,6 @@ import { ToastrService } from 'ngx-toastr';
 export class GenericService {
 
   constructor(
-    // private shelfService: ShelfService,
     private translateService: TranslateService,
     private toastr: ToastrService
   ) { (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs; }
@@ -68,29 +66,13 @@ export class GenericService {
     this.toastr.error(errorMessage);
   }
 
-  // tableData: any[] = []
-  // onSearchInputChange(searchKeyword: string, loadShelvesCallback: () => void) {
-  //   this.tableData = []
-  //   if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
-  //     setTimeout(() =>
-  //       this.shelfService.search(searchKeyword).subscribe({
-  //         next: (result) => {
-  //           this.tableData = this.uuidSplit(result);
-  //           this.getSearchResponse(this.tableData)
-  //         },
-  //         error: (err) => {
-  //           console.log(err);
-  //         }
-  //       }),
-  //       300
-  //     );
-  //   } else {
-  //     loadShelvesCallback();
-  //   }
-  // }
+  showCreateInvoiceInfo(messageKey: string) {
+    const errorMessage = this.translateService.instant(messageKey);
+    this.toastr.info(errorMessage);
+  }
 
-  // getSearchResponse(tableData: any = ""){
-  //   console.log("search response method: ", tableData);
-  //   return tableData;
-  // }
+  showAuthError(messageKey: string) {
+    const errorMessage = this.translateService.instant(messageKey);
+    this.toastr.error(errorMessage);
+  }
 }

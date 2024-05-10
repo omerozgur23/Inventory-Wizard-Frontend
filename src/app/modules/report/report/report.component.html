@@ -1,5 +1,7 @@
+<app-navbar (refreshEvent)="ngOnInit()"></app-navbar>
+
 <div style="background: #faf9ff" class="row stat-cards me-5 ms-5">
-  <div class="col-md-6 col-xl-4">
+  <div class="col-md-6 col-xl-4 mb-5">
     <article
       style="
         border-radius: 2rem;
@@ -21,7 +23,7 @@
       </div>
     </article>
   </div>
-  <div class="col-md-6 col-xl-4">
+  <div class="col-md-6 col-xl-4 mb-5">
     <article
       style="
         border-radius: 2rem;
@@ -43,7 +45,7 @@
       </div>
     </article>
   </div>
-  <div class="col-md-6 col-xl-4">
+  <div class="col-md-6 col-xl-4 mb-5">
     <article
       style="
         border-radius: 2rem;
@@ -65,9 +67,89 @@
       </div>
     </article>
   </div>
+  <!--RECENT ORDERS-->
+  <div class="col-md-6 col-xl-4 mb-5">
+    <article
+      style="
+        border-radius: 2rem;
+        border: 1px solid #e2e5ff;
+        box-shadow: 0px 2px 4px rgba(221, 221, 221, 0.8);
+      "
+      class="stat-cards-item"
+    >
+      <div class="stat-cards-icon purple">
+        <i data-feather="file" aria-hidden="true"></i>
+      </div>
+      <div class="stat-cards-info">
+        <p class="stat-cards-info__num">Recent Orders</p>
+      </div>
+      <button class="ms-3" (click)="navigateRecentOrders()">Show List</button>
+    </article>
+  </div>
+  <!--TOP ORDERERS-->
+  <div class="col-md-6 col-xl-4 mb-5">
+    <article
+      style="
+        border-radius: 2rem;
+        border: 1px solid #e2e5ff;
+        box-shadow: 0px 2px 4px rgba(221, 221, 221, 0.8);
+      "
+      class="stat-cards-item"
+    >
+      <div class="stat-cards-icon purple">
+        <i data-feather="file" aria-hidden="true"></i>
+      </div>
+      <div class="stat-cards-info">
+        <p class="stat-cards-info__num">Top Orderers</p>
+      </div>
+      <button class="ms-3" (click)="navigateTopOrderers()">Show List</button>
+    </article>
+  </div>
+  <!--MOST ORDER SENDERS-->
+  <div class="col-md-6 col-xl-4 mb-5">
+    <article
+      style="
+        border-radius: 2rem;
+        border: 1px solid #e2e5ff;
+        box-shadow: 0px 2px 4px rgba(221, 221, 221, 0.8);
+      "
+      class="stat-cards-item"
+    >
+      <div class="stat-cards-icon purple">
+        <i data-feather="file" aria-hidden="true"></i>
+      </div>
+      <div class="stat-cards-info">
+        <p class="stat-cards-info__num">Most Order Senders</p>
+      </div>
+      <button class="ms-3" (click)="navigateMostOrderSenders()">
+        Show List
+      </button>
+    </article>
+  </div>
+  <!--BEST SELLING PRODUCTS-->
+  <div class="col-md-6 col-xl-4 mb-5">
+    <article
+      style="
+        border-radius: 2rem;
+        border: 1px solid #e2e5ff;
+        box-shadow: 0px 2px 4px rgba(221, 221, 221, 0.8);
+      "
+      class="stat-cards-item"
+    >
+      <div class="stat-cards-icon purple">
+        <i data-feather="file" aria-hidden="true"></i>
+      </div>
+      <div class="stat-cards-info">
+        <p class="stat-cards-info__num">Best Selling Products</p>
+      </div>
+      <button class="ms-3" (click)="navigateBestSellingProducts()">
+        Show List
+      </button>
+    </article>
+  </div>
 </div>
 
-<div style="height: 20rem" class="row stat-cards me-5 ms-5">
+<!-- <div style="height: 20rem" class="row stat-cards me-5 ms-5">
   <div class="col-md-6 col-xl-6">
     <article
       style="border-radius: 2rem; border: 1px solid #e2e5ff"
@@ -118,9 +200,9 @@
       </table>
     </article>
   </div>
-</div>
+</div> -->
 
-<div style="height: 20rem" class="row stat-cards mt-5 me-5 ms-5">
+<!-- <div style="height: 20rem" class="row stat-cards mt-5 me-5 ms-5">
   <div class="col-md-6 col-xl-6">
     <article
       style="border-radius: 2rem; border: 1px solid #e2e5ff"
@@ -171,5 +253,4 @@
       </table>
     </article>
   </div>
-</div>
-<button (click)="navigateRecentOrders()">recent orders</button>
+</div> -->

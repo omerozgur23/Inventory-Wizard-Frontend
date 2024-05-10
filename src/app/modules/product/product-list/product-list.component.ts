@@ -15,8 +15,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TestDialogComponent } from '../../../shared/components/test-dialog/test-dialog.component';
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
-import { GetSupplierResponse } from '../../supplier/dto/getSupplierResponse';
 import { SupplierService } from '../../supplier/service/supplier.service';
+import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
   selector: 'app-product-list',
@@ -45,7 +45,6 @@ export class ProductListComponent implements OnInit{
   currentPage = 1;
   totalShelvesCount = 0;
   totalPages = 0;
-  // totalPages: number = 10;
 
   constructor(
     private toastr: ToastrService,
@@ -58,6 +57,7 @@ export class ProductListComponent implements OnInit{
     private route: ActivatedRoute,
     private genericService: GenericService,
     private translateService: TranslateService,
+    private authService: AuthService,
   ){}
 
   setSelectedProduct(productId: string) {
@@ -122,6 +122,7 @@ export class ProductListComponent implements OnInit{
   }
 
   openCreateProductDialog() {
+    if (this.authService.isAdmin()) {
     let dialog = this.dialog.open(CreateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -157,7 +158,10 @@ export class ProductListComponent implements OnInit{
         
       }
     });
-    
+  }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
   }
 
   createProduct(productname: string, categoryId: string, supplierId: string, criticalCount: number, purchasePrice: number, unitPrice: number) {
@@ -176,6 +180,7 @@ export class ProductListComponent implements OnInit{
   }
 
   openUpdateProductDialog(item: any){
+      if (this.authService.isAdmin()) {
     let dialog =  this.dialog.open(UpdateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -201,6 +206,10 @@ export class ProductListComponent implements OnInit{
       }
     });
   }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
+  }
 
   updateProduct(id: string, /*categoryId: string, supplierId: string,*/ productName: string, criticalCount: number, purchasePrice: number, unitPrice: number ){
     const successUpdatedMessage = this.translateService.instant("productUpdatedMessage");
@@ -218,6 +227,7 @@ export class ProductListComponent implements OnInit{
   }
 
   deleteProduct(id: any){
+      if (this.authService.isAdmin()) {
     const successDeletedMessage = this.translateService.instant("productDeletedMessage");
     this.productService.deleteProduct(id).subscribe(
       {
@@ -231,6 +241,10 @@ export class ProductListComponent implements OnInit{
         }
       }
     );
+  }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
   }
 
   navigateSettings(){
@@ -263,40 +277,44 @@ export class ProductListComponent implements OnInit{
 
 
   openTestCreateProductDialog() {
-    let dialog = this.dialog.open(TestDialogComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+    if (this.authService.isAdmin()) {
+     let dialog = this.dialog.open(TestDialogComponent, {
+       width: '500px',
+       enterAnimationDuration: '400ms',
+       exitAnimationDuration: '250ms',
+     });
     
-    dialog.componentInstance.title = 'createProductTitle';
-    dialog.componentInstance.inputLabels = ['productTableProductName', 'productTableCriticalStock', 'productTablePurchasePrice', 'productTableUnitPrice'];
-    dialog.componentInstance.categoryDropdownOptions = this.categoryList;
-    dialog.componentInstance.supplierDropdownOptions = this.supplierList;
-    for (let i = 0; i < 4; i++) {
-      dialog.componentInstance.addInput();
-    }
-    dialog.componentInstance.addSupplierDropdown();
-    dialog.componentInstance.addCategoryDropdown();
+     dialog.componentInstance.title = 'createProductTitle';
+     dialog.componentInstance.inputLabels = ['productTableProductName', 'productTableCriticalStock', 'productTablePurchasePrice', 'productTableUnitPrice'];
+     dialog.componentInstance.categoryDropdownOptions = this.categoryList;
+     dialog.componentInstance.supplierDropdownOptions = this.supplierList;
+     for (let i = 0; i < 4; i++) {
+       dialog.componentInstance.addInput();
+     }
+     dialog.componentInstance.addSupplierDropdown();
+     dialog.componentInstance.addCategoryDropdown();
     
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-          const formValues = dialog.componentInstance.createTestForm.value.values;
-          const productNameValue = formValues[0].inputValue;
-          const criticalCountValue = formValues[1].inputValue;
-          const purchasePriceValue = formValues[2].inputValue;
-          const unitPriceValue = formValues[3].inputValue;
-          const supplierIdValue = formValues[4].supplierDropdownValue;
-          const categoryIdValue = formValues[5].categoryDropdownValue;
-          
-          this.createProduct(productNameValue, categoryIdValue, supplierIdValue, criticalCountValue, purchasePriceValue, unitPriceValue);
+     dialog.afterClosed().subscribe({
+       next: (data) => {
+         if (data?.result === 'yes') {
+           const formValues = dialog.componentInstance.createTestForm.value.values;
+           const productNameValue = formValues[0].inputValue;
+           const criticalCountValue = formValues[1].inputValue;
+           const purchasePriceValue = formValues[2].inputValue;
+           const unitPriceValue = formValues[3].inputValue;
+           const supplierIdValue = formValues[4].supplierDropdownValue;
+           const categoryIdValue = formValues[5].categoryDropdownValue;
+           
+           this.createProduct(productNameValue, categoryIdValue, supplierIdValue, criticalCountValue, purchasePriceValue, unitPriceValue);
+         }
+       },
+       error: (err) => {
+         console.log("Dialog Hatası " + err);
         }
-      },
-      error: (err) => {
-        console.log("Dialog Hatası " + err);
-        
-      }
-    });
+     });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 }

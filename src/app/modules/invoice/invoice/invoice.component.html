@@ -1,0 +1,22 @@
+<app-navbar
+  (refreshEvent)="ngOnInit()"
+  (onSearchInputChangeEvent)="onSearchInputChange($event)"
+></app-navbar>
+
+<app-table
+  [showInvoiceDetailButton]="true"
+  [totalPages]="totalPages"
+  [tableTitle]="tableTitle"
+  [tableData]="tableData"
+  [columns]="columns"
+  (navigateUpdateDialogEvent)="openUpdateInvoiceDialog()"
+  (navigateDeleteDialogEvent)="setSelectedInvoice($event.id)"
+  (navigateInvoiceDetailsEvent)="navigateInvoiceDetails($event)"
+  (paginationEvent)="onPageChange($event)"
+  (navigateDeleteDialogEvent)="setSelectedInvoice($event.id)"
+></app-table>
+
+<app-delete-modal
+  [description]="invoiceCancellationDescription"
+  (deleteEvent)="invoiceCancellation(id)"
+></app-delete-modal>

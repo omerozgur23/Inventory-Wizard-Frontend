@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -8,13 +8,10 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrl: './update-modal.component.scss'
 })
 export class UpdateModalComponent {
-  // inputs: any[] = [];
   title = '';
   inputLabels: string[] = [];
-  
   updateForm!: FormGroup;
 
-  // switch ile dropdown dene => NgSwitch
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<UpdateModalComponent>,
@@ -31,7 +28,6 @@ export class UpdateModalComponent {
   addValue() {
     const value = new FormControl('');
     this.values.push(value);
-    // console.log(this.values.value);
   }
 
   update(){

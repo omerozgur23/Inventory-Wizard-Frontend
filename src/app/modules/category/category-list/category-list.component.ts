@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 import { GenericService } from '../../../core/service/generic.service';
-import { TestDialogComponent } from '../../../shared/components/test-dialog/test-dialog.component';
+import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
   selector: 'app-category-list',
@@ -33,16 +33,14 @@ export class CategoryListComponent implements OnInit {
   currentPage = 1;
   totalShelvesCount = 0;
   totalPages = 0;
-  // totalPages: number = 10;
 
   constructor(
     private categoryService: CategoryService,
     private toastr: ToastrService,
     private dialog: MatDialog,
-    private router: Router,
-    private route: ActivatedRoute,
     private genericService: GenericService,
     private translateService: TranslateService,
+    private authService: AuthService,
   ){}
 
   setSelectedCategory(categoryId: string) {
@@ -83,6 +81,7 @@ export class CategoryListComponent implements OnInit {
   }
 
   openCreateCategoryDialog() {
+      if (this.authService.isAdmin()) {
     let dialog = this.dialog.open(CreateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -109,6 +108,10 @@ export class CategoryListComponent implements OnInit {
       }
     });
   }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
+  }
 
   createCategory(categoryName: string) {
     const successCreatedMessage = this.translateService.instant('categoryCreatedMessage');
@@ -126,6 +129,7 @@ export class CategoryListComponent implements OnInit {
   }
 
   openUpdateCategoryDialog(item: any){
+      if (this.authService.isAdmin()) {
     let dialog =  this.dialog.open(UpdateModalComponent, {
       width: '500px',
       enterAnimationDuration: '400ms',
@@ -143,7 +147,11 @@ export class CategoryListComponent implements OnInit {
         this.updateCategory(item.id, nameValue);
         }
       }
-    });    
+    });
+  }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
   }
 
   updateCategory(id: string, categoryName: string){
@@ -162,6 +170,7 @@ export class CategoryListComponent implements OnInit {
   }
 
   deleteCategory(id: any){
+      if (this.authService.isAdmin()) {
     const successDeletedMessage = this.translateService.instant('categoryDeletedMessage');
     this.categoryService.deleteCategory(id).subscribe(
       {
@@ -175,6 +184,10 @@ export class CategoryListComponent implements OnInit {
         }
       }
     );
+  }
+  else {
+    this.genericService.showAuthError("authorizationError");
+  }
   }
 
   generatePDF() {
@@ -199,9 +212,5 @@ export class CategoryListComponent implements OnInit {
     } else {
       this.loadCategory();
     }
-  }
-
-  navigateSettings(){
-    this.router.navigate(['/home/settings']);
   }
 }
