@@ -19,6 +19,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { registerLocaleData } from '@angular/common';
 import localeTr from '@angular/common/locales/tr';
+import { SharedModule } from './shared/shared.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -44,6 +45,7 @@ registerLocaleData(localeTr);
     BrowserAnimationsModule,
     NgxPaginationModule,
     MatDialogModule,
+    SharedModule,
     TranslateModule.forRoot(
       {
         loader: {
