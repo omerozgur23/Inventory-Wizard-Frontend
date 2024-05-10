@@ -1,10 +1,12 @@
-<div class="pt-2 pb-2 nb">
-  <div class="ps-4 pe-4">
+<div class="pt-2 pb-2 nb" >
+  <div class="ps-4 pe-4 nb-items">
     <!-- Ekleme, Yenileme ve Arama Butonları -->
+
     <button class="btn primary img-button" (click)="refresh()">
       <img src="../../../../assets/img/refresh.svg" title="Yenile" />
       <span class="nb-btn-span"> {{ "refresh" | translate }} </span>
     </button>
+
     <button (click)="navigateCreateDialog()" class="btn btn primary img-button">
       <img src="../../../../assets/img/createIcon.svg" title="Ekle" />
       <span class="nb-btn-span"> {{ "create" | translate }} </span>
@@ -30,7 +32,7 @@
       <span class="nb-btn-span"> {{ "pdf" | translate }} </span>
     </button>
 
-    <!-- <div class="form">
+    <!-- <span class="form">
       <label for="search">
         <input
           class="input"
@@ -39,15 +41,16 @@
           placeholder="Ara"
           id="search"
           (input)="handleSearchInputChange($event)"
-        />
-        <div class="fancy-bg"></div>
-        <div class="search">
+        /> 
+        <div class="fancy-bg"></div>       
+        <span class="search">
           <img src="../../../../assets/img/search.svg" alt="" />
-        </div>
+        </span>
+        
       </label>
-    </div> -->
+    </span> -->
 
-    <span class="mt-1 me-3 nb-search-span">
+    <span class=" nb-search-span">
       <img src="../../../../assets/img/search.svg" alt="" />
 
       <input
@@ -59,18 +62,27 @@
     </span>
 
     <div
-      class="flex-shrink-0 dropdown d-flex justify-content-between"
+      class=" dropdown d-flex justify-content-between"
       style="float: right"
     >
+    
+    <form class="me-3" >      
       <select
-        class="form-select me-3"
-        (change)="changeLang($event)"
-        name=""
-        id=""
-      >
-        <option [selected]="lang === 'en'" value="en">English</option>
-        <option [selected]="lang === 'tr'" value="tr">Türkçe</option>
-      </select>
+      class="form-select"
+      (change)="changeLang($event)"
+      name=""
+      id=""
+    >
+    
+      <option [selected]="lang === 'en'" value="en">English</option>
+      <option [selected]="lang === 'tr'" value="tr">Türkçe</option>
+    </select>
+    
+    </form>
+
+
+
+
       <a
         style="cursor: pointer"
         class="d-block link-dark text-decoration-none dropdown-toggle"
@@ -86,6 +98,7 @@
           class="rounded-circle"
         />
       </a>
+
       <ul
         class="dropdown-menu text-small shadow"
         aria-labelledby="dropdownUser2"

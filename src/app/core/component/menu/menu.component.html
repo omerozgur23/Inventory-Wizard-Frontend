@@ -1,7 +1,17 @@
+
+<div class="menu-btn">
+  <button class="toggle-btn" type="button" (click)="toggleSidebarr()">
+  <!-- <i class="lni lni-grid-alt"></i> -->
+  <img src="./assets/img/logo.svg" alt="" />
+</button>
+</div>
+
+
+
 <div class="wrapper">
   <aside id="sidebar" [ngClass]="{ expand: isExpanded }">
     <div class="d-flex">
-      <button class="toggle-btn" type="button" (click)="toggleSidebarr()">
+      <button class="toggle-btn logo-test" type="button" (click)="toggleSidebarr()">
         <!-- <i class="lni lni-grid-alt"></i> -->
         <img src="./assets/img/logo.svg" alt="" />
       </button>
@@ -9,7 +19,8 @@
         <a [routerLink]="['../menu']" [relativeTo]="route">Inventory Wizard</a>
       </div>
     </div>
-    <ul class="sidebar-nav">
+    
+    <ul class="sidebar-nav"  (click)="isMobileView ? toggleSidebarr() : '' " >
       <li class="sidebar-item">
         <a
           class="sidebar-link"
@@ -21,7 +32,7 @@
           <span>{{ "shelves" | translate }}</span>
         </a>
       </li>
-      <li class="sidebar-item">
+      <li class="sidebar-item" >
         <a
           class="sidebar-link"
           [routerLink]="['./category']"
