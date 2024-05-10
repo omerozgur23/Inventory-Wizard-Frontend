@@ -6,6 +6,7 @@ export interface GetInvoiceResponse {
             customerCompanyName: string,
             totalAmount: number,
             waybillDate: Date,
+            status: boolean,
         }
     ]
 }

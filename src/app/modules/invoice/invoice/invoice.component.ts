@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { InvoiceService } from '../service/invoice.service';
 import { GenericService } from '../../../core/service/generic.service';
-import { TranslateService } from '@ngx-translate/core';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
   selector: 'app-invoice',
@@ -16,11 +17,14 @@ export class InvoiceComponent implements OnInit{
   tableData: any[] = [];
   columns: TableColumn[] = [
     { label: 'invoiceTableInvoiceCode', field: 'shortId' },
+    { label: 'invoiceTableOrderCode', field: 'orderId' },
     { label: 'invoiceTableCompanyName', field: 'companyName' },
     { label: 'invoiceTableTotalAmount', field: 'totalAmount' },
     { label: 'invoiceTableWaybillDate', field: 'waybillDate' },
+    { label: 'invoiceTableStatus', field: 'status' },
   ];
 
+  invoiceCancellationDescription = "invoiceCancellationDialogDescription";
   id = '';
   itemPerPage = 15;
   currentPage = 1;
@@ -31,6 +35,9 @@ export class InvoiceComponent implements OnInit{
     private invoiceService: InvoiceService,
     private genericService: GenericService,
     private router: Router,
+    private toastr: ToastrService,
+    private translateService: TranslateService,
+    private authService: AuthService,
   ){}
   
   ngOnInit(): void {
@@ -45,6 +52,9 @@ export class InvoiceComponent implements OnInit{
     this.invoiceService.getInvoicesByPage(this.currentPage, this.itemPerPage).subscribe({
       next: (result) => {
         this.tableData = this.genericService.uuidSplit(result.data);
+        this.tableData.forEach(item => {
+          item.orderId = '#' + item.orderId.split('-')[0];
+        })
         this.totalInvoicesCount = result.count;
         this.totalPages = Math.ceil(this.totalInvoicesCount / this.itemPerPage) 
       },
@@ -81,8 +91,30 @@ export class InvoiceComponent implements OnInit{
     this.router.navigate(['/home/invoice-details'], { queryParams: { id: invoiceId } });
   } 
 
-  openUpdateInvoiceDialog(item: any){};
+  openUpdateInvoiceDialog(){};
 
-  setSelectedInvoice(id: any){};
+  setSelectedInvoice(invoiceId: any){
+    this.id = invoiceId;
+  };
 
+  invoiceCancellation(id: any){
+    if (this.authService.isAdmin()) {
+      const successCancellationMessage = this.translateService.instant('cancellationInvoiceMessage');
+      this.invoiceService.invoiceCancellation(id).subscribe(
+        {
+          next: (result) =>{
+            this.toastr.success(successCancellationMessage)
+            this.loadInvoice();
+          },
+          error: (err) => {
+            console.log(err);
+            this.genericService.showError("cancellationInvoiceErrorMessage");
+          }
+        }
+      );
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
+  }
 }

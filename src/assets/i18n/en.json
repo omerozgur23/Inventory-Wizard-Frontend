@@ -47,6 +47,10 @@
     "orderDetailPdfTitle": "Order Detail",
     "employeePdfTitle": "Employee List",
     "customerPdfTitle": "Customer List",
+    "bestSellingProductsPdfTitle": "Best Selling Products",
+    "mostOrderSendersPdfTitle": "Most Order Senders",
+    "recentOrdersPdfTitle": "Recent Orders",
+    "topOrderersPdfTitle": "Top Orderers",
 
     "deleteCategoryDialogDescription": "Are you sure you want to delete the category?",
     "categoryTableTitle": "Categories",
@@ -93,7 +97,8 @@
     "orderTableEmployee": "Order Creator",
     "orderTableDate": "Order Date",
     "orderTableTotalPrice": "Order Amount",
-    "orderTableInvoiceGenerated": "Invoice",
+    "orderTableStatus": "Status",
+    "orderTableInvoiceGenerated": "Invoice Status",
     "orderTableOrderDetails": "Order Detail",
     "orderPeace": "Order Peace",
 
@@ -137,11 +142,14 @@
     "createEmployeeTitle": "New Employee",
     "updateEmployeeTitle": "Update Employee",
 
+    "invoiceCancellationDialogDescription": "Are you sure you want to cancel the invoice?",
     "invoiceTableTitle": "Invoices",
     "invoiceTableInvoiceCode": "Invoice Code",
+    "invoiceTableOrderCode": "Order Code",
     "invoiceTableCompanyName": "Customer",
     "invoiceTableTotalAmount": "Invoice Amount",
     "invoiceTableWaybillDate": "Invoice Date",
+    "invoiceTableStatus": "Status",
     "invoiceTableInvoiceDetails": "Invoice Details",
 
     "invoiceDetailsTableTitle": "Invoice Detail",
@@ -213,5 +221,7 @@
     "customerDeletedMessage": "Employee is deleted",
 
     "invoiceCreatedMessage": "Invoice Created",
-    "createdInvoiceInfoMessage": "This order already has an invoice"
+    "createdInvoiceInfoMessage": "This order already has an invoice",
+    "cancellationInvoiceErrorMessage": "This invoice has already been canceled",
+    "cancellationInvoiceMessage": "Invoice canceled"
 }
