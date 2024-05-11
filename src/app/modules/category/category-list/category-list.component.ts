@@ -2,14 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryService } from '../service/category.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
-import { FormControl  } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
 import { UpdateCategoryRequest } from '../dto/updateCategoryRequest';
-import { ActivatedRoute, Router } from '@angular/router';
-
 import { TranslateService } from '@ngx-translate/core';
 import { GenericService } from '../../../core/service/generic.service';
 import { AuthService } from '../../../core/service/auth.service';
@@ -52,7 +49,7 @@ export class CategoryListComponent implements OnInit {
   }
 
   loadCategory() {
-    this.categoryService.getCategoriesByPage(this.currentPage, 18).subscribe({
+    this.categoryService.getCategoriesByPage(this.currentPage, this.itemPerPage).subscribe({
       next: (result) => {
         this.tableData = this.genericService.uuidSplit(result.data)
         this.totalShelvesCount = result.count;
@@ -81,36 +78,35 @@ export class CategoryListComponent implements OnInit {
   }
 
   openCreateCategoryDialog() {
-      if (this.authService.isAdmin()) {
-    let dialog = this.dialog.open(CreateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+    if (this.authService.isAdmin()) {
+      let dialog = this.dialog.open(CreateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+      });
 
-    dialog.componentInstance.title = 'createCategoryTitle';
-    dialog.componentInstance.inputLabels = ['categoryTableCategoryName'];
-    // dialog.componentInstance.values.push(new FormControl(''));
-    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
-      dialog.componentInstance.addInput();
-    }
-
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-          const formValues = dialog.componentInstance.createForm.value.values;
-          const categoryNameValue = formValues[0].inputValue;
-          this.createCategory(categoryNameValue);
-        }
-      },
-      error: (err) => {
-        console.log(err);
+      dialog.componentInstance.title = 'createCategoryTitle';
+      dialog.componentInstance.inputLabels = ['categoryTableCategoryName'];
+      for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+        dialog.componentInstance.addInput();
       }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+            const formValues = dialog.componentInstance.createForm.value.values;
+            const categoryNameValue = formValues[0].inputValue;
+            this.createCategory(categoryNameValue);
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   createCategory(categoryName: string) {
@@ -129,29 +125,29 @@ export class CategoryListComponent implements OnInit {
   }
 
   openUpdateCategoryDialog(item: any){
-      if (this.authService.isAdmin()) {
-    let dialog =  this.dialog.open(UpdateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+    if (this.authService.isAdmin()) {
+      let dialog =  this.dialog.open(UpdateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+      });
 
-    dialog.componentInstance.title='updateCategoryTitle';
-    dialog.componentInstance.inputLabels=['categoryTableCategoryName'];
-    dialog.componentInstance.values.push(new FormControl(item.name));
+      dialog.componentInstance.title='updateCategoryTitle';
+      dialog.componentInstance.inputLabels=['categoryTableCategoryName'];
+      dialog.componentInstance.addInput(item.name);
 
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-        const nameValue =  dialog.componentInstance.updateForm.value.values[0];
-        this.updateCategory(item.id, nameValue);
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+          const nameValue =  dialog.componentInstance.updateForm.value.values[0].inputValue;
+          this.updateCategory(item.id, nameValue);
+          }
         }
-      }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   updateCategory(id: string, categoryName: string){
@@ -170,24 +166,24 @@ export class CategoryListComponent implements OnInit {
   }
 
   deleteCategory(id: any){
-      if (this.authService.isAdmin()) {
-    const successDeletedMessage = this.translateService.instant('categoryDeletedMessage');
-    this.categoryService.deleteCategory(id).subscribe(
-      {
-        next: (result) =>{
-          this.toastr.success(successDeletedMessage)
-          this.loadCategory();
-        },
-        error: (err) => {
-          console.log(err);
-          this.genericService.showError("errorMessage");
+    if (this.authService.isAdmin()) {
+      const successDeletedMessage = this.translateService.instant('categoryDeletedMessage');
+      this.categoryService.deleteCategory(id).subscribe(
+        {
+          next: (result) =>{
+            this.toastr.success(successDeletedMessage)
+            this.loadCategory();
+          },
+          error: (err) => {
+            console.log(err);
+            this.genericService.showError("errorMessage");
+          }
         }
-      }
-    );
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+      );
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   generatePDF() {

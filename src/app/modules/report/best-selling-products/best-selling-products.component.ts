@@ -17,7 +17,7 @@ export class BestSellingProductsComponent implements OnInit{
     private translateService: TranslateService,
   ){}
 
-  tableTitle = "Best Selling Products"
+  tableTitle = "bestSellingProducts"
   tableData: any[] = [];
   columns: TableColumn[] = [
     { label: 'productTableProductCode', field: 'shortId' },

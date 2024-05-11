@@ -9,7 +9,6 @@ import {MatButtonModule} from '@angular/material/button';
 import { CreateModalComponent } from './components/create-modal/create-modal.component';
 import { AcceptProductModalComponent } from './components/accept-product-modal/accept-product-modal.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { TestDialogComponent } from './components/test-dialog/test-dialog.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ReportTableComponent } from './components/report-table/report-table.component';
 import { CreateInvoiceModalComponent } from './components/create-invoice-modal/create-invoice-modal.component';
@@ -22,7 +21,6 @@ import { CreateInvoiceModalComponent } from './components/create-invoice-modal/c
     CreateModalComponent,
     AcceptProductModalComponent,
     NavbarComponent,
-    TestDialogComponent,
     ReportTableComponent,
     CreateInvoiceModalComponent,
   ],

@@ -109,3 +109,18 @@
   height: 16px;
   margin-right: 5px;
 }
+
+article {
+  border-radius: 2rem;
+  border: 1px solid #e2e5ff;
+  box-shadow: 0px 2px 4px rgba(221, 221, 221, 0.8);
+
+
+}
+
+.report-item:hover{
+  cursor: pointer;
+  background-color: #cdcdcd;
+  transition: all 0.2s ease-in;
+
+}
