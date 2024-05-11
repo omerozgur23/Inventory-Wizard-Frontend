@@ -2,14 +2,11 @@ import { UpdateCustomerRequest } from '../dto/updateCustomerRequest';
 import { Component, OnInit } from '@angular/core';
 import { CustomerService } from '../service/customer.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
-import { FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateCustomerRequest } from '../dto/createCustomerRequest';
-import { ActivatedRoute, Router } from '@angular/router';
-
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/service/auth.service';
@@ -56,7 +53,7 @@ export class CustomerListComponent implements OnInit{
   }
 
   loadCustomer() {
-    this.customerService.getCustomersByPage(this.currentPage, 18).subscribe({
+    this.customerService.getCustomersByPage(this.currentPage, this.itemPerPage).subscribe({
       next: (result) => {
         this.tableData = result.data;
         this.totalShelvesCount = result.count;
@@ -85,40 +82,40 @@ export class CustomerListComponent implements OnInit{
   }
   
   openCreateCustomerDialog() {
-      if (this.authService.isAdmin()) {
-    let dialog = this.dialog.open(CreateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+    if (this.authService.isAdmin()) {
+      let dialog = this.dialog.open(CreateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+      });
 
-    dialog.componentInstance.title = 'createCustomerTitle';
-    dialog.componentInstance.inputLabels = ['customerTableCompanyName', 'customerTableCompanyOfficial', 'customerTableOfficialEmail', 'customerTableOfficialPhone', 'customerTableTaxNumber', 'customerTableAddress'];
-    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
-      dialog.componentInstance.addInput();
-    }
-
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-          const formValues = dialog.componentInstance.createForm.value.values;
-          const companyNameValue = formValues[0].inputValue;
-          const contactNameValue = formValues[1].inputValue;
-          const contactEmailValue = formValues[2].inputValue;
-          const contactPhoneValue = formValues[3].inputValue;
-          const taxNumber = formValues[4].inputValue;
-          const addressValue = formValues[5].inputValue;
-          this.createCustomer(companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, taxNumber, addressValue);
-        }
-      },
-      error: (err) => {
-        console.log(err);
+      dialog.componentInstance.title = 'createCustomerTitle';
+      dialog.componentInstance.inputLabels = ['customerTableCompanyName', 'customerTableCompanyOfficial', 'customerTableOfficialEmail', 'customerTableOfficialPhone', 'customerTableTaxNumber', 'customerTableAddress'];
+      for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+        dialog.componentInstance.addInput();
       }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+            const formValues = dialog.componentInstance.createForm.value.values;
+            const companyNameValue = formValues[0].inputValue;
+            const contactNameValue = formValues[1].inputValue;
+            const contactEmailValue = formValues[2].inputValue;
+            const contactPhoneValue = formValues[3].inputValue;
+            const taxNumber = formValues[4].inputValue;
+            const addressValue = formValues[5].inputValue;
+            this.createCustomer(companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, taxNumber, addressValue);
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   createCustomer(companyName: string, contactName: string, contactEmail: string, contactPhone: string, taxNumber: string, address: string) {
@@ -137,40 +134,40 @@ export class CustomerListComponent implements OnInit{
   }
 
   openUpdateCustomerDialog(item: any){
-      if (this.authService.isAdmin()) {
-    let dialog =  this.dialog.open(UpdateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+    if (this.authService.isAdmin()) {
+      let dialog =  this.dialog.open(UpdateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+      });
 
-    dialog.componentInstance.title='updateCustomerTitle';
-    dialog.componentInstance.inputLabels=['customerTableCompanyName','customerTableCompanyOfficial','customerTableOfficialEmail','customerTableOfficialPhone', 'customerTableAddress'];
-    dialog.componentInstance.values.push(new FormControl(item.companyName));
-    dialog.componentInstance.values.push(new FormControl(item.contactName));
-    dialog.componentInstance.values.push(new FormControl(item.contactEmail));
-    dialog.componentInstance.values.push(new FormControl(item.contactPhone));
-    dialog.componentInstance.values.push(new FormControl(item.address));
+      dialog.componentInstance.title='updateCustomerTitle';
+      dialog.componentInstance.inputLabels=['customerTableCompanyName','customerTableCompanyOfficial','customerTableOfficialEmail','customerTableOfficialPhone', 'customerTableAddress'];
+      dialog.componentInstance.addInput(item.companyName);
+      dialog.componentInstance.addInput(item.contactName);
+      dialog.componentInstance.addInput(item.contactEmail);
+      dialog.componentInstance.addInput(item.contactPhone);
+      dialog.componentInstance.addInput(item.address);
 
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-        const companyNameValue =  dialog.componentInstance.updateForm.value.values[0];
-        const contactNameValue =  dialog.componentInstance.updateForm.value.values[1];
-        const contactEmailValue =  dialog.componentInstance.updateForm.value.values[2];
-        const contactPhoneValue =  dialog.componentInstance.updateForm.value.values[3];
-        const addressValue =  dialog.componentInstance.updateForm.value.values[4]; 
-        this.updateCustomer(item.id, companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, addressValue);
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+          const companyNameValue =  dialog.componentInstance.updateForm.value.values[0].inputValue;
+          const contactNameValue =  dialog.componentInstance.updateForm.value.values[1].inputValue;
+          const contactEmailValue =  dialog.componentInstance.updateForm.value.values[2].inputValue;
+          const contactPhoneValue =  dialog.componentInstance.updateForm.value.values[3].inputValue;
+          const addressValue =  dialog.componentInstance.updateForm.value.values[4].inputValue;
+          this.updateCustomer(item.id, companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, addressValue);
+          }
+        },
+        error: (err) => {
+          console.log(err);
         }
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   updateCustomer(id: string, companyName: string, contactName: string, contactEmail: string, contactPhone: string, address: string){
@@ -189,24 +186,24 @@ export class CustomerListComponent implements OnInit{
   }
 
   deleteCustomer(id: any){
-      if (this.authService.isAdmin()) {
-    const successDeletedMessage = this.translateService.instant("customerDeletedMessage");
-    this.customerService.deleteCustomer(id).subscribe(
-      {
-        next: (result) =>{
-          this.toastr.success(successDeletedMessage)
-          this.loadCustomer();
-        },
-        error: (err) => {
-          console.log(err);
-          this.genericService.showError("errorMessage");
+    if (this.authService.isAdmin()) {
+      const successDeletedMessage = this.translateService.instant("customerDeletedMessage");
+      this.customerService.deleteCustomer(id).subscribe(
+        {
+          next: (result) =>{
+            this.toastr.success(successDeletedMessage)
+            this.loadCustomer();
+          },
+          error: (err) => {
+            console.log(err);
+            this.genericService.showError("errorMessage");
+          }
         }
-      }
-    );
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+      );
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   generatePDF() {

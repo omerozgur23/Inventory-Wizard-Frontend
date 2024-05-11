@@ -5,5 +5,7 @@ export class UpdateProductRequest {
         public criticalCount: number,
         public purchasePrice: number,
         public unitPrice:number,
+        public categoryId: string,
+        public supplierId: string,
     ){}
 }

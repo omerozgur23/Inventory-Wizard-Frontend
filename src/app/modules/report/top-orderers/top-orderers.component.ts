@@ -17,7 +17,7 @@ export class TopOrderersComponent implements OnInit{
     private genericService: GenericService,
   ){}
 
-  tableTitle = 'Top Orderers';
+  tableTitle = 'reportTopOrderers';
   tableData: any[] = [];
   columns: TableColumn[] = [
     { label: 'customerTableCompanyName', field: 'companyName' },

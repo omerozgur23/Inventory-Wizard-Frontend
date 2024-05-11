@@ -1,18 +1,14 @@
-import { GetCategoryResponse } from './../../category/dto/getCategoryResponse';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { UpdateProductRequest } from '../dto/updateProductRequest';
-import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateProductRequest } from '../dto/createProductRequest';
 import { CategoryService } from '../../category/service/category.service';
-import { ActivatedRoute, Router } from '@angular/router';
-
-import { TestDialogComponent } from '../../../shared/components/test-dialog/test-dialog.component';
+import { Router } from '@angular/router';
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SupplierService } from '../../supplier/service/supplier.service';
@@ -52,9 +48,7 @@ export class ProductListComponent implements OnInit{
     private categoryService: CategoryService,
     private supplierService: SupplierService,
     private dialog: MatDialog,
-    private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
     private genericService: GenericService,
     private translateService: TranslateService,
     private authService: AuthService,
@@ -123,45 +117,45 @@ export class ProductListComponent implements OnInit{
 
   openCreateProductDialog() {
     if (this.authService.isAdmin()) {
-    let dialog = this.dialog.open(CreateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+      let dialog = this.dialog.open(CreateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+      });
     
-    dialog.componentInstance.title = 'createProductTitle';
-    dialog.componentInstance.inputLabels = ['productTableProductName', 'productTableCriticalStock', 'productTablePurchasePrice', 'productTableUnitPrice'];
-    dialog.componentInstance.categoryDropdownOptions = this.categoryList;
-    dialog.componentInstance.supplierDropdownOptions = this.supplierList;
-    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
-      dialog.componentInstance.addInput();
-    };
-    dialog.componentInstance.addCategoryDropdown();
-    dialog.componentInstance.addSupplierDropdown();
+      dialog.componentInstance.title = 'createProductTitle';
+      dialog.componentInstance.inputLabels = ['productTableProductName', 'productTableCriticalStock', 'productTablePurchasePrice', 'productTableUnitPrice'];
+      dialog.componentInstance.categoryDropdownOptions = this.categoryList;
+      dialog.componentInstance.supplierDropdownOptions = this.supplierList;
+      for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+        dialog.componentInstance.addInput();
+      };
+      dialog.componentInstance.addCategoryDropdown();
+      dialog.componentInstance.addSupplierDropdown();
 
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-          const formValues = dialog.componentInstance.createForm.value.values;
-          const productNameValue = formValues[0].inputValue;
-          const criticalCountValue = formValues[1].inputValue;
-          const purchasePriceValue = formValues[2].inputValue;
-          const unitPriceValue = formValues[3].inputValue;
-          const categoryIdValue = formValues[4].categoryDropdownValue;
-          const supplierIdValue = formValues[5].supplierDropdownValue;
-          
-          this.createProduct(productNameValue, categoryIdValue, supplierIdValue, criticalCountValue, purchasePriceValue, unitPriceValue);
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+            const formValues = dialog.componentInstance.createForm.value.values;
+            const productNameValue = formValues[0].inputValue;
+            const criticalCountValue = formValues[1].inputValue;
+            const purchasePriceValue = formValues[2].inputValue;
+            const unitPriceValue = formValues[3].inputValue;
+            const categoryIdValue = formValues[4].categoryDropdownValue;
+            const supplierIdValue = formValues[5].supplierDropdownValue;
+
+            this.createProduct(productNameValue, categoryIdValue, supplierIdValue, criticalCountValue, purchasePriceValue, unitPriceValue);
+          }
+        },
+        error: (err) => {
+          console.log("Dialog Hatası " + err);
+
         }
-      },
-      error: (err) => {
-        console.log("Dialog Hatası " + err);
-        
-      }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   createProduct(productname: string, categoryId: string, supplierId: string, criticalCount: number, purchasePrice: number, unitPrice: number) {
@@ -180,40 +174,46 @@ export class ProductListComponent implements OnInit{
   }
 
   openUpdateProductDialog(item: any){
-      if (this.authService.isAdmin()) {
-    let dialog =  this.dialog.open(UpdateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+    if (this.authService.isAdmin()) {
+      let dialog =  this.dialog.open(UpdateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+      });
 
-    dialog.componentInstance.title='updateProductTitle';
-    dialog.componentInstance.inputLabels=['productTableProductName', 'productTableCriticalStock', 'productTablePurchasePrice', 'productTableUnitPrice'];
-    dialog.componentInstance.values.push(new FormControl(item.productName));
-    dialog.componentInstance.values.push(new FormControl(item.criticalCount));
-    dialog.componentInstance.values.push(new FormControl(item.purchasePrice));
-    dialog.componentInstance.values.push(new FormControl(item.unitPrice));
+      dialog.componentInstance.title='updateProductTitle';
+      dialog.componentInstance.inputLabels=['productTableProductName', 'productTableCriticalStock', 'productTablePurchasePrice', 'productTableUnitPrice'];
+      dialog.componentInstance.categoryDropdownOptions = this.categoryList;
+      dialog.componentInstance.supplierDropdownOptions = this.supplierList;
+      dialog.componentInstance.addInput(item.productName);
+      dialog.componentInstance.addInput(item.criticalCount);
+      dialog.componentInstance.addInput(item.purchasePrice);
+      dialog.componentInstance.addInput(item.unitPrice);
+      dialog.componentInstance.addCategoryDropdown();
+      dialog.componentInstance.addSupplierDropdown();
 
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-        const productNameValue =  dialog.componentInstance.updateForm.value.values[0];
-        const criticalCountValue =  dialog.componentInstance.updateForm.value.values[1];
-        const purchasePriceValue =  dialog.componentInstance.updateForm.value.values[2];
-        const unitPriceValue =  dialog.componentInstance.updateForm.value.values[3];
-        this.updateProduct(item.id,/* item.categoryId, item.supplierId,*/ productNameValue, criticalCountValue, purchasePriceValue, unitPriceValue);
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+          const productNameValue =  dialog.componentInstance.updateForm.value.values[0].inputValue;
+          const criticalCountValue =  dialog.componentInstance.updateForm.value.values[1].inputValue;
+          const purchasePriceValue =  dialog.componentInstance.updateForm.value.values[2].inputValue;
+          const unitPriceValue =  dialog.componentInstance.updateForm.value.values[3].inputValue;
+          const categoryIdValue =  dialog.componentInstance.updateForm.value.values[4].categoryDropdownValue;
+          const supplierIdValue =  dialog.componentInstance.updateForm.value.values[5].supplierDropdownValue;
+          this.updateProduct(item.id,/* item.categoryId, item.supplierId,*/ productNameValue, criticalCountValue, purchasePriceValue, unitPriceValue, categoryIdValue, supplierIdValue);
+          }
         }
-      }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
-  updateProduct(id: string, /*categoryId: string, supplierId: string,*/ productName: string, criticalCount: number, purchasePrice: number, unitPrice: number ){
+  updateProduct(id: string, productName: string, criticalCount: number, purchasePrice: number, unitPrice: number, categoryId: string, supplierId: string ){
     const successUpdatedMessage = this.translateService.instant("productUpdatedMessage");
-    const product = new UpdateProductRequest(id,/* categoryId, supplierId,*/ productName, criticalCount, purchasePrice, unitPrice);
+    const product = new UpdateProductRequest(id, productName, criticalCount, purchasePrice, unitPrice, categoryId, supplierId);
     this.productService.updateProduct(product).subscribe({
       next: (result) => {
         this.toastr.success(successUpdatedMessage);
@@ -227,24 +227,24 @@ export class ProductListComponent implements OnInit{
   }
 
   deleteProduct(id: any){
-      if (this.authService.isAdmin()) {
-    const successDeletedMessage = this.translateService.instant("productDeletedMessage");
-    this.productService.deleteProduct(id).subscribe(
-      {
-        next: (result) =>{
-          this.toastr.success(successDeletedMessage)
-          this.ngOnInit();
-        },
-        error: (err) => {
-          console.log(err);
-          this.genericService.showError("errorMessage");
+    if (this.authService.isAdmin()) {
+      const successDeletedMessage = this.translateService.instant("productDeletedMessage");
+      this.productService.deleteProduct(id).subscribe(
+        {
+          next: (result) =>{
+            this.toastr.success(successDeletedMessage)
+            this.ngOnInit();
+          },
+          error: (err) => {
+            console.log(err);
+            this.genericService.showError("errorMessage");
+          }
         }
-      }
-    );
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+      );
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   navigateSettings(){
@@ -272,49 +272,6 @@ export class ProductListComponent implements OnInit{
       );
     } else {
       this.loadProducts();
-    }
-  }
-
-
-  openTestCreateProductDialog() {
-    if (this.authService.isAdmin()) {
-     let dialog = this.dialog.open(TestDialogComponent, {
-       width: '500px',
-       enterAnimationDuration: '400ms',
-       exitAnimationDuration: '250ms',
-     });
-    
-     dialog.componentInstance.title = 'createProductTitle';
-     dialog.componentInstance.inputLabels = ['productTableProductName', 'productTableCriticalStock', 'productTablePurchasePrice', 'productTableUnitPrice'];
-     dialog.componentInstance.categoryDropdownOptions = this.categoryList;
-     dialog.componentInstance.supplierDropdownOptions = this.supplierList;
-     for (let i = 0; i < 4; i++) {
-       dialog.componentInstance.addInput();
-     }
-     dialog.componentInstance.addSupplierDropdown();
-     dialog.componentInstance.addCategoryDropdown();
-    
-     dialog.afterClosed().subscribe({
-       next: (data) => {
-         if (data?.result === 'yes') {
-           const formValues = dialog.componentInstance.createTestForm.value.values;
-           const productNameValue = formValues[0].inputValue;
-           const criticalCountValue = formValues[1].inputValue;
-           const purchasePriceValue = formValues[2].inputValue;
-           const unitPriceValue = formValues[3].inputValue;
-           const supplierIdValue = formValues[4].supplierDropdownValue;
-           const categoryIdValue = formValues[5].categoryDropdownValue;
-           
-           this.createProduct(productNameValue, categoryIdValue, supplierIdValue, criticalCountValue, purchasePriceValue, unitPriceValue);
-         }
-       },
-       error: (err) => {
-         console.log("Dialog Hatası " + err);
-        }
-     });
-    }
-    else {
-      this.genericService.showAuthError("authorizationError");
     }
   }
 }

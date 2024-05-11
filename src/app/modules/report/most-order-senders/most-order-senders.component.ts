@@ -17,7 +17,7 @@ export class MostOrderSendersComponent implements OnInit{
     private translateService: TranslateService,
   ){}
 
-  tableTitle = 'Most Order Senders';
+  tableTitle = 'mostOrderSenders';
   tableData: any[] = [];
   columns: TableColumn[] = [
     { label: 'employeeTableFirstName', field: 'firstName' },

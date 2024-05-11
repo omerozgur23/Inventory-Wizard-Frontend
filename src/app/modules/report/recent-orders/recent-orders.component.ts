@@ -3,7 +3,6 @@ import { ReportService } from '../service/report.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { TranslateService } from '@ngx-translate/core';
 import { GenericService } from '../../../core/service/generic.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recent-orders',
@@ -12,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class RecentOrdersComponent implements OnInit {
 
-  tableTitle = "Recent Orders";
+  tableTitle = "reportRecentOrder";
   tableData: any[] = [];
   columns: TableColumn[] = [
     { label: 'orderTableOrderCode', field: 'shortId' },
@@ -25,7 +24,6 @@ export class RecentOrdersComponent implements OnInit {
     private reportService: ReportService,
     private genericService: GenericService,
     private translateService: TranslateService,
-    // private router: Router,
   ){}
 
   ngOnInit(): void {

@@ -1,22 +1,3 @@
-<!-- <h2 mat-dialog-title>{{ title | translate }}</h2>
-<mat-dialog-content class="mat-typography">
-  <form [formGroup]="createForm">
-    <div class="formBox form-group" formArrayName="values">
-      @for (values of values.controls; track $index) {
-      <div class="inputBox w100">
-        <input
-          formControlName="{{ $index }}"
-          required
-          style="margin-top: 5px"
-        />
-        <label [for]="'input_' + $index">{{
-          inputLabels[$index] | translate
-        }}</label>
-      </div>
-      }
-    </div>
-  </form>
-</mat-dialog-content> -->
 <h2 mat-dialog-title>{{ title | translate }}</h2>
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="createForm">
@@ -35,19 +16,16 @@
             inputLabels[$index] | translate
           }}</label>
         </div>
-
-        <div *ngIf="isCategoryDropdownControl(control)">
-          <input
-            id="mycategories"
-            placeholder="Type category here..."
-            list="categories"
+        <div class="dropdown" *ngIf="isCategoryDropdownControl(control)">
+          <select
+            class="form-select"
             [formControlName]="'categoryDropdownValue'"
-          />
-          <datalist id="categories">
+          >
+            <option selected>Category List</option>
             @for (item of categoryDropdownOptions; track $index) {
             <option value="{{ item.id }}">{{ item.name }}</option>
             }
-          </datalist>
+          </select>
         </div>
 
         <div class="dropdown" *ngIf="isSupplierDropdownControl(control)">

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { LoginService } from '../../service/login.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -36,7 +36,7 @@ export class LoginComponent {
     this.loginService.login(email, password).subscribe({
         next: () => {
           setTimeout(() => {
-            this.showLogoEffect = false; // Efekti gizle
+            this.showLogoEffect = false;
             this.router.navigate(["/home/shelf"]);
             const welcomeMessage = this.translateService.instant('loginSuccessMessage');
             this.toastr.success(welcomeMessage)

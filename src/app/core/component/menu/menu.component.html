@@ -1,15 +1,24 @@
+<div class="menu-btn">
+  <button class="toggle-btn" type="button" (click)="toggleSidebarr()">
+    <img src="./assets/img/logo.svg" alt="" />
+  </button>
+</div>
 <div class="wrapper">
   <aside id="sidebar" [ngClass]="{ expand: isExpanded }">
     <div class="d-flex">
-      <button class="toggle-btn" type="button" (click)="toggleSidebarr()">
-        <!-- <i class="lni lni-grid-alt"></i> -->
+      <button
+        class="toggle-btn logo-test"
+        type="button"
+        (click)="toggleSidebarr()"
+      >
         <img src="./assets/img/logo.svg" alt="" />
       </button>
       <div class="sidebar-logo">
         <a [routerLink]="['../menu']" [relativeTo]="route">Inventory Wizard</a>
       </div>
     </div>
-    <ul class="sidebar-nav">
+
+    <ul class="sidebar-nav" (click)="isMobileView ? toggleSidebarr() : ''">
       <li class="sidebar-item">
         <a
           class="sidebar-link"
@@ -134,10 +143,6 @@
       </li>
     </ul>
     <div class="sidebar-footer" (click)="logout()">
-      <a class="sidebar-link">
-        <img src="./assets/img/settings.svg" alt="Settings" />
-        <span>Ayarlar</span>
-      </a>
       <a class="sidebar-link">
         <img src="./assets/img/logout.svg" alt="Logout" />
         <span>{{ "signOut" | translate }}</span>

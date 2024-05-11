@@ -21,21 +21,14 @@ export class CreateModalComponent {
     public dialogRef: MatDialogRef<CreateModalComponent>,
   ) {
     this.createForm = this.fb.group({
-      values: this.fb.array([], Validators.required), // values adında bir FormArray oluşturuldu
+      values: this.fb.array([], Validators.required),
     });
   }
 
-  // values FormArray'ine erişim sağlamak için bir getter tanımlandı
   get values() {
     return this.createForm.get('values') as FormArray;
   }
 
-  // Yeni bir FormControl eklemek için addValue fonksiyonu
-  // addValue() {
-  //   const value = new FormControl('', Validators.required);
-  //   this.values.push(value); // values FormArray'ine yeni bir FormControl eklendi
-  //   console.log(this.values.value);
-  // }
   addInput() {
     const inputFormControl = new FormGroup({
       inputValue: new FormControl('', Validators.required)
@@ -80,15 +73,13 @@ export class CreateModalComponent {
     return control instanceof FormGroup && control.contains('roleDropdownValue');
   }
  
-  // Formun geçerli olup olmadığını kontrol edip modalı kapatmak için create fonksiyonu
   create(){
     if (this.createForm.valid) {
-      this.dialogRef.close({result: 'yes'}); // Modalı kapatıp 'yes' sonucunu iletiliyor
+      this.dialogRef.close({result: 'yes'});
     } 
   }
 
-  // Modalı kapatmak için close fonksiyonu
   close(){
-    this.dialogRef.close({result: 'no'}); // Modalı kapatıp 'no' sonucunu iletiliyor
+    this.dialogRef.close({result: 'no'});
   }
 }

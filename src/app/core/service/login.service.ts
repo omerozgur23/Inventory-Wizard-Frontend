@@ -1,6 +1,6 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +36,6 @@ export class LoginService {
     );
   }
   
-  // login olunursa çalışıyor
   parseLoginResponse(data: any, email: string, password: string){
     this.loggedIn = true;
         this.token = data.token;

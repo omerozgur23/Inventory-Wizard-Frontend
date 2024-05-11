@@ -65,7 +65,6 @@
 
 .logo-container img {
   animation: shakeLogo 0.3s ease-in-out infinite;
-  // -webkit-animation: rotateLogo 2s linear infinite;
 }
 
 @keyframes shakeLogo {
@@ -85,6 +84,3 @@
     transform: translate(0, 0);
   }
 }
-
-  
- 

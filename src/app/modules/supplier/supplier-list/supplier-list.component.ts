@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute, Router } from '@angular/router';
 import { SupplierService } from '../service/supplier.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
-import { FormControl } from '@angular/forms';
 import { UpdateSupplierRequest } from '../dto/updateSupplierRequest';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateSupplierRequest } from '../dto/createSupplierRequest';
-
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/service/auth.service';
@@ -85,37 +82,37 @@ export class SupplierListComponent implements OnInit{
   }
 
   openCreateSupplierDialog(){
-      if (this.authService.isAdmin()) {
-    let dialog = this.dialog.open(CreateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms,'
-    });
+    if (this.authService.isAdmin()) {
+      let dialog = this.dialog.open(CreateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms,'
+      });
 
-    dialog.componentInstance.title = 'createSupplierTitle';
-    dialog.componentInstance.inputLabels = ['supplierTableCompanyName', 'supplierTableCompanyOfficial', 'supplierTableOfficialEmail', 'supplierTableOfficialPhone', 'supplierTableTaxNumber', 'supplierTableAddress'];
-    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
-      dialog.componentInstance.addInput();
-    }
-
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if(data?.result === 'yes') {
-          const formValues = dialog.componentInstance.createForm.value.values;
-          const companyNameValue = formValues[0].inputValue;
-          const contactNameValue = formValues[1].inputValue;
-          const contactEmailValue = formValues[2].inputValue;
-          const contactPhoneValue = formValues[3].inputValue;
-          const taxNumberValue = formValues[4].inputValue;
-          const addressValue = formValues[5].inputValue;
-          this.createSupplier(companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, taxNumberValue, addressValue);
-        }
+      dialog.componentInstance.title = 'createSupplierTitle';
+      dialog.componentInstance.inputLabels = ['supplierTableCompanyName', 'supplierTableCompanyOfficial', 'supplierTableOfficialEmail', 'supplierTableOfficialPhone', 'supplierTableTaxNumber', 'supplierTableAddress'];
+      for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+        dialog.componentInstance.addInput();
       }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if(data?.result === 'yes') {
+            const formValues = dialog.componentInstance.createForm.value.values;
+            const companyNameValue = formValues[0].inputValue;
+            const contactNameValue = formValues[1].inputValue;
+            const contactEmailValue = formValues[2].inputValue;
+            const contactPhoneValue = formValues[3].inputValue;
+            const taxNumberValue = formValues[4].inputValue;
+            const addressValue = formValues[5].inputValue;
+            this.createSupplier(companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, taxNumberValue, addressValue);
+          }
+        }
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   createSupplier(companyName: string, contactName: string, contactEmail: string, contactPhone: string, taxNumber: string, address: string){
@@ -134,37 +131,37 @@ export class SupplierListComponent implements OnInit{
   }
 
   openUpdateSupplierDialog(item: any){
-      if (this.authService.isAdmin()) {  
-    let dialog =  this.dialog.open(UpdateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+    if (this.authService.isAdmin()) {  
+      let dialog =  this.dialog.open(UpdateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+      });
 
-    dialog.componentInstance.title='updateSupplierTitle';
-    dialog.componentInstance.inputLabels = ['supplierTableCompanyName', 'supplierTableCompanyOfficial', 'supplierTableOfficialEmail', 'supplierTableOfficialPhone', 'supplierTableAddress'];
-    dialog.componentInstance.values.push(new FormControl(item.companyName));
-    dialog.componentInstance.values.push(new FormControl(item.contactName));
-    dialog.componentInstance.values.push(new FormControl(item.contactEmail));
-    dialog.componentInstance.values.push(new FormControl(item.contactPhone));
-    dialog.componentInstance.values.push(new FormControl(item.address));
+      dialog.componentInstance.title='updateSupplierTitle';
+      dialog.componentInstance.inputLabels = ['supplierTableCompanyName', 'supplierTableCompanyOfficial', 'supplierTableOfficialEmail', 'supplierTableOfficialPhone', 'supplierTableAddress'];
+      dialog.componentInstance.addInput(item.companyName);
+      dialog.componentInstance.addInput(item.contactName);
+      dialog.componentInstance.addInput(item.contactEmail);
+      dialog.componentInstance.addInput(item.contactPhone);
+      dialog.componentInstance.addInput(item.address);
 
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-          const companyNameValue = dialog.componentInstance.updateForm.value.values[0];
-          const contactNameValue = dialog.componentInstance.updateForm.value.values[1];
-          const contactEmailValue = dialog.componentInstance.updateForm.value.values[2];
-          const contactPhoneValue = dialog.componentInstance.updateForm.value.values[3];
-          const addressValue = dialog.componentInstance.updateForm.value.values[4];
-          this.updateSupplier(item.id, companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, addressValue);
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+            const companyNameValue = dialog.componentInstance.updateForm.value.values[0].inputValue;
+            const contactNameValue = dialog.componentInstance.updateForm.value.values[1].inputValue;
+            const contactEmailValue = dialog.componentInstance.updateForm.value.values[2].inputValue;
+            const contactPhoneValue = dialog.componentInstance.updateForm.value.values[3].inputValue;
+            const addressValue = dialog.componentInstance.updateForm.value.values[4].inputValue;
+            this.updateSupplier(item.id, companyNameValue, contactNameValue, contactEmailValue, contactPhoneValue, addressValue);
+          }
         }
-      }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  } 
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   updateSupplier(id: string, companyName: string, contactName: string, contactEmail: string, contactPhone: string, address: string){
@@ -183,22 +180,22 @@ export class SupplierListComponent implements OnInit{
   }
 
   deleteSupplier(id: any) {
-      if (this.authService.isAdmin()) {
-    const successDeletedMessage = this.translateService.instant("supplierDeletedMessage");
-    this.supplierService.deleteSupplier(id).subscribe({
-      next: (result) => {
-        this.toastr.success(successDeletedMessage)
-        this.ngOnInit();
-      },
-      error: (err) => {
-        console.log(err);
-        this.genericService.showError("errorMessage");
-      }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  } 
+    if (this.authService.isAdmin()) {
+      const successDeletedMessage = this.translateService.instant("supplierDeletedMessage");
+      this.supplierService.deleteSupplier(id).subscribe({
+        next: (result) => {
+          this.toastr.success(successDeletedMessage)
+          this.ngOnInit();
+        },
+        error: (err) => {
+          console.log(err);
+          this.genericService.showError("errorMessage");
+        }
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   generatePDF() {
