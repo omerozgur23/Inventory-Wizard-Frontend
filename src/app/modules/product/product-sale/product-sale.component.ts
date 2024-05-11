@@ -2,13 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UpdateCustomerRequest } from '../../customer/dto/updateCustomerRequest';
-import { GetEmployeeResponse } from '../../employee/dto/getEmployeeResponse';
 import { forkJoin } from 'rxjs';
 import { EmployeeService } from '../../employee/service/employee.service';
 import { CustomerService } from '../../customer/service/customer.service';
-import { GetProductResponse } from '../dto/getProductResponse';
 import { SaleProductRequest } from '../dto/saleProductRequest';
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -83,11 +79,7 @@ export class ProductSaleComponent implements OnInit{
       this.productService.saleProduct(saleRequest).subscribe({
         next: (result) => {
           this.toastr.success(successSaleMessage);
-          this.saleProductForm.reset({
-            customerId: '',
-            userId: '',
-            productItems: [this.createProductGroup()]
-          });
+          this.resetProductList();
         },
         error: (err) => {
           console.error(err);
@@ -95,7 +87,18 @@ export class ProductSaleComponent implements OnInit{
         }
       });
     } else {
-      this.toastr.error('Lütfen formu eksiksiz doldurun');
+      this.genericService.showError("productSaleFormValid");
     }
+  }
+
+  resetProductList(): void {
+    while (this.productItems.length > 1) {
+      this.productItems.removeAt(1);
+    }
+    this.saleProductForm.reset({
+      customerId: '',
+      userId: '',
+      productItems: [this.createProductGroup()]
+    });
   }
 }

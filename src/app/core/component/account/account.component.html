@@ -1,9 +1,23 @@
-
-<app-navbar>
-  
-</app-navbar>
-<div style="display: flex; justify-content: center; align-items: center; height: 90vh;">
-      <form [formGroup]="accountForm" (ngSubmit)="submit()" style="width: 50%; border: 2px solid #e2e5ff; padding: 50px; border-radius: 20px; background-color: white;">
+<app-navbar></app-navbar>
+<div
+  style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+  "
+>
+  <form
+    [formGroup]="accountForm"
+    (ngSubmit)="submit()"
+    style="
+      width: 50%;
+      border: 2px solid #e2e5ff;
+      padding: 50px;
+      border-radius: 20px;
+      background-color: white;
+    "
+  >
     <div class="mb-3">
       <label for="txtEmail" class="form-label">
         {{ "settingsFormEmail" | translate }}
@@ -89,19 +103,17 @@
         {{ "doNotMatchPassword" | translate }}
       </div>
     </div>
-    <div style="float: right;">
+    <div style="float: right">
       <button class="btn btn-outline-secondary me-2" [routerLink]="['..']">
-      {{ "cancelButton" | translate }}
-    </button>
-    <button
-      class="btn btn-outline-primary"
-      type="submit"
-      [disabled]="!accountForm.valid"
-    >
-      {{ "saveButton" | translate }}
-    </button>
+        {{ "cancelButton" | translate }}
+      </button>
+      <button
+        class="btn btn-outline-primary"
+        type="submit"
+        [disabled]="!accountForm.valid"
+      >
+        {{ "saveButton" | translate }}
+      </button>
     </div>
-
   </form>
-  </div>
-
+</div>

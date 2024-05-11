@@ -62,7 +62,6 @@ registerLocaleData(localeTr);
       provide: APP_CONFIG,
       useValue: environment,
     },
-    // provideAnimationsAsync(),
     { provide: LOCALE_ID, useValue: 'tr'},
     HttpClient
   ],

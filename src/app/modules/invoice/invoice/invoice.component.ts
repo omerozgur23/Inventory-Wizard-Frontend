@@ -4,7 +4,7 @@ import { GenericService } from '../../../core/service/generic.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
@@ -30,6 +30,8 @@ export class InvoiceComponent implements OnInit{
   currentPage = 1;
   totalInvoicesCount = 0;
   totalPages = 0;
+  isStatusTrue?: string;
+  isStatusFalse?: string;
   
   constructor(
     private invoiceService: InvoiceService,
@@ -38,10 +40,20 @@ export class InvoiceComponent implements OnInit{
     private toastr: ToastrService,
     private translateService: TranslateService,
     private authService: AuthService,
-  ){}
+  ){
+    this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.ngOnInit()
+    });
+  }
   
   ngOnInit(): void {
     this.loadInvoice();
+    this.updateStatusTranslations();
+  }
+
+  private updateStatusTranslations(): void {
+    this.isStatusTrue = this.translateService.instant('invoiceTableStatusTrue');
+    this.isStatusFalse = this.translateService.instant('invoiceTableStatusFalse');
   }
 
   setSelectedShelf(invoiceId: string) {
@@ -54,6 +66,7 @@ export class InvoiceComponent implements OnInit{
         this.tableData = this.genericService.uuidSplit(result.data);
         this.tableData.forEach(item => {
           item.orderId = '#' + item.orderId.split('-')[0];
+          item.status = item.status ? this.isStatusTrue : this.isStatusFalse;
         })
         this.totalInvoicesCount = result.count;
         this.totalPages = Math.ceil(this.totalInvoicesCount / this.itemPerPage) 
@@ -91,7 +104,10 @@ export class InvoiceComponent implements OnInit{
     this.router.navigate(['/home/invoice-details'], { queryParams: { id: invoiceId } });
   } 
 
-  openUpdateInvoiceDialog(){};
+  openUpdateInvoiceDialog(){
+    const invoiceUpdateButtonMessage = this.translateService.instant("invoiceUpdateButtonMessage");
+    this.toastr.info(invoiceUpdateButtonMessage)
+  };
 
   setSelectedInvoice(invoiceId: any){
     this.id = invoiceId;

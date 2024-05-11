@@ -3,13 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { EmployeeService } from '../service/employee.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
-import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateModalComponent } from '../../../shared/components/update-modal/update-modal.component';
 import { CreateEmployeeRequest } from '../dto/createEmployeeRequest';
 import { UpdateEmployeeRequest } from '../dto/updateEmployeeRequest';
-import { ActivatedRoute, Router } from '@angular/router';
-
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
 import { GetRolesResponse } from '../dto/getRolesResponse';
@@ -58,7 +55,7 @@ export class EmployeeListComponent implements OnInit{
   }
   
   loadEmployee() {
-    this.employeeService.getEmployeesByPage(this.currentPage, 18).subscribe({
+    this.employeeService.getEmployeesByPage(this.currentPage, this.itemPerPage).subscribe({
       next: (result) => {
         this.tableData = result.data;
         this.totalShelvesCount = result.count;
@@ -98,41 +95,41 @@ export class EmployeeListComponent implements OnInit{
   }
 
   openCreateEmployeeDialog(){
-      if (this.authService.isAdmin()) {
-    let dialog = this.dialog.open(CreateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+    if (this.authService.isAdmin()) {
+      let dialog = this.dialog.open(CreateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+      });
 
-    dialog.componentInstance.title = 'createEmployeeTitle';
-    dialog.componentInstance.inputLabels = ['employeeTableFirstName', 'employeeTableLastName', 'employeeTableEmail', 'employeeTablePassword'];
-    dialog.componentInstance.roleDropdownOptions = this.roleList;
-    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
-      dialog.componentInstance.addInput();
-    }
-    dialog.componentInstance.addRoleDropdown();
-
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-          const formValues = dialog.componentInstance.createForm.value.values;
-          const firstNameValue = formValues[0].inputValue;
-          const lastNameValue =  formValues[1].inputValue;
-          const emailValue =  formValues[2].inputValue;
-          const passwordValue =  formValues[3].inputValue;
-          const roleIdValue =  formValues[4].roleDropdownValue;
-          this.createEmployee(firstNameValue, lastNameValue, emailValue, passwordValue, roleIdValue);
-        }
-      },
-      error: (err) => {
-        console.log(err);
+      dialog.componentInstance.title = 'createEmployeeTitle';
+      dialog.componentInstance.inputLabels = ['employeeTableFirstName', 'employeeTableLastName', 'employeeTableEmail', 'employeeTablePassword'];
+      dialog.componentInstance.roleDropdownOptions = this.roleList;
+      for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+        dialog.componentInstance.addInput();
       }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  } 
+      dialog.componentInstance.addRoleDropdown();
+
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+            const formValues = dialog.componentInstance.createForm.value.values;
+            const firstNameValue = formValues[0].inputValue;
+            const lastNameValue =  formValues[1].inputValue;
+            const emailValue =  formValues[2].inputValue;
+            const passwordValue =  formValues[3].inputValue;
+            const roleIdValue =  formValues[4].roleDropdownValue;
+            this.createEmployee(firstNameValue, lastNameValue, emailValue, passwordValue, roleIdValue);
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    } 
   }
 
   createEmployee(firstName: string, lastName: string, email: string, password: string, roleId: string){
@@ -155,39 +152,46 @@ export class EmployeeListComponent implements OnInit{
   }
  
   openUpdateEmployeeDialog(item: any){
-      if (this.authService.isAdmin()) {
-    let dialog =  this.dialog.open(UpdateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+    if (this.authService.isAdmin()) {
+      let dialog =  this.dialog.open(UpdateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+      });
 
-    dialog.componentInstance.title='updateEmployeeTitle';
-    dialog.componentInstance.inputLabels=['employeeTableEmail', 'employeeTablePassword'];
-    dialog.componentInstance.values.push(new FormControl(item.email));
-    dialog.componentInstance.values.push(new FormControl("******"));
+      dialog.componentInstance.title='updateEmployeeTitle';
+      dialog.componentInstance.inputLabels=['employeeTableEmail', 'employeeTablePassword'];
+      dialog.componentInstance.roleDropdownOptions = this.roleList;
+      dialog.componentInstance.addInput(item.email);
+      dialog.componentInstance.addInput('*******');
+      dialog.componentInstance.addRoleDropdown();
 
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-        const emailValue =  dialog.componentInstance.updateForm.value.values[0];
-        const passwordValue =  dialog.componentInstance.updateForm.value.values[1];
-        this.updateEmployee(item.id, emailValue, passwordValue); 
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+          const emailValue =  dialog.componentInstance.updateForm.value.values[0].inputValue;
+          const passwordValue =  dialog.componentInstance.updateForm.value.values[1].inputValue;
+          const roleIdValue =  dialog.componentInstance.updateForm.value.values[2].roleDropdownValue;
+          this.updateEmployee(item.id, emailValue, passwordValue, roleIdValue); 
+          }
+        },
+        error: (err) => {
+          console.log(err);
         }
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  } 
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    } 
   }
 
-  updateEmployee(id: string, email: string, password: string){
+  updateEmployee(id: string, email: string, password: string, roleId: string){
     const successUpdatedMessage = this.translateService.instant("employeeUpdatedMessage");
-    const employee = new UpdateEmployeeRequest(id, email, password);
+
+    const role = new RoleDTO(roleId);
+    const rolesArray: RoleDTO[] = [role];
+
+    const employee = new UpdateEmployeeRequest(id, email, password, rolesArray);
     this.employeeService.updateEmployee(employee).subscribe({
       next: (resp) => {
         this.toastr.success(successUpdatedMessage);
@@ -201,24 +205,24 @@ export class EmployeeListComponent implements OnInit{
   }
 
   deleteEmployee(id: any) {
-      if (this.authService.isAdmin()) {
-    const successDeletedMessage = this.translateService.instant("employeeDeletedMessage");
-    this.employeeService.deleteEmployee(id).subscribe(
-      {
-        next: (result) => {
-          this.toastr.success(successDeletedMessage);
-          this.ngOnInit();
-        },
-        error: (err) => {
-          console.log(err);
-          this.genericService.showError("errorMessage");
+    if (this.authService.isAdmin()) {
+      const successDeletedMessage = this.translateService.instant("employeeDeletedMessage");
+      this.employeeService.deleteEmployee(id).subscribe(
+        {
+          next: (result) => {
+            this.toastr.success(successDeletedMessage);
+            this.ngOnInit();
+          },
+          error: (err) => {
+            console.log(err);
+            this.genericService.showError("errorMessage");
+          }
         }
-      }
-    );
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+      );
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   generatePDF() {

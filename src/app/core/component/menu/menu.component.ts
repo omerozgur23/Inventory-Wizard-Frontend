@@ -1,5 +1,5 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { Component, HostListener, Input } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from '../../service/login.service';
 
 @Component({
@@ -7,7 +7,6 @@ import { LoginService } from '../../service/login.service';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
 })
-
 
 export class MenuComponent {
   @Input() isExpanded = false;
@@ -37,8 +36,7 @@ export class MenuComponent {
     this.checkScreenSize();
   }
 
-
   checkScreenSize() {
-    this.isMobileView = window.innerWidth < 768; // 768 piksel genişlik küçükse mobil olarak kabul edelim
+    this.isMobileView = window.innerWidth < 768;
   }
 }
