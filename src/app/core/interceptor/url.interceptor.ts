@@ -1,8 +1,8 @@
-import { HttpErrorResponse, HttpHandler, HttpInterceptor, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
-import { Inject, Injectable, inject } from '@angular/core';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, catchError, switchMap, throwError } from 'rxjs';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { LoginService } from '../service/login.service';
 import { APP_CONFIG } from '../../app.config';
 
@@ -28,10 +28,8 @@ export const urlInterceptor: HttpInterceptorFn = (req, next) => {
       catchError((error) => {
         console.log(error.url);
         if (error instanceof HttpErrorResponse && error.url != appConfig.serverURL+ '/login' && error.status == 403) {
-          // login işlemi yapılmıyor ve token hatası döndü
           return loginService.reLogin().pipe(
             switchMap((token: any) => {
-              // toastrService.info("Tekrar giriş yapıldı");
               headers = headers.set('Authorization', 'Bearer ' + loginService.token);
               newReq = newReq.clone({
                 headers,

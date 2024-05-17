@@ -1,127 +1,66 @@
 .nb {
     background: #fff;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  }
+}
   
   
-  button:hover {
-    background-color: #cdcdcd;
-    border-radius: 5px;
-  }
+button:hover {
+  background-color: #cdcdcd;
+  border-radius: 5px;
+}
   
-  button:active {
-   background-color: #cdcdcd;
-   border-radius: 5px;
-  }
+button:active {
+ background-color: #cdcdcd;
+ border-radius: 5px;
+}
   
-  button{
-    border: none;
-  }
+button{
+  border: none;
+}
   
-  .nb-btn-span{
-    vertical-align: middle;
-  }
+.nb-btn-span{
+  vertical-align: middle;
+}
   
-  .nb-search-span{
-    margin-left: 7rem;
-    background-color: white;
-  }
+.nb-search-span{
+  margin-left: 3rem;
+  background-color: white;
+  border: 1px solid #5a55ff1a;
+  border-radius: 15px;
+  padding: 5px;
+}
   
-  .nb-search-input{
-    border: 1px solid #E2E5FF;
-    border-radius: 50px;
-  }
+.nb-search-input{
+  border: none;
+  background: none;
+}
   
-  .nb-search-input:active{
-    border: none;
-  }
 
-  /************************************************/
-/* this is a recreation of twitter search in css */
-// .form {
-//   --input-text-color: #000;
-//   --input-bg-color: #fff;
-//   --focus-input-bg-color: transparent;
-//   --text-color: #949faa;
-//   --active-color: #E2E5FF;
-//   --width-of-input: 200px;
-//   --inline-padding-of-input: 1.2em;
-//   --gap: 0.9rem;
-// }
-// // /* form style */
-// .form {
-//   font-size: 0.9rem;
-//   display: flex;
-//   gap: 0.5rem;
-//   align-items: center;
-//   width: var(--width-of-input);
-//   position: relative;
-//   isolation: isolate;
-// }
-// // /* a fancy bg for showing background and border when focus. */
-// .fancy-bg {
-//   position: absolute;
-//   width: 100%;
-//   inset: 0;
-//   background: var(--input-bg-color);
-//   border-radius: 30px;
-//   height: 100%;
-//   z-index: -1;
-//   pointer-events: none;
-//   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-// }
-// // /* label styling */
-// label {
-//   width: 100%;
-//   padding: 0.8em;
-//   height: 40px;
-//   padding-inline: var(--inline-padding-of-input);
-//   display: flex;
-//   align-items: center;
-// }
+.nb-search-input:focus{
+  border: none;
+  outline: none;
+}
 
-// // /* styling search-icon */
-// .search {
-//   position: absolute;
-//   fill: var(--text-color);
-//   left: var(--inline-padding-of-input);
-// }
+.lang-select{
+  outline: none; 
+  border: none;  
+}
 
-// // /* styling of input */
-// .input {
-//   color: var(--input-text-color);
-//   width: 100%;
-//   margin-inline: min(2em,calc(var(--inline-padding-of-input) + var(--gap)));
-//   background: none;
-//   border: none;
-// }
+.lang-select:focus{
+  outline: none; 
+  border: none;
+}
 
-// .input:focus {
-//   outline: none;
-// }
+.lang-select:hover{
+  outline: none; 
+  border: none;
+}
 
-// .input::placeholder {
-//   color: var(--text-color)
-// }
-// // /* input background change in focus */
-// .input:focus ~ .fancy-bg {
-//   border: 1px solid var(--active-color);
-//   background: var(--focus-input-bg-color);
-// }
-// // /* search icon color change in focus */
-// .input:focus ~ .search {
-//   fill: var(--active-color);
-// }
-// // /* showing close button when typing */
-// .input:valid ~ .close-btn {
-//   opacity: 1;
-//   visibility: visible;
-// }
-// // /* this is for the default background in input,when selecting autofill options -- you can remove this code if you do not want to override the browser style.  */
-// input:-webkit-autofill,
-// input:-webkit-autofill:hover,
-// input:-webkit-autofill:focus,
-// input:-webkit-autofill:active {
-//   -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
-//   -webkit-transition-delay: 9999s;
-// }
+@media (max-width: 903px) {
+  .nb-items{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
+}

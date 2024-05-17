@@ -10,10 +10,7 @@ import { Router } from '@angular/router';
 })
 export class ReportComponent implements OnInit{
 
-  // Total Sales
   totalSales = 0;
-
-  // Total Sales Product Cost
   totalSalesCost = 0;
   winning = 0;
 

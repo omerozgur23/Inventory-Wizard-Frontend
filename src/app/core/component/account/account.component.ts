@@ -35,10 +35,8 @@ export class AccountComponent {
       },
       error: (error) => {
         if (error.status === 400) {
-          // Eski şifre yanlış ise
           this.accountForm.get('lastPassword')!.setErrors({ incorrectPassword: true });
         } else {
-          // Diğer hata durumları için genel hata mesajı
           this.toastr.error("Şifre değiştirme işlemi başarısız oldu.");
         }
       }

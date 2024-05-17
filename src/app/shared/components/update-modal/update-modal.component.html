@@ -2,13 +2,55 @@
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="updateForm">
     <div class="formBox form-group" formArrayName="values">
-      <div
-        class="inputBox w100"
-        *ngFor="let value of values.controls; let i = index"
-      >
-        <input formControlName="{{ i }}" required style="margin-top: 5px" />
-        <label [for]="'input_' + i">{{ inputLabels[i] | translate }}</label>
+      @for (control of values.controls; track $index) {
+      <div class="inputBox w100" [formGroupName]="$index">
+        @if (isInputControl(control)) {
+        <div>
+          <input
+            [formControlName]="'inputValue'"
+            required
+            style="margin-top: 5px"
+          />
+          <label [for]="'input_' + $index">{{
+            inputLabels[$index] | translate
+          }}</label>
+        </div>
+        } @if (isRoleDropdownControl(control)) {
+        <div class="dropdown">
+          <select class="form-select" [formControlName]="'roleDropdownValue'">
+            <option selected>Role List</option>
+            @for (item of roleDropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.role }}</option>
+            }
+          </select>
+        </div>
+        } @if (isCategoryDropdownControl(control)) {
+        <div class="dropdown">
+          <select
+            class="form-select"
+            [formControlName]="'categoryDropdownValue'"
+          >
+            <option selected>Category List</option>
+            @for (item of categoryDropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.name }}</option>
+            }
+          </select>
+        </div>
+        } @if (isSupplierDropdownControl(control)) {
+        <div class="dropdown">
+          <select
+            class="form-select"
+            [formControlName]="'supplierDropdownValue'"
+          >
+            <option selected>Category List</option>
+            @for (item of supplierDropdownOptions; track $index) {
+            <option value="{{ item.id }}">{{ item.companyName }}</option>
+            }
+          </select>
+        </div>
+        }
       </div>
+      }
     </div>
   </form>
 </mat-dialog-content>
