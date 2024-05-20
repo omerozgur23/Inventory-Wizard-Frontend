@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ShelfService } from '../service/shelf.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateShelfRequest } from '../dto/createShelfRequest';
@@ -13,6 +13,9 @@ import { AcceptProductModalComponent } from '../../../shared/components/accept-p
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/service/auth.service';
+import { SearchShelfRequest } from '../dto/searchShelfRequest';
+import { DeleteShelfRequest } from '../dto/deleteShelfRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
 
 @Component({
   selector: 'app-shelf-list',
@@ -73,7 +76,7 @@ export class ShelfListComponent implements OnInit{
   }
 
   loadShelves() {
-    this.shelfService.getShelvesByPage(this.currentPage, this.itemPerPage).subscribe({
+    this.shelfService.getShelvesByPage(new PaginationRequest(this.currentPage, this.itemPerPage)).subscribe({
       next: (result) => {
         this.tableData = this.genericService.uuidSplit(result.data);
         this.totalShelvesCount = result.count;
@@ -162,7 +165,7 @@ export class ShelfListComponent implements OnInit{
 
       dialog.componentInstance.title='updateShelfTitle';
       dialog.componentInstance.inputLabels=['shelfTableCapacity'];
-      dialog.componentInstance.addInput(item.capacity);
+      dialog.componentInstance.addInput(item.capacity, [Validators.required, Validators.max(10), Validators.min(0)]);
 
       dialog.afterClosed().subscribe({
         next: (data) => {
@@ -202,7 +205,8 @@ export class ShelfListComponent implements OnInit{
   deleteShelf(id: any){
     if (this.authService.isAdmin()) {
       const successDeletedMessage = this.translateService.instant("shelfDeletedMessage");
-      this.shelfService.deleteShelf(id).subscribe(
+      const shelf = new DeleteShelfRequest(id);
+      this.shelfService.deleteShelf(shelf).subscribe(
         {
           next: () =>{
             this.toastr.success(successDeletedMessage)
@@ -271,10 +275,11 @@ export class ShelfListComponent implements OnInit{
   
   onSearchInputChange(searchKeyword: string) {
     if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      const keyword = new SearchShelfRequest(searchKeyword);
       setTimeout(() => 
-        this.shelfService.search(searchKeyword).subscribe({
+        this.shelfService.search(keyword).subscribe({
           next: (result) => {
-            this.tableData = this.genericService.uuidSplit(result);
+            this.tableData = this.genericService.uuidSplit(result.data);
           },
           error: (err) => {
             console.log(err);

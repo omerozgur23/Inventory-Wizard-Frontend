@@ -10,6 +10,10 @@ import { CreateSupplierRequest } from '../dto/createSupplierRequest';
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/service/auth.service';
+import { SearchSupplierRequest } from '../dto/searchSupplierRequest';
+import { DeleteSupplierRequest } from '../dto/deleteSupplierRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-supplier-list',
@@ -58,7 +62,7 @@ export class SupplierListComponent implements OnInit{
   }
 
   loadSupplier() {
-    this.supplierService.getSuppliersByPage(this.currentPage, this.itemPerPage).subscribe({
+    this.supplierService.getSuppliersByPage(new PaginationRequest(this.currentPage, this.itemPerPage)).subscribe({
       next: (result) => {
         this.tableData = result.data;
         this.totalShelvesCount = result.count;
@@ -140,11 +144,11 @@ export class SupplierListComponent implements OnInit{
 
       dialog.componentInstance.title='updateSupplierTitle';
       dialog.componentInstance.inputLabels = ['supplierTableCompanyName', 'supplierTableCompanyOfficial', 'supplierTableOfficialEmail', 'supplierTableOfficialPhone', 'supplierTableAddress'];
-      dialog.componentInstance.addInput(item.companyName);
-      dialog.componentInstance.addInput(item.contactName);
-      dialog.componentInstance.addInput(item.contactEmail);
-      dialog.componentInstance.addInput(item.contactPhone);
-      dialog.componentInstance.addInput(item.address);
+      dialog.componentInstance.addInput(item.companyName, [Validators.required]);
+      dialog.componentInstance.addInput(item.contactName, [Validators.required]);
+      dialog.componentInstance.addInput(item.contactEmail, [Validators.required, Validators.email]);
+      dialog.componentInstance.addInput(item.contactPhone, [Validators.required]);
+      dialog.componentInstance.addInput(item.address, [Validators.required]);
 
       dialog.afterClosed().subscribe({
         next: (data) => {
@@ -182,7 +186,8 @@ export class SupplierListComponent implements OnInit{
   deleteSupplier(id: any) {
     if (this.authService.isAdmin()) {
       const successDeletedMessage = this.translateService.instant("supplierDeletedMessage");
-      this.supplierService.deleteSupplier(id).subscribe({
+      const supplier = new DeleteSupplierRequest(id);
+      this.supplierService.deleteSupplier(supplier).subscribe({
         next: (result) => {
           this.toastr.success(successDeletedMessage)
           this.ngOnInit();
@@ -206,10 +211,11 @@ export class SupplierListComponent implements OnInit{
   
   onSearchInputChange(searchKeyword: string) {
     if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      const keyword = new SearchSupplierRequest(searchKeyword);
       setTimeout(() => 
-        this.supplierService.search(searchKeyword).subscribe({
+        this.supplierService.search(keyword).subscribe({
           next: (result) => {
-            this.tableData = result;
+            this.tableData = result.data;
           },
           error: (err) => {
             console.log(err);

@@ -100,7 +100,7 @@
     "orderTableTotalPrice": "Order Amount",
     "orderTableStatus": "Status",
     "orderTableStatusTrue": "Active",
-    "orderTableStatusFalse": "Canceled",
+    "orderTableStatusFalse": "Inactive",
     "orderTableInvoiceGenerated": "Invoice Status",
     "orderTableOrderDetails": "Order Detail",
     "orderPeace": "Order Peace",
@@ -122,6 +122,7 @@
     "customerTableAddress": "Address",
     "createCustomerTitle": "New Customer",
     "updateCustomerTitle": "Update Customer",
+    "selectCategoryDropdown": "Select a Category",
 
     "deleteSupplierDialogDescription": "Are you sure you want to delete the supplier?",
     "supplierTableTitle": "Suppliers",
@@ -134,6 +135,7 @@
     "createSupplierTitle": "New Supplier",
     "updateSupplierTitle": "Update Supplier",
     "supplierPdfTitle": "Supplier List",
+    "selectSupplierDropdown": "Select a Supplier",
 
     "deleteEmployeeDialogDescription": "Are you sure you want to delete the employee?",
     "employeeTableTitle": "Employees",
@@ -144,6 +146,7 @@
     "employeeTableRoles": "Roles",
     "createEmployeeTitle": "New Employee",
     "updateEmployeeTitle": "Update Employee",
+    "selectRolesDropdown": "Select Roles",
 
     "invoiceCancellationDialogDescription": "Are you sure you want to cancel the invoice?",
     "invoiceTableTitle": "Invoices",
@@ -223,6 +226,7 @@
     "employeeCreatedMessage": "Employee is created",
     "employeeUpdatedMessage": "Employee is updated",
     "employeeDeletedMessage": "Employee is deleted",
+    "adminCannotDeleteItselfMessage": "Admin cannot delete itself",
 
     "customerCreatedMessage": "Employee is created",
     "customerUpdatedMessage": "Employee is updated",
@@ -232,5 +236,7 @@
     "createdInvoiceInfoMessage": "This order already has an invoice",
     "cancellationInvoiceErrorMessage": "This invoice has already been canceled",
     "cancellationInvoiceMessage": "Invoice canceled",
-    "invoiceUpdateButtonMessage": "Invoices cannot be updated!"
+    "invoiceUpdateButtonMessage": "Invoices cannot be updated!",
+
+    "validEmpty": "Cannot be empty."
 }

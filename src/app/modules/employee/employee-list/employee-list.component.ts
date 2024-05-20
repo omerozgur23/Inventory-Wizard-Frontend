@@ -12,6 +12,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { GetRolesResponse } from '../dto/getRolesResponse';
 import { RoleDTO } from '../dto/RoleDTO';
 import { AuthService } from '../../../core/service/auth.service';
+import { SearchEmployeeRequest } from '../dto/searchEmployeeRequest';
+import { DeleteEmployeeRequest } from '../dto/deleteEmployeeRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-employee-list',
@@ -35,6 +39,7 @@ export class EmployeeListComponent implements OnInit{
   totalShelvesCount = 0;
   totalPages = 0;
   roleList: GetRolesResponse[] = [];
+  selectedEmployee: any;
 
   constructor(
     private employeeService: EmployeeService,
@@ -47,6 +52,8 @@ export class EmployeeListComponent implements OnInit{
 
   setSelectedEmployee(employeeId: string) {
     this.id = employeeId;
+    const employee = this.tableData.find(emp => emp.id === employeeId);
+    this.selectedEmployee = employee;
   }
 
   ngOnInit(): void {
@@ -55,7 +62,7 @@ export class EmployeeListComponent implements OnInit{
   }
   
   loadEmployee() {
-    this.employeeService.getEmployeesByPage(this.currentPage, this.itemPerPage).subscribe({
+    this.employeeService.getEmployeesByPage(new PaginationRequest(this.currentPage, this.itemPerPage)).subscribe({
       next: (result) => {
         this.tableData = result.data;
         this.totalShelvesCount = result.count;
@@ -103,11 +110,12 @@ export class EmployeeListComponent implements OnInit{
       });
 
       dialog.componentInstance.title = 'createEmployeeTitle';
-      dialog.componentInstance.inputLabels = ['employeeTableFirstName', 'employeeTableLastName', 'employeeTableEmail', 'employeeTablePassword'];
+      dialog.componentInstance.inputLabels = ['employeeTableFirstName', 'employeeTableLastName', 'employeeTableEmail'];
       dialog.componentInstance.roleDropdownOptions = this.roleList;
       for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
         dialog.componentInstance.addInput();
       }
+      dialog.componentInstance.addPasswordInput();
       dialog.componentInstance.addRoleDropdown();
 
       dialog.afterClosed().subscribe({
@@ -117,8 +125,8 @@ export class EmployeeListComponent implements OnInit{
             const firstNameValue = formValues[0].inputValue;
             const lastNameValue =  formValues[1].inputValue;
             const emailValue =  formValues[2].inputValue;
-            const passwordValue =  formValues[3].inputValue;
-            const roleIdValue =  formValues[4].roleDropdownValue;
+            const passwordValue =  formValues[3].passwordInputValue;
+            const roleIdValue =  formValues[4].roleDropdownValue.id;
             this.createEmployee(firstNameValue, lastNameValue, emailValue, passwordValue, roleIdValue);
           }
         },
@@ -160,19 +168,19 @@ export class EmployeeListComponent implements OnInit{
       });
 
       dialog.componentInstance.title='updateEmployeeTitle';
-      dialog.componentInstance.inputLabels=['employeeTableEmail', 'employeeTablePassword'];
+      dialog.componentInstance.inputLabels=['employeeTableEmail'];
       dialog.componentInstance.roleDropdownOptions = this.roleList;
-      dialog.componentInstance.addInput(item.email);
-      dialog.componentInstance.addInput('*******');
+      dialog.componentInstance.addInput(item.email, [Validators.required, Validators.email]);
+      dialog.componentInstance.addPasswordInput('');
       dialog.componentInstance.addRoleDropdown();
 
       dialog.afterClosed().subscribe({
         next: (data) => {
           if (data?.result === 'yes') {
           const emailValue =  dialog.componentInstance.updateForm.value.values[0].inputValue;
-          const passwordValue =  dialog.componentInstance.updateForm.value.values[1].inputValue;
-          const roleIdValue =  dialog.componentInstance.updateForm.value.values[2].roleDropdownValue;
-          this.updateEmployee(item.id, emailValue, passwordValue, roleIdValue); 
+          const passwordValue =  dialog.componentInstance.updateForm.value.values[1].passwordInputValue;
+          const roleIdValue =  dialog.componentInstance.updateForm.value.values[2].roleDropdownValue.id;
+          this.updateEmployee(item.id, emailValue, passwordValue, roleIdValue);
           }
         },
         error: (err) => {
@@ -206,8 +214,14 @@ export class EmployeeListComponent implements OnInit{
 
   deleteEmployee(id: any) {
     if (this.authService.isAdmin()) {
+      const loggedInUserEmail = this.authService.getLoggedInUserEmail();
       const successDeletedMessage = this.translateService.instant("employeeDeletedMessage");
-      this.employeeService.deleteEmployee(id).subscribe(
+      const employee = new DeleteEmployeeRequest(id);
+      if (loggedInUserEmail === this.selectedEmployee.email) {
+        this.genericService.showError("adminCannotDeleteItselfMessage");
+        return;
+      }
+      this.employeeService.deleteEmployee(employee).subscribe(
         {
           next: (result) => {
             this.toastr.success(successDeletedMessage);
@@ -233,10 +247,11 @@ export class EmployeeListComponent implements OnInit{
 
   onSearchInputChange(searchKeyword: string) {
     if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      const keyword = new SearchEmployeeRequest(searchKeyword);
       setTimeout(() => 
-        this.employeeService.search(searchKeyword).subscribe({
+        this.employeeService.search(keyword).subscribe({
           next: (result) => {
-            this.tableData = result;
+            this.tableData = result.data;
           },
           error: (err) => {
             console.log(err);

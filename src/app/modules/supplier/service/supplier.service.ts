@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { GetSupplierResponse } from '../dto/getSupplierResponse';
 import { UpdateSupplierRequest } from '../dto/updateSupplierRequest';
 import { CreateSupplierRequest } from '../dto/createSupplierRequest';
+import { SearchSupplierRequest } from '../dto/searchSupplierRequest';
+import { DeleteSupplierRequest } from '../dto/deleteSupplierRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +24,8 @@ export class SupplierService {
     return this.httpClient.get<GetSupplierResponse>('/supplier/getall');
   }
 
-  getSuppliersByPage(pageNo: number, pageSize: number): Observable<GetSupplierResponse> {
-    return this.httpClient.get<GetSupplierResponse>(`/supplier/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getSuppliersByPage(request: PaginationRequest): Observable<GetSupplierResponse> {
+    return this.httpClient.post<GetSupplierResponse>(`/supplier/getallByPage`, request);
   }
 
   createSupplier(supplier: CreateSupplierRequest):Observable<CreateSupplierRequest> {
@@ -33,12 +36,11 @@ export class SupplierService {
     return this.httpClient.put<UpdateSupplierRequest>('/supplier/update', supplier, this.httpOptions);
   }
 
-  deleteSupplier(id: string):Observable<any> {
-    return this.httpClient.post('/supplier/delete', JSON.stringify(id), this.httpOptions);
+  deleteSupplier(supplier: DeleteSupplierRequest):Observable<DeleteSupplierRequest> {
+    return this.httpClient.post<DeleteSupplierRequest>('/supplier/delete', supplier, this.httpOptions);
   }
 
-  search(keyword: string): Observable<GetSupplierResponse[]> {
-    const params = new HttpParams().set('keyword', keyword);
-    return this.httpClient.get<GetSupplierResponse[]>(`/supplier/search`, { params: params });
+  search(keyword: SearchSupplierRequest): Observable<GetSupplierResponse> {
+    return this.httpClient.post<GetSupplierResponse>(`/supplier/search`, keyword );
   }
 }
