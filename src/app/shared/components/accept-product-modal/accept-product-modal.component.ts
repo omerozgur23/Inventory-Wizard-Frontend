@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GetProductResponse } from '../../../modules/product/dto/getProductResponse';
 
 @Component({
   selector: 'app-accept-product-modal',
@@ -12,6 +11,7 @@ export class AcceptProductModalComponent {
   title = '';
   productList: any[] = [];
   acceptProductForm: FormGroup;
+  selectedProduct: any;
 
   constructor(
     private dialogRef: MatDialogRef<AcceptProductModalComponent>,
@@ -29,7 +29,17 @@ export class AcceptProductModalComponent {
 
   create() {
     if (this.acceptProductForm.valid) {
-      this.dialogRef.close({ result: 'yes', formValue: this.acceptProductForm.value });
+      // this.dialogRef.close({ result: 'yes', formValue: this.acceptProductForm.value });
+      const formValue = this.acceptProductForm.value;
+      const selectedProductId = this.selectedProduct ? this.selectedProduct.id : null;
+      const result = {
+        result: 'yes',
+        formValue: {
+          productId: selectedProductId,
+          count: formValue.count
+        }
+      };
+      this.dialogRef.close(result);
     }
   }
 

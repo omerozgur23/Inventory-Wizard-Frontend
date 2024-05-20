@@ -90,6 +90,7 @@
     "productSaleInputQuantity": "Adet",
     "productSaleInputOrderNote": "Sipariş Notu",
     "productSaleDescOrderNote": "Sipariş notunuzu buraya yazabilirsiniz",
+    "productSaleFormValid": "Lütfen formu eksiksiz doldurun",
 
     "orderTableTitle": "Siparişler",
     "orderTableOrderCode": "Sipariş Kodu",
@@ -98,6 +99,8 @@
     "orderTableDate": "Sipariş Tarihi",
     "orderTableTotalPrice": "Sipariş Tutarı",
     "orderTableStatus": "Durum",
+    "orderTableStatusTrue": "Aktif",
+    "orderTableStatusFalse": "İptal",
     "orderTableInvoiceGenerated": "Fatura Durumu",
     "orderTableOrderDetails": "Sipariş Detayı",
     "orderPeace": "Sipariş Adedi",
@@ -119,6 +122,7 @@
     "customerTableAddress": "Adres",
     "createCustomerTitle": "Yeni Müşteri",
     "updateCustomerTitle": "Müşteri Güncelle",
+    "selectCategoryDropdown": "Kategory Seçiniz",
 
     "deleteSupplierDialogDescription": "Tedarikçi kaydını silmek istediğinizden emin misiniz?",
     "supplierTableTitle": "Tedarikçiler",
@@ -131,6 +135,7 @@
     "createSupplierTitle": "Yeni Tedarikçi",
     "updateSupplierTitle": "Tedarikçi Güncelle",
     "supplierPdfTitle": "Tedarikçi Listesi",
+    "selectSupplierDropdown": "Tedarikçi Seçiniz",
 
     "deleteEmployeeDialogDescription": "Personel kaydını silmek istediğinizden emin misiniz?",
     "employeeTableTitle": "Personeller",
@@ -141,6 +146,7 @@
     "employeeTableRoles": "Roller",
     "createEmployeeTitle": "Yeni Personel",
     "updateEmployeeTitle": "Personel Güncelle",
+    "selectRolesDropdown": "Rol Seçiniz",
 
     "invoiceCancellationDialogDescription": "Faturayı iptal etmek istediğinizden emin misiniz?",
     "invoiceTableTitle": "Faturalar",
@@ -150,6 +156,8 @@
     "invoiceTableTotalAmount": "Fatura Tutarı",
     "invoiceTableWaybillDate": "Fatura Tarihi",
     "invoiceTableStatus": "Durum",
+    "invoiceTableStatusTrue": "Aktif",
+    "invoiceTableStatusFalse": "İptal",
     "invoiceTableInvoiceDetails": "Fatura Detayı",
 
     "invoiceDetailsTableTitle": "Fatura Detayı",
@@ -172,7 +180,6 @@
     "errorPageP": "Aradığınız sayfa mevcut değil." ,
 
     "loginPageH2": "Hesabınıza giriş yapın",
-    "loginPageForgettenPassword": "Şİfremi unuttum",
     "loginPagePassword": "Şifre",
     "loginPageEmail": "örnek@gmail.com",
 
@@ -182,6 +189,10 @@
     "reportTotalSales": "Toplam Ciro",
     "reportTotalWinning": "Toplam Kâr",
     "repotTotalSalesCost": "Toplam Satış Maliyeti",
+    "reportRecentOrder": "Son Siparişler",
+    "reportTopOrderers": "En Çok Sipariş Verenler",
+    "mostOrderSenders": "En Çok Sipariş Gönderenler",
+    "bestSellingProducts": "Çok Satan Ürünler",
 
     "errorMessage": "Hata oluştu",
     "authorizationError": "Bu işlem için yetkiniz yok",
@@ -196,7 +207,7 @@
     "shelfUpdatedMessage": "Raf güncellendi",
     "shelfDeletedMessage": "Raf silindi",
     "successAcceptProductMessage": "Ürün girişi yapıldı",
-    "createShelfErrorCapacity": "Raf kapasitesi maksimum 5 olabilir!",
+    "createShelfErrorCapacity": "Raf kapasitesi maksimum 10 olabilir!",
     "createShelfErrorCount": "Tek seferde maksimum 10 raf oluşturulabilir!",
 
     "supplierCreatedMessage": "Tedarikçi kaydı oluşturuldu",
@@ -215,6 +226,7 @@
     "employeeCreatedMessage": "Personel kaydı oluşturuldu",
     "employeeUpdatedMessage": "Personel güncellendi",
     "employeeDeletedMessage": "Personel silindi",
+    "adminCannotDeleteItselfMessage": "Admin kendisini silemez",
 
     "customerCreatedMessage": "Müşteri kaydı oluşturuldu",
     "customerUpdatedMessage": "Müşteri güncellendi",
@@ -223,5 +235,8 @@
     "invoiceCreatedMessage": "Fatura Oluşturudu",
     "createdInvoiceInfoMessage": "Bu siparişin faturası zaten var",
     "cancellationInvoiceErrorMessage": "Bu fatura zaten iptal edildi",
-    "cancellationInvoiceMessage": "Fatura iptal edildi"
+    "cancellationInvoiceMessage": "Fatura iptal edildi",
+    "invoiceUpdateButtonMessage": "Faturalara güncellenemez!",
+
+    "validEmpty": "boş geçilemez."
 }

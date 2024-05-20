@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { Component, HostListener, Input } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from '../../service/login.service';
 
 @Component({
@@ -8,15 +8,19 @@ import { LoginService } from '../../service/login.service';
   styleUrl: './menu.component.scss'
 })
 
-
 export class MenuComponent {
   @Input() isExpanded = false;
+  isMobileView: boolean = false;
   
   constructor(
     private loginService: LoginService,
     private router: Router,
     public route: ActivatedRoute,
-  ) {}
+    
+  ) {
+
+    this.checkScreenSize();
+  }
 
   logout(){
     this.loginService.logout();
@@ -25,5 +29,14 @@ export class MenuComponent {
 
   toggleSidebarr() {
     this.isExpanded = !this.isExpanded;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobileView = window.innerWidth < 768;
   }
 }

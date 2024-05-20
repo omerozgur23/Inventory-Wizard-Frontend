@@ -32,13 +32,16 @@ export class AccountComponent {
       next: (sonuc) => {
         console.log(sonuc);
         this.toastr.info("Şifre değiştirilmiştir.");
+        this.accountForm.reset({
+          lastPassword: "",
+          password: "",
+          password2: "",
+        })
       },
       error: (error) => {
         if (error.status === 400) {
-          // Eski şifre yanlış ise
           this.accountForm.get('lastPassword')!.setErrors({ incorrectPassword: true });
         } else {
-          // Diğer hata durumları için genel hata mesajı
           this.toastr.error("Şifre değiştirme işlemi başarısız oldu.");
         }
       }

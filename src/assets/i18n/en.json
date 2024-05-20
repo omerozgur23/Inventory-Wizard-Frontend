@@ -66,7 +66,7 @@
     "shelfTableProductQuantity": "Product Quantity",
     "shelfTableCapacity": "Capacity",
     "createShelfTitle": "New Shelf",
-    "shelfInputsPeace": "Peace",
+    "shelfInputsPeace": "Piece",
     "updateShelfTitle": "Update Shelf",
     "acceptProductTitle": "Product Entry",
     "shelfDropdownsProductList": "Select Product",
@@ -90,6 +90,7 @@
     "productSaleInputQuantity": "Quantity",
     "productSaleInputOrderNote": "Order Note",
     "productSaleDescOrderNote": "You can write your order note here",
+    "productSaleFormValid": "Please fill out the form completely",
 
     "orderTableTitle": "Orders",
     "orderTableOrderCode": "Order Code",
@@ -98,6 +99,8 @@
     "orderTableDate": "Order Date",
     "orderTableTotalPrice": "Order Amount",
     "orderTableStatus": "Status",
+    "orderTableStatusTrue": "Active",
+    "orderTableStatusFalse": "Inactive",
     "orderTableInvoiceGenerated": "Invoice Status",
     "orderTableOrderDetails": "Order Detail",
     "orderPeace": "Order Peace",
@@ -119,6 +122,7 @@
     "customerTableAddress": "Address",
     "createCustomerTitle": "New Customer",
     "updateCustomerTitle": "Update Customer",
+    "selectCategoryDropdown": "Select a Category",
 
     "deleteSupplierDialogDescription": "Are you sure you want to delete the supplier?",
     "supplierTableTitle": "Suppliers",
@@ -131,6 +135,7 @@
     "createSupplierTitle": "New Supplier",
     "updateSupplierTitle": "Update Supplier",
     "supplierPdfTitle": "Supplier List",
+    "selectSupplierDropdown": "Select a Supplier",
 
     "deleteEmployeeDialogDescription": "Are you sure you want to delete the employee?",
     "employeeTableTitle": "Employees",
@@ -141,6 +146,7 @@
     "employeeTableRoles": "Roles",
     "createEmployeeTitle": "New Employee",
     "updateEmployeeTitle": "Update Employee",
+    "selectRolesDropdown": "Select Roles",
 
     "invoiceCancellationDialogDescription": "Are you sure you want to cancel the invoice?",
     "invoiceTableTitle": "Invoices",
@@ -150,6 +156,8 @@
     "invoiceTableTotalAmount": "Invoice Amount",
     "invoiceTableWaybillDate": "Invoice Date",
     "invoiceTableStatus": "Status",
+    "invoiceTableStatusTrue": "Active",
+    "invoiceTableStatusFalse": "Canceled",
     "invoiceTableInvoiceDetails": "Invoice Details",
 
     "invoiceDetailsTableTitle": "Invoice Detail",
@@ -172,7 +180,6 @@
     "errorPageP": "The page you’re looking for doesn’t exist.",
 
     "loginPageH2": "Sign in to your account",
-    "loginPageForgettenPassword": "Forgetten Password",
     "loginPagePassword": "Password",
     "loginPageEmail": "example@gmail.com",
 
@@ -182,6 +189,10 @@
     "reportTotalSales": "Total Sales",
     "reportTotalWinning": "Total Winning",
     "repotTotalSalesCost": "Total Sales Cost",
+    "reportRecentOrder": "Recent Orders",
+    "reportTopOrderers": "Top Orderers",
+    "mostOrderSenders": "Most Order Senders",
+    "bestSellingProducts": "Best Selling Products",
 
     "errorMessage": "An error occurred",
     "authorizationError": "You are not authorized for this operation",
@@ -196,7 +207,7 @@
     "shelfUpdatedMessage": "Shelf is updated",
     "shelfDeletedMessage": "Shelf is deleted",
     "successAcceptProductMessage": "Product entry has been made",
-    "createShelfErrorCapacity": "Shelf capacity can be a maximum of 5!",
+    "createShelfErrorCapacity": "Shelf capacity can be a maximum of 10!",
     "createShelfErrorCount": "A maximum of 10 shelves can be created at once!",
 
     "supplierCreatedMessage": "Supplier is created",
@@ -215,6 +226,7 @@
     "employeeCreatedMessage": "Employee is created",
     "employeeUpdatedMessage": "Employee is updated",
     "employeeDeletedMessage": "Employee is deleted",
+    "adminCannotDeleteItselfMessage": "Admin cannot delete itself",
 
     "customerCreatedMessage": "Employee is created",
     "customerUpdatedMessage": "Employee is updated",
@@ -223,5 +235,8 @@
     "invoiceCreatedMessage": "Invoice Created",
     "createdInvoiceInfoMessage": "This order already has an invoice",
     "cancellationInvoiceErrorMessage": "This invoice has already been canceled",
-    "cancellationInvoiceMessage": "Invoice canceled"
+    "cancellationInvoiceMessage": "Invoice canceled",
+    "invoiceUpdateButtonMessage": "Invoices cannot be updated!",
+
+    "validEmpty": "Cannot be empty."
 }

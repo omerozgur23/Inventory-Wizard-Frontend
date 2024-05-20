@@ -5,6 +5,9 @@ import { Observable } from 'rxjs';
 import { CreateEmployeeRequest } from '../dto/createEmployeeRequest';
 import { UpdateEmployeeRequest } from '../dto/updateEmployeeRequest';
 import { GetRolesResponse } from '../dto/getRolesResponse';
+import { SearchEmployeeRequest } from '../dto/searchEmployeeRequest';
+import { DeleteEmployeeRequest } from '../dto/deleteEmployeeRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +25,8 @@ export class EmployeeService {
     return this.httpClient.get<GetEmployeeResponse>('/user/getall');
   }
 
-  getEmployeesByPage(pageNo: number, pageSize: number): Observable<GetEmployeeResponse> {
-    return this.httpClient.get<GetEmployeeResponse>(`/user/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getEmployeesByPage(request: PaginationRequest): Observable<GetEmployeeResponse> {
+    return this.httpClient.post<GetEmployeeResponse>(`/user/getallByPage`, request);
   }
 
   createEmployee(employee: CreateEmployeeRequest):Observable<CreateEmployeeRequest>{
@@ -34,13 +37,13 @@ export class EmployeeService {
     return this.httpClient.put<UpdateEmployeeRequest>('/user/update', employee, this.httpOptions);
   }
 
-  deleteEmployee(id: string):Observable<any>{
-    return this.httpClient.post('/user/delete', JSON.stringify(id), this.httpOptions);
+  deleteEmployee(employee: DeleteEmployeeRequest):Observable<DeleteEmployeeRequest>{
+    return this.httpClient.post<DeleteEmployeeRequest>('/user/delete', employee, this.httpOptions);
   }
 
-  search(keyword: string): Observable<GetEmployeeResponse[]> {
-    const params = new HttpParams().set('keyword', keyword);
-    return this.httpClient.get<GetEmployeeResponse[]>(`/user/search`, { params: params });
+  search(keyword: SearchEmployeeRequest): Observable<GetEmployeeResponse> {
+    // const params = new HttpParams().set('keyword', keyword);
+    return this.httpClient.post<GetEmployeeResponse>(`/user/search`, keyword);
   }
 
   getAllRoles(): Observable<GetRolesResponse[]>{

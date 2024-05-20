@@ -1,10 +1,9 @@
 import { UpdateModalComponent } from './../../../shared/components/update-modal/update-modal.component';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ShelfService } from '../service/shelf.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateModalComponent } from '../../../shared/components/create-modal/create-modal.component';
 import { CreateShelfRequest } from '../dto/createShelfRequest';
@@ -14,6 +13,9 @@ import { AcceptProductModalComponent } from '../../../shared/components/accept-p
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/service/auth.service';
+import { SearchShelfRequest } from '../dto/searchShelfRequest';
+import { DeleteShelfRequest } from '../dto/deleteShelfRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
 
 @Component({
   selector: 'app-shelf-list',
@@ -74,7 +76,7 @@ export class ShelfListComponent implements OnInit{
   }
 
   loadShelves() {
-    this.shelfService.getShelvesByPage(this.currentPage, this.itemPerPage).subscribe({
+    this.shelfService.getShelvesByPage(new PaginationRequest(this.currentPage, this.itemPerPage)).subscribe({
       next: (result) => {
         this.tableData = this.genericService.uuidSplit(result.data);
         this.totalShelvesCount = result.count;
@@ -103,33 +105,33 @@ export class ShelfListComponent implements OnInit{
   }
 
   openCreateShelfDialog(){
-      if (this.authService.isAdmin()) {
-    let dialog = this.dialog.open(CreateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+    if (this.authService.isAdmin()) {
+      let dialog = this.dialog.open(CreateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+      });
 
-    dialog.componentInstance.title = 'createShelfTitle';
-    dialog.componentInstance.inputLabels = ['shelfTableCapacity', 'shelfInputsPeace'];
-    for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
-      dialog.componentInstance.addInput();
-    }
-
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-          const formValues = dialog.componentInstance.createForm.value.values;
-          const capacityValue = formValues[0].inputValue;
-          const countValue = formValues[1].inputValue;
-          this.createShelf(capacityValue, countValue);
-        }
+      dialog.componentInstance.title = 'createShelfTitle';
+      dialog.componentInstance.inputLabels = ['shelfTableCapacity', 'shelfInputsPeace'];
+      for (let i = 0; i < dialog.componentInstance.inputLabels.length; i++) {
+        dialog.componentInstance.addInput();
       }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+            const formValues = dialog.componentInstance.createForm.value.values;
+            const capacityValue = formValues[0].inputValue;
+            const countValue = formValues[1].inputValue;
+            this.createShelf(capacityValue, countValue);
+          }
+        }
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   createShelf(capacity: number, count: number){
@@ -143,9 +145,9 @@ export class ShelfListComponent implements OnInit{
         this.loadShelves();
       },
       error: (err) => {    
-        if (capacity > 5) {
+        if (capacity > 10) {
           this.toastr.error(errorCapacityMessage);
-        }if (count > 2) {
+        }if (count > 10) {
           this.toastr.info(errorCountMessage)
         }
         console.log(err);
@@ -154,32 +156,32 @@ export class ShelfListComponent implements OnInit{
   }
 
   openUpdateShelfDialog(item: any){
-      if (this.authService.isAdmin()) {
-    let dialog =  this.dialog.open(UpdateModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-    });
+    if (this.authService.isAdmin()) {
+      let dialog =  this.dialog.open(UpdateModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+      });
 
-    dialog.componentInstance.title='updateShelfTitle';
-    dialog.componentInstance.inputLabels=['shelfTableCapacity'];
-    dialog.componentInstance.values.push(new FormControl(item.capacity));
+      dialog.componentInstance.title='updateShelfTitle';
+      dialog.componentInstance.inputLabels=['shelfTableCapacity'];
+      dialog.componentInstance.addInput(item.capacity, [Validators.required, Validators.max(10), Validators.min(0)]);
 
-    dialog.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-        const capacityValue = dialog.componentInstance.updateForm.value.values[0];
-        this.updateShelf(item.id, capacityValue);
+      dialog.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+          const capacityValue = dialog.componentInstance.updateForm.value.values[0].inputValue;
+          this.updateShelf(item.id, capacityValue);
+          }
+        },
+        error: (err) => {
+          console.log(err);
         }
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+      });
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   updateShelf(id: string, capacity: number){
@@ -192,7 +194,7 @@ export class ShelfListComponent implements OnInit{
         this.loadShelves();
       },
       error: (err) => {
-        if (capacity > 5) {
+        if (capacity > 10) {
           this.toastr.error(errorCapacityMessage)
         }
         console.log(err);
@@ -201,52 +203,53 @@ export class ShelfListComponent implements OnInit{
   }
   
   deleteShelf(id: any){
-      if (this.authService.isAdmin()) {
-    const successDeletedMessage = this.translateService.instant("shelfDeletedMessage");
-    this.shelfService.deleteShelf(id).subscribe(
-      {
-        next: () =>{
-          this.toastr.success(successDeletedMessage)
-          this.ngOnInit();
-        },
-        error: () => {
-          this.genericService.showError("errorMessage");
+    if (this.authService.isAdmin()) {
+      const successDeletedMessage = this.translateService.instant("shelfDeletedMessage");
+      const shelf = new DeleteShelfRequest(id);
+      this.shelfService.deleteShelf(shelf).subscribe(
+        {
+          next: () =>{
+            this.toastr.success(successDeletedMessage)
+            this.ngOnInit();
+          },
+          error: () => {
+            this.genericService.showError("errorMessage");
+          }
         }
-      }
-    );
-  }
-  else {
-    this.genericService.showAuthError("authorizationError");
-  }
+      );
+    }
+    else {
+      this.genericService.showAuthError("authorizationError");
+    }
   }
 
   openAcceptProductDialog(item: any) {
-      if (this.authService.isAdmin() || this.authService.isWarehouseSupervisor()) {
-    const dialogRef = this.dialog.open(AcceptProductModalComponent, {
-      width: '500px',
-      enterAnimationDuration: '400ms',
-      exitAnimationDuration: '250ms',
-      data : {
-        title: 'acceptProductTitle', 
-        productList: this.productList,
-      }
-    });
-  
-    dialogRef.afterClosed().subscribe({
-      next: (data) => {
-        if (data?.result === 'yes') {
-          const formValue = data.formValue;
-          this.acceptProduct(formValue);
+    if (this.authService.isAdmin() || this.authService.isWarehouseSupervisor()) {
+      const dialogRef = this.dialog.open(AcceptProductModalComponent, {
+        width: '500px',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '250ms',
+        data : {
+          title: 'acceptProductTitle', 
+          productList: this.productList,
         }
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
-  }
-  else{
-    this.genericService.showAuthError("authorizationError");
-  }
+      });
+  
+      dialogRef.afterClosed().subscribe({
+        next: (data) => {
+          if (data?.result === 'yes') {
+            const formValue = data.formValue;
+            this.acceptProduct(formValue);
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
+    }
+    else{
+      this.genericService.showAuthError("authorizationError");
+    }
   }
   
 
@@ -272,10 +275,11 @@ export class ShelfListComponent implements OnInit{
   
   onSearchInputChange(searchKeyword: string) {
     if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      const keyword = new SearchShelfRequest(searchKeyword);
       setTimeout(() => 
-        this.shelfService.search(searchKeyword).subscribe({
+        this.shelfService.search(keyword).subscribe({
           next: (result) => {
-            this.tableData = this.genericService.uuidSplit(result);
+            this.tableData = this.genericService.uuidSplit(result.data);
           },
           error: (err) => {
             console.log(err);

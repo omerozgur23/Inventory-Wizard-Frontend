@@ -2,13 +2,138 @@
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="updateForm">
     <div class="formBox form-group" formArrayName="values">
-      <div
-        class="inputBox w100"
-        *ngFor="let value of values.controls; let i = index"
-      >
-        <input formControlName="{{ i }}" required style="margin-top: 5px" />
-        <label [for]="'input_' + i">{{ inputLabels[i] | translate }}</label>
+      @for (control of values.controls; track $index) {
+      <div class="inputBox w100" [formGroupName]="$index">
+        @if (isInputControl(control)) {
+        <div>
+          <input [formControlName]="'inputValue'" style="margin-top: 5px" />
+          <label [for]="'input_' + $index">{{
+            inputLabels[$index] | translate
+          }}</label>
+          <div
+            style="color: red"
+            *ngIf="control.get('inputValue')?.hasError('required')"
+          >
+            {{ inputLabels[$index] | translate }} {{ "validEmpty" | translate }}
+          </div>
+          <div
+            style="color: red"
+            *ngIf="control.get('inputValue')?.hasError('minlength')"
+          >
+            {{ inputLabels[$index] | translate }} must be at least 2 characters.
+          </div>
+          <div
+            style="color: red"
+            *ngIf="control.get('inputValue')?.hasError('max')"
+          >
+            {{ inputLabels[$index] | translate }} can be max 10.
+          </div>
+          <div
+            style="color: red"
+            *ngIf="control.get('inputValue')?.hasError('min')"
+          >
+            {{ inputLabels[$index] | translate }} must be positive.
+          </div>
+          <div
+            style="color: red"
+            *ngIf="control.get('inputValue')?.hasError('email')"
+          >
+            {{ "Email is not a valid" | translate }}
+          </div>
+        </div>
+        } @if (isPasswordInputControl(control)) {
+        <div class="card flex justify-content-center">
+          <p-password
+            [style]="{ width: '100%' }"
+            placeholder="{{ 'employeeTablePassword' | translate }}"
+            [formControlName]="'passwordInputValue'"
+            [toggleMask]="true"
+          />
+        </div>
+        } @if (isRoleDropdownControl(control)) {
+        <div class="card flex justify-content-center">
+          <p-dropdown
+            [style]="{ width: '100%' }"
+            [class]="'custom-class'"
+            [formControlName]="'roleDropdownValue'"
+            [options]="roleDropdownOptions"
+            [(ngModel)]="selectedRole"
+            optionLabel="role"
+            [filter]="true"
+            filterBy="role"
+            [showClear]="true"
+            placeholder="Select a Role"
+            appendTo="body"
+          >
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="flex align-items-center">
+                <div>{{ selectedOption.role }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-roles pTemplate="item">
+              <div class="flex align-items-center">
+                <div>{{ roles.role }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        } @if (isCategoryDropdownControl(control)) {
+        <div class="card flex justify-content-center">
+          <p-dropdown
+            [style]="{ width: '100%' }"
+            [class]="'custom-class'"
+            [formControlName]="'categoryDropdownValue'"
+            [options]="categoryDropdownOptions"
+            [(ngModel)]="selectedCategory"
+            optionLabel="categoryName"
+            [filter]="true"
+            filterBy="categoryName"
+            [showClear]="true"
+            placeholder="Select a Category"
+            appendTo="body"
+          >
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="flex align-items-center">
+                <div>{{ selectedOption.categoryName }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-category pTemplate="item">
+              <div class="flex align-items-center">
+                <div>{{ category.categoryName }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        } @if (isSupplierDropdownControl(control)) {
+        <div class="card flex justify-content-center">
+          <p-dropdown
+            [style]="{ width: '100%' }"
+            [class]="'custom-class'"
+            [formControlName]="'supplierDropdownValue'"
+            [options]="supplierDropdownOptions"
+            [(ngModel)]="selectedSupplier"
+            optionLabel="companyName"
+            [filter]="true"
+            filterBy="companyName"
+            [showClear]="true"
+            placeholder="Select a Supplier"
+            appendTo="body"
+          >
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="flex align-items-center">
+                <div>{{ selectedOption.companyName }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-supplier pTemplate="item">
+              <div class="flex align-items-center">
+                <div>{{ supplier.companyName }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        }
       </div>
+      }
     </div>
   </form>
 </mat-dialog-content>
@@ -19,10 +144,10 @@
       {{ "cancelButton" | translate }}
     </button>
     <button
+      [disabled]="!updateForm.valid"
       (click)="update()"
       type="submit"
       class="btn btn-outline-primary"
-      [disabled]="updateForm.invalid"
     >
       {{ "saveButton" | translate }}
     </button>

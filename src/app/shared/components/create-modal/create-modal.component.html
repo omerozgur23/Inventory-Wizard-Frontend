@@ -1,30 +1,11 @@
-<!-- <h2 mat-dialog-title>{{ title | translate }}</h2>
-<mat-dialog-content class="mat-typography">
-  <form [formGroup]="createForm">
-    <div class="formBox form-group" formArrayName="values">
-      @for (values of values.controls; track $index) {
-      <div class="inputBox w100">
-        <input
-          formControlName="{{ $index }}"
-          required
-          style="margin-top: 5px"
-        />
-        <label [for]="'input_' + $index">{{
-          inputLabels[$index] | translate
-        }}</label>
-      </div>
-      }
-    </div>
-  </form>
-</mat-dialog-content> -->
 <h2 mat-dialog-title>{{ title | translate }}</h2>
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="createForm">
     <div class="formBox form-group" formArrayName="values">
       @for (control of values.controls; track $index) {
-
       <div class="inputBox w100" [formGroupName]="$index">
-        <div class="" *ngIf="isInputControl(control)">
+        @if (isInputControl(control)) {
+        <div>
           <input
             type="text"
             [formControlName]="'inputValue'"
@@ -35,41 +16,97 @@
             inputLabels[$index] | translate
           }}</label>
         </div>
-
-        <div *ngIf="isCategoryDropdownControl(control)">
-          <input
-            id="mycategories"
-            placeholder="Type category here..."
-            list="categories"
-            [formControlName]="'categoryDropdownValue'"
+        } @if (isPasswordInputControl(control)) {
+        <div class="card flex justify-content-center">
+          <p-password
+            [style]="{ width: '100%' }"
+            placeholder="{{ 'employeeTablePassword' | translate }}"
+            [formControlName]="'passwordInputValue'"
+            [toggleMask]="true"
           />
-          <datalist id="categories">
-            @for (item of categoryDropdownOptions; track $index) {
-            <option value="{{ item.id }}">{{ item.name }}</option>
-            }
-          </datalist>
         </div>
-
-        <div class="dropdown" *ngIf="isSupplierDropdownControl(control)">
-          <select
-            class="form-select"
-            [formControlName]="'supplierDropdownValue'"
+        } @if (isCategoryDropdownControl(control)) {
+        <div class="card flex justify-content-center">
+          <p-dropdown
+            [style]="{ width: '100%' }"
+            [class]="'custom-class'"
+            [formControlName]="'categoryDropdownValue'"
+            [options]="categoryDropdownOptions"
+            [(ngModel)]="selectedCategory"
+            optionLabel="categoryName"
+            [filter]="true"
+            filterBy="categoryName"
+            [showClear]="true"
+            placeholder="Select a Category"
+            appendTo="body"
           >
-            <option selected>Supplier List</option>
-            @for (item of supplierDropdownOptions; track $index) {
-            <option value="{{ item.id }}">{{ item.companyName }}</option>
-            }
-          </select>
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="flex align-items-center">
+                <div>{{ selectedOption.categoryName }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-category pTemplate="item">
+              <div class="flex align-items-center">
+                <div>{{ category.categoryName }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
         </div>
-
-        <div class="dropdown" *ngIf="isRoleDropdownControl(control)">
-          <select class="form-select" [formControlName]="'roleDropdownValue'">
-            <option selected>Role List</option>
-            @for (item of roleDropdownOptions; track $index) {
-            <option value="{{ item.id }}">{{ item.role }}</option>
-            }
-          </select>
+        } @if (isSupplierDropdownControl(control)) {
+        <div class="card flex justify-content-center">
+          <p-dropdown
+            [style]="{ width: '100%' }"
+            [class]="'custom-class'"
+            [formControlName]="'supplierDropdownValue'"
+            [options]="supplierDropdownOptions"
+            [(ngModel)]="selectedSupplier"
+            optionLabel="companyName"
+            [filter]="true"
+            filterBy="companyName"
+            [showClear]="true"
+            placeholder="Select a Supplier"
+            appendTo="body"
+          >
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="flex align-items-center">
+                <div>{{ selectedOption.companyName }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-supplier pTemplate="item">
+              <div class="flex align-items-center">
+                <div>{{ supplier.companyName }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
         </div>
+        } @if (isRoleDropdownControl(control)) {
+        <div class="card flex justify-content-center">
+          <p-dropdown
+            [style]="{ width: '100%' }"
+            [class]="'custom-class'"
+            [formControlName]="'roleDropdownValue'"
+            [options]="roleDropdownOptions"
+            [(ngModel)]="selectedRole"
+            optionLabel="role"
+            [filter]="true"
+            filterBy="role"
+            [showClear]="true"
+            placeholder="Select a Role"
+            appendTo="body"
+          >
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="flex align-items-center">
+                <div>{{ selectedOption.role }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-supplier pTemplate="item">
+              <div class="flex align-items-center">
+                <div>{{ supplier.role }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        }
       </div>
       }
     </div>

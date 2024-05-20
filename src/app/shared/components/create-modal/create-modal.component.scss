@@ -11,10 +11,6 @@
   margin-bottom: 25px;
 }
 
-// .formBox .inputBox.w50 {
-//     width: 47%;
-// }
-
 .formBox .inputBox.w100 {
   width: 100%;
   margin-top: 10px;
@@ -49,9 +45,8 @@
 }
   
 .formBox .inputBox input:focus ~ label,
-.formBox .inputBox input:valid ~ label,
-.formBox .inputBox textarea:focus ~ label,
-.formBox .inputBox textarea:valid ~ label {
+.formBox .inputBox input:valid ~ label
+ {
   transform: translateY(-20px);
   font-size: 12px;
   font-weight: 400;
@@ -78,4 +73,8 @@ h2 {
 
 .btn-outline-primary:hover {
   background: #0138B1;
+}
+
+.card:hover {
+  border-color: #0138B1;
 }

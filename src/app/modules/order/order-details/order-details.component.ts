@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { OrderService } from '../service/order.service';
-import { ActivatedRoute, Router } from '@angular/router';
-
+import { ActivatedRoute } from '@angular/router';
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
 

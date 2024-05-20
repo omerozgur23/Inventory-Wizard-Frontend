@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { InvoiceService } from '../service/invoice.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { GenericService } from '../../../core/service/generic.service';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-invoice-detail',

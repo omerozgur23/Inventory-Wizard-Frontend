@@ -30,14 +30,14 @@ export class TableComponent implements OnInit{
 
   onPageChange(pageNo: number) {
     if (pageNo < 1 || pageNo > this.totalPages) {
-      return; // Geçersiz sayfa numarası, işlemi durdur
+      return;
     }
     this.currentPage = pageNo;
     this.paginationEvent.emit(pageNo);
   }
 
   totalPagesArray(): number[] {
-    const numPagesToShow = 5; // Gösterilecek maksimum sayfa sayısı
+  const numPagesToShow = 5;
   const currentPage = this.currentPage;
   const totalPages = this.totalPages;
   
@@ -45,21 +45,16 @@ export class TableComponent implements OnInit{
   let endPage: number;
 
   if (totalPages <= numPagesToShow) {
-    // Toplam sayfa sayısı, gösterilecek maksimum sayfa sayısından az veya eşitse
     startPage = 1;
     endPage = totalPages;
   } else {
-    // Toplam sayfa sayısı, gösterilecek maksimum sayfa sayısından fazlaysa
     if (currentPage <= Math.floor(numPagesToShow / 2)) {
-      // Mevcut sayfa ilk sayfalardaysa
       startPage = 1;
       endPage = numPagesToShow;
     } else if (currentPage + Math.floor(numPagesToShow / 2) >= totalPages) {
-      // Mevcut sayfa son sayfalardaysa
       startPage = totalPages - numPagesToShow + 1;
       endPage = totalPages;
     } else {
-      // Mevcut sayfa orta kısımdaysa
       startPage = currentPage - Math.floor(numPagesToShow / 2);
       endPage = currentPage + Math.floor(numPagesToShow / 2);
     }

@@ -4,8 +4,11 @@ import { GenericService } from '../../../core/service/generic.service';
 import { TableColumn } from '../../../shared/components/table/dto/table';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/service/auth.service';
+import { SearchInvoiceRequest } from '../dto/searchInvoiceRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
+import { CancellationInvoiceRequest } from '../dto/cancellationInvoiceRequest';
 
 @Component({
   selector: 'app-invoice',
@@ -30,6 +33,8 @@ export class InvoiceComponent implements OnInit{
   currentPage = 1;
   totalInvoicesCount = 0;
   totalPages = 0;
+  isStatusTrue?: string;
+  isStatusFalse?: string;
   
   constructor(
     private invoiceService: InvoiceService,
@@ -38,10 +43,20 @@ export class InvoiceComponent implements OnInit{
     private toastr: ToastrService,
     private translateService: TranslateService,
     private authService: AuthService,
-  ){}
+  ){
+    this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.ngOnInit()
+    });
+  }
   
   ngOnInit(): void {
     this.loadInvoice();
+    this.updateStatusTranslations();
+  }
+
+  private updateStatusTranslations(): void {
+    this.isStatusTrue = this.translateService.instant('invoiceTableStatusTrue');
+    this.isStatusFalse = this.translateService.instant('invoiceTableStatusFalse');
   }
 
   setSelectedShelf(invoiceId: string) {
@@ -49,11 +64,12 @@ export class InvoiceComponent implements OnInit{
   }
 
   loadInvoice() {
-    this.invoiceService.getInvoicesByPage(this.currentPage, this.itemPerPage).subscribe({
+    this.invoiceService.getInvoicesByPage(new PaginationRequest(this.currentPage, this.itemPerPage)).subscribe({
       next: (result) => {
         this.tableData = this.genericService.uuidSplit(result.data);
         this.tableData.forEach(item => {
           item.orderId = '#' + item.orderId.split('-')[0];
+          // item.status = item.status ? this.isStatusTrue : this.isStatusFalse;
         })
         this.totalInvoicesCount = result.count;
         this.totalPages = Math.ceil(this.totalInvoicesCount / this.itemPerPage) 
@@ -71,10 +87,15 @@ export class InvoiceComponent implements OnInit{
 
   onSearchInputChange(searchKeyword: string) {
     if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      const keyword = new SearchInvoiceRequest(searchKeyword);
       setTimeout(() => 
-        this.invoiceService.search(searchKeyword).subscribe({
+        this.invoiceService.search(keyword).subscribe({
           next: (result) => {
-            this.tableData = this.genericService.uuidSplit(result);
+            this.tableData = this.genericService.uuidSplit(result.data);
+            this.tableData.forEach(item => {
+              item.orderId = '#' + item.orderId.split('-')[0];
+              // item.status = item.status ? this.isStatusTrue : this.isStatusFalse;
+            })
           },
           error: (err) => {
             console.log(err);
@@ -91,7 +112,10 @@ export class InvoiceComponent implements OnInit{
     this.router.navigate(['/home/invoice-details'], { queryParams: { id: invoiceId } });
   } 
 
-  openUpdateInvoiceDialog(){};
+  openUpdateInvoiceDialog(){
+    const invoiceUpdateButtonMessage = this.translateService.instant("invoiceUpdateButtonMessage");
+    this.toastr.info(invoiceUpdateButtonMessage)
+  };
 
   setSelectedInvoice(invoiceId: any){
     this.id = invoiceId;
@@ -100,7 +124,7 @@ export class InvoiceComponent implements OnInit{
   invoiceCancellation(id: any){
     if (this.authService.isAdmin()) {
       const successCancellationMessage = this.translateService.instant('cancellationInvoiceMessage');
-      this.invoiceService.invoiceCancellation(id).subscribe(
+      this.invoiceService.invoiceCancellation(new CancellationInvoiceRequest(id)).subscribe(
         {
           next: (result) =>{
             this.toastr.success(successCancellationMessage)
