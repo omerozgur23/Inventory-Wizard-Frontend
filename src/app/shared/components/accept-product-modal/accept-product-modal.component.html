@@ -2,17 +2,33 @@
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="acceptProductForm">
     <div class="formBox form-group">
-      <label for="productId">
-        {{ "shelfDropdownsProductList" | translate }}
-      </label>
       <div class="inputBox w100">
-        <select formControlName="productId" class="form-select my-2 mb-3">
-          @for (item of productList; track $index) {
-          <option [value]="item.id">
-            {{ item.productName }}
-          </option>
-          }
-        </select>
+        <div class="card flex justify-content-center">
+          <p-dropdown
+            [style]="{ width: '100%' }"
+            [class]="'custom-class'"
+            formControlName="productId"
+            [options]="productList"
+            [(ngModel)]="selectedProduct"
+            optionLabel="productName"
+            [filter]="true"
+            filterBy="productName"
+            [showClear]="true"
+            placeholder="Select a Product"
+            appendTo="body"
+          >
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="flex align-items-center">
+                <div>{{ selectedOption.productName }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-product pTemplate="item">
+              <div class="flex align-items-center">
+                <div>{{ product.productName }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
       </div>
       <div class="inputBox w100">
         <input formControlName="count" required />

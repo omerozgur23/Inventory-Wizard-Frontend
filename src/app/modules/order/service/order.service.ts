@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GetOrderResponse } from '../dto/getOrderResponse';
 import { GetOrderDetailsResponse } from '../dto/getOrderDetailsResponse';
+import { SearchOrderRequest } from '../dto/searchOrderRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +22,8 @@ export class OrderService {
     return this.httpClient.get<GetOrderResponse>('/orders/getall');
   }
   
-  getOrdersByPage(pageNo: number, pageSize: number): Observable<GetOrderResponse> {
-    return this.httpClient.get<GetOrderResponse>(`/orders/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getOrdersByPage(request: PaginationRequest): Observable<GetOrderResponse> {
+    return this.httpClient.post<GetOrderResponse>(`/orders/getallByPage`, request);
   }
 
   getOrderDetails(orderId: string, pageNo: number, pageSize: number): Observable<GetOrderDetailsResponse>{
@@ -29,9 +31,8 @@ export class OrderService {
     return this.httpClient.get<GetOrderDetailsResponse>('/orderDetails/getByOrderId', { params });
   }
 
-  search(keyword: string): Observable<GetOrderResponse[]> {
-    const params = new HttpParams().set('keyword', keyword);
-    return this.httpClient.get<GetOrderResponse[]>(`/orders/search`, { params: params });
+  search(keyword: SearchOrderRequest): Observable<GetOrderResponse> {
+    return this.httpClient.post<GetOrderResponse>(`/orders/search`, keyword );
   }
 
 }

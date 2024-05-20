@@ -12,6 +12,11 @@ export class AuthService {
     private loginService: LoginService,
   ) { }
 
+  getLoggedInUserEmail(): string {
+    const userEmail = localStorage.getItem('email') || '';
+    return userEmail;
+  }
+
   isAdmin(): boolean {
     return this.loginService.roles.includes(ROLE_ADMIN);
   }

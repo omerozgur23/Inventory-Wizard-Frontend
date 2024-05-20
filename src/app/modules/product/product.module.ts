@@ -7,6 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { ProductSaleComponent } from './product-sale/product-sale.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 
@@ -23,6 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     MatDialogModule,
     TranslateModule,
+    DropdownModule
   ]
 })
 export class ProductModule { }

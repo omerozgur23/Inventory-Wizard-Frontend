@@ -32,6 +32,11 @@ export class AccountComponent {
       next: (sonuc) => {
         console.log(sonuc);
         this.toastr.info("Şifre değiştirilmiştir.");
+        this.accountForm.reset({
+          lastPassword: "",
+          password: "",
+          password2: "",
+        })
       },
       error: (error) => {
         if (error.status === 400) {

@@ -5,6 +5,9 @@ import { UpdateShelfRequest } from '../dto/updateShelfRequest';
 import { GetShelfResponse } from '../dto/getShelfResponse';
 import { CreateShelfRequest } from '../dto/createShelfRequest';
 import { AcceptProductRequest } from '../dto/acceptProductRequest';
+import { SearchShelfRequest } from '../dto/searchShelfRequest';
+import { DeleteShelfRequest } from '../dto/deleteShelfRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +25,8 @@ export class ShelfService {
     return this.httpClient.get<GetShelfResponse>('/shelf/getall');
   }
 
-  getShelvesByPage(pageNo: number, pageSize: number): Observable<GetShelfResponse> {
-    return this.httpClient.get<GetShelfResponse>(`/shelf/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getShelvesByPage(request: PaginationRequest): Observable<GetShelfResponse> {
+    return this.httpClient.post<GetShelfResponse>(`/shelf/getallByPage`, request);
   }
 
   createShelf(shelf: CreateShelfRequest):Observable<CreateShelfRequest> {
@@ -34,16 +37,15 @@ export class ShelfService {
     return this.httpClient.put<any>('/shelf/update', shelf, this.httpOptions)
   }
   
-  deleteShelf(id: string):Observable<any> {
-    return this.httpClient.post('/shelf/delete', JSON.stringify(id), this.httpOptions);
+  deleteShelf(shelf: DeleteShelfRequest):Observable<DeleteShelfRequest> {
+    return this.httpClient.post<DeleteShelfRequest>('/shelf/delete', shelf, this.httpOptions);
   }
 
   acceptProduct(request: AcceptProductRequest):Observable<AcceptProductRequest> {
     return this.httpClient.post<AcceptProductRequest>('/product/accept', request);
   }
 
-  search(keyword: string): Observable<GetShelfResponse[]> {
-    const params = new HttpParams().set('keyword', keyword);
-    return this.httpClient.get<GetShelfResponse[]>(`/shelf/search`, { params: params });
+  search(keyword: SearchShelfRequest): Observable<GetShelfResponse> {
+    return this.httpClient.post<GetShelfResponse>(`/shelf/search`, keyword );
   }
 }

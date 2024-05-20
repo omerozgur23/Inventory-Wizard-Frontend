@@ -122,6 +122,7 @@
     "customerTableAddress": "Adres",
     "createCustomerTitle": "Yeni Müşteri",
     "updateCustomerTitle": "Müşteri Güncelle",
+    "selectCategoryDropdown": "Kategory Seçiniz",
 
     "deleteSupplierDialogDescription": "Tedarikçi kaydını silmek istediğinizden emin misiniz?",
     "supplierTableTitle": "Tedarikçiler",
@@ -134,6 +135,7 @@
     "createSupplierTitle": "Yeni Tedarikçi",
     "updateSupplierTitle": "Tedarikçi Güncelle",
     "supplierPdfTitle": "Tedarikçi Listesi",
+    "selectSupplierDropdown": "Tedarikçi Seçiniz",
 
     "deleteEmployeeDialogDescription": "Personel kaydını silmek istediğinizden emin misiniz?",
     "employeeTableTitle": "Personeller",
@@ -144,6 +146,7 @@
     "employeeTableRoles": "Roller",
     "createEmployeeTitle": "Yeni Personel",
     "updateEmployeeTitle": "Personel Güncelle",
+    "selectRolesDropdown": "Rol Seçiniz",
 
     "invoiceCancellationDialogDescription": "Faturayı iptal etmek istediğinizden emin misiniz?",
     "invoiceTableTitle": "Faturalar",
@@ -223,6 +226,7 @@
     "employeeCreatedMessage": "Personel kaydı oluşturuldu",
     "employeeUpdatedMessage": "Personel güncellendi",
     "employeeDeletedMessage": "Personel silindi",
+    "adminCannotDeleteItselfMessage": "Admin kendisini silemez",
 
     "customerCreatedMessage": "Müşteri kaydı oluşturuldu",
     "customerUpdatedMessage": "Müşteri güncellendi",
@@ -232,5 +236,7 @@
     "createdInvoiceInfoMessage": "Bu siparişin faturası zaten var",
     "cancellationInvoiceErrorMessage": "Bu fatura zaten iptal edildi",
     "cancellationInvoiceMessage": "Fatura iptal edildi",
-    "invoiceUpdateButtonMessage": "Faturalara güncellenemez!"
+    "invoiceUpdateButtonMessage": "Faturalara güncellenemez!",
+
+    "validEmpty": "boş geçilemez."
 }

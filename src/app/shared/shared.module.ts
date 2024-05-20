@@ -12,6 +12,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ReportTableComponent } from './components/report-table/report-table.component';
 import { CreateInvoiceModalComponent } from './components/create-invoice-modal/create-invoice-modal.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { PasswordModule } from 'primeng/password';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { CreateInvoiceModalComponent } from './components/create-invoice-modal/c
     MatDialogModule,
     MatButtonModule,
     FormsModule,
-    TranslateModule
+    TranslateModule,
+    DropdownModule,
+    PasswordModule
   ],
   exports: [
     TableComponent,

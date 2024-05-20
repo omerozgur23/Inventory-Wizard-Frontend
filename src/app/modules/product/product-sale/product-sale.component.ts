@@ -18,6 +18,9 @@ export class ProductSaleComponent implements OnInit{
   customerList: any[] = [];
   employeeList: any[] = [];
   productList: any[] = [];
+  selectedCustomer: any;
+  selectedEmployee: any;
+  selectedProduct: any;
   saleProductForm!: FormGroup;
   
   constructor(
@@ -75,7 +78,13 @@ export class ProductSaleComponent implements OnInit{
   submit(): void {
     const successSaleMessage = this.translateService.instant("productSaleMessage");
     if (this.saleProductForm.valid) {
-      const saleRequest: SaleProductRequest = this.saleProductForm.value;
+      const customerId = this.selectedCustomer ? this.selectedCustomer.id : null;
+      const userId = this.selectedEmployee ? this.selectedEmployee.id : null;
+      const saleRequest: SaleProductRequest = {
+        customerId,
+        userId,
+        productItems: this.saleProductForm.value.productItems
+      };
       this.productService.saleProduct(saleRequest).subscribe({
         next: (result) => {
           this.toastr.success(successSaleMessage);
