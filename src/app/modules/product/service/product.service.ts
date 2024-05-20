@@ -6,6 +6,9 @@ import { HttpHeaders } from '@angular/common/http';
 import { UpdateProductRequest } from '../dto/updateProductRequest';
 import { CreateProductRequest } from '../dto/createProductRequest';
 import { SaleProductRequest } from '../dto/saleProductRequest';
+import { SearchProductRequest } from '../dto/searchProductRequest';
+import { DeleteProductRequest } from '../dto/deleteProductRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +26,8 @@ export class ProductService {
     return this.httpClient.get<GetProductResponse>('/product/getall');
   }
 
-  getProductsByPage(pageNo: number, pageSize: number): Observable<GetProductResponse> {
-    return this.httpClient.get<GetProductResponse>(`/product/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getProductsByPage(request: PaginationRequest): Observable<GetProductResponse> {
+    return this.httpClient.post<GetProductResponse>(`/product/getallByPage`, request);
   }
 
   createProduct(product: CreateProductRequest):Observable<CreateProductRequest> {
@@ -35,16 +38,15 @@ export class ProductService {
     return this.httpClient.put<UpdateProductRequest>('/product/update', product, this.httpOptions);
   }
 
-  deleteProduct(id: string):Observable<any> {
-    return this.httpClient.post('/product/delete', JSON.stringify(id), this.httpOptions);
+  deleteProduct(product: DeleteProductRequest):Observable<DeleteProductRequest> {
+    return this.httpClient.post<DeleteProductRequest>('/product/delete', product, this.httpOptions);
   }
 
   saleProduct(saleRequest: SaleProductRequest):Observable<any> {
     return this.httpClient.post<any>('/product/sale', saleRequest);
   }
   
-  search(keyword: string): Observable<GetProductResponse[]> {
-    const params = new HttpParams().set('keyword', keyword);
-    return this.httpClient.get<GetProductResponse[]>(`/product/search`, { params: params });
+  search(keyword: SearchProductRequest): Observable<GetProductResponse> {
+    return this.httpClient.post<GetProductResponse>(`/product/search`, keyword );
   }
 }

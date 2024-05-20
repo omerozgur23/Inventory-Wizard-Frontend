@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -15,7 +15,10 @@ export class CreateModalComponent {
   categoryDropdownOptions: any[] = [];
   supplierDropdownOptions: any[] = [];
   roleDropdownOptions: any[] = [];
-  
+  selectedCategory: any;
+  selectedSupplier: any;
+  selectedRole: any;
+
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<CreateModalComponent>,
@@ -34,6 +37,13 @@ export class CreateModalComponent {
       inputValue: new FormControl('', Validators.required)
     });
     this.values.push(inputFormControl);
+  }
+
+  addPasswordInput() {
+    const passwordInputFormControl = new FormGroup({
+      passwordInputValue: new FormControl('', Validators.required)
+    });
+    this.values.push(passwordInputFormControl);
   }
 
   addCategoryDropdown() {
@@ -59,6 +69,10 @@ export class CreateModalComponent {
 
   isInputControl(control: AbstractControl): boolean {
     return control.get('inputValue') instanceof FormControl;
+  }
+
+  isPasswordInputControl(control: AbstractControl): boolean {
+    return control.get('passwordInputValue') instanceof FormControl;
   }
 
   isCategoryDropdownControl(control: AbstractControl): boolean {

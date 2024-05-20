@@ -13,18 +13,15 @@ export class AppComponent {
   ){
     this.translateService.setDefaultLang("en");
     this.translateService.use(localStorage.getItem("lang") || "en");
+    // this.initializeInactivityTimer();
+    // window.addEventListener('mousemove', () => this.resetInactivityTimer());
+    // window.addEventListener('keydown', () => this.resetInactivityTimer());
   }
 
   title = 'warehouseManagement-frontend';
   
   // private inactivityTimeout = /* 30 * 1000 */ 30 * 60 * 1000; // 30 dakika (30 * 60 * 1000)
   // private inactivityTimer: any;
-
-  // constructor() {
-  //   this.initializeInactivityTimer();
-  //   window.addEventListener('mousemove', () => this.resetInactivityTimer());
-  //   window.addEventListener('keydown', () => this.resetInactivityTimer());
-  // }
 
   // private initializeInactivityTimer(): void {
   //   this.inactivityTimer = setTimeout(() => {

@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { UpdateCustomerRequest } from '../dto/updateCustomerRequest';
 import { CreateCustomerRequest } from '../dto/createCustomerRequest';
 import { GetCustomerResponse } from '../dto/getCustomerResponse';
+import { SearchCustomerRequest } from '../dto/searchCustomerRequest';
+import { DeleteCustomerRequest } from '../dto/deleteCustomerRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +24,8 @@ export class CustomerService {
     return this.httpClient.get<GetCustomerResponse>('/customer/getall');
   }
 
-  getCustomersByPage(pageNo: number, pageSize: number): Observable<GetCustomerResponse> {
-    return this.httpClient.get<GetCustomerResponse>(`/customer/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getCustomersByPage(request: PaginationRequest): Observable<GetCustomerResponse> {
+    return this.httpClient.post<GetCustomerResponse>(`/customer/getallByPage`, request);
   }
   
   createCustomer(customer: CreateCustomerRequest): Observable<CreateCustomerRequest> {
@@ -33,12 +36,11 @@ export class CustomerService {
     return this.httpClient.put<any>('/customer/update', customer, this.httpOptions);
   }
   
-  deleteCustomer(id: string):Observable<any> {
-    return this.httpClient.post('/customer/delete', JSON.stringify(id), this.httpOptions);
+  deleteCustomer(customer: DeleteCustomerRequest):Observable<DeleteCustomerRequest> {
+    return this.httpClient.post<DeleteCustomerRequest>('/customer/delete', customer, this.httpOptions);
   }
 
-  search(keyword: string): Observable<GetCustomerResponse[]> {
-    const params = new HttpParams().set('keyword', keyword);
-    return this.httpClient.get<GetCustomerResponse[]>(`/customer/search`, { params: params });
+  search(keyword: SearchCustomerRequest): Observable<GetCustomerResponse> {
+    return this.httpClient.post<GetCustomerResponse>(`/customer/search`, keyword);
   }
 }

@@ -26,6 +26,7 @@
     "ngx-pagination": "^6.0.3",
     "ngx-toastr": "^18.0.0",
     "pdfmake": "^0.2.10",
+    "primeng": "^17.16.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

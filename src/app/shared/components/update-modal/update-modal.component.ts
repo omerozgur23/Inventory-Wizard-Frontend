@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -11,9 +11,12 @@ export class UpdateModalComponent {
   title = '';
   inputLabels: string[] = [];
   updateForm!: FormGroup;
-  roleDropdownOptions: any[] = [];
   categoryDropdownOptions: any[] = [];
   supplierDropdownOptions: any[] = [];
+  roleDropdownOptions: any[] = [];
+  selectedCategory: any;
+  selectedSupplier: any;
+  selectedRole: any;
 
   constructor(
     private fb: FormBuilder,
@@ -28,11 +31,18 @@ export class UpdateModalComponent {
     return this.updateForm.get('values') as FormArray;
   }
 
-  addInput(initialValue: string) {
+  addInput(initialValue: string, validators: ValidatorFn[] = []) {
     const inputFormControl = new FormGroup({
-      inputValue: new FormControl(initialValue, Validators.required)
+      inputValue: new FormControl(initialValue, validators)
     });
     this.values.push(inputFormControl);
+  }
+
+  addPasswordInput(initialValue: string, validators: ValidatorFn[] = []) {
+    const passwordInputFormControl = new FormGroup({
+      passwordInputValue: new FormControl(initialValue, validators)
+    });
+    this.values.push(passwordInputFormControl);
   }
 
   addRoleDropdown() {
@@ -58,6 +68,10 @@ export class UpdateModalComponent {
 
   isInputControl(control: AbstractControl): boolean {
     return control.get('inputValue') instanceof FormControl;
+  }
+
+  isPasswordInputControl(control: AbstractControl): boolean {
+    return control.get('passwordInputValue') instanceof FormControl;
   }
 
   isRoleDropdownControl(control: AbstractControl): boolean {

@@ -4,6 +4,9 @@ import { GetCategoryResponse } from '../dto/getCategoryResponse';
 import { Observable } from 'rxjs';
 import { CreateCategoryRequest } from '../dto/createCategoryRequest';
 import { UpdateCategoryRequest } from '../dto/updateCategoryRequest';
+import { DeleteCategoryRequest } from '../dto/deleteCategoryRequest';
+import { SearchCategoryRequest } from '../dto/searchCategoryRequest';
+import { PaginationRequest } from '../dto/paginationRequest';
 
 
 @Injectable({
@@ -22,8 +25,8 @@ export class CategoryService {
     return this.httpClient.get<GetCategoryResponse>('/category/getall');
   }
 
-  getCategoriesByPage(pageNo: number, pageSize: number): Observable<GetCategoryResponse> {
-    return this.httpClient.get<GetCategoryResponse>(`/category/getallByPage?pageNo=${pageNo}&pageSize=${pageSize}`);
+  getCategoriesByPage(request: PaginationRequest): Observable<GetCategoryResponse> {
+    return this.httpClient.post<GetCategoryResponse>(`/category/getallByPage`, request);
   }
 
   createCategory(category: CreateCategoryRequest): Observable<CreateCategoryRequest> {
@@ -34,12 +37,11 @@ export class CategoryService {
     return this.httpClient.put<UpdateCategoryRequest>('/category/update', category, this.httpOptions);
   }
 
-  deleteCategory(id: string):Observable<any> {
-    return this.httpClient.post('/category/delete', JSON.stringify(id), this.httpOptions);
+  deleteCategory(category: DeleteCategoryRequest):Observable<DeleteCategoryRequest> {
+    return this.httpClient.post<DeleteCategoryRequest>('/category/delete', category, this.httpOptions);
   }
 
-  search(keyword: string): Observable<GetCategoryResponse[]> {
-    const params = new HttpParams().set('keyword', keyword);
-    return this.httpClient.get<GetCategoryResponse[]>(`/category/search`, { params: params });
+  search(keyword: SearchCategoryRequest): Observable<GetCategoryResponse> {
+    return this.httpClient.post<GetCategoryResponse>(`/category/search`, keyword);
   }
 }

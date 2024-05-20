@@ -10,6 +10,10 @@ import { CreateCustomerRequest } from '../dto/createCustomerRequest';
 import { GenericService } from '../../../core/service/generic.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/service/auth.service';
+import { SearchCustomerRequest } from '../dto/searchCustomerRequest';
+import { DeleteCustomerRequest } from '../dto/deleteCustomerRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-customer-list',
@@ -53,7 +57,7 @@ export class CustomerListComponent implements OnInit{
   }
 
   loadCustomer() {
-    this.customerService.getCustomersByPage(this.currentPage, this.itemPerPage).subscribe({
+    this.customerService.getCustomersByPage(new PaginationRequest(this.currentPage, this.itemPerPage)).subscribe({
       next: (result) => {
         this.tableData = result.data;
         this.totalShelvesCount = result.count;
@@ -143,11 +147,11 @@ export class CustomerListComponent implements OnInit{
 
       dialog.componentInstance.title='updateCustomerTitle';
       dialog.componentInstance.inputLabels=['customerTableCompanyName','customerTableCompanyOfficial','customerTableOfficialEmail','customerTableOfficialPhone', 'customerTableAddress'];
-      dialog.componentInstance.addInput(item.companyName);
-      dialog.componentInstance.addInput(item.contactName);
-      dialog.componentInstance.addInput(item.contactEmail);
-      dialog.componentInstance.addInput(item.contactPhone);
-      dialog.componentInstance.addInput(item.address);
+      dialog.componentInstance.addInput(item.companyName, [Validators.required]);
+      dialog.componentInstance.addInput(item.contactName, [Validators.required]);
+      dialog.componentInstance.addInput(item.contactEmail, [Validators.required, Validators.email]);
+      dialog.componentInstance.addInput(item.contactPhone, [Validators.required]);
+      dialog.componentInstance.addInput(item.address, [Validators.required]);
 
       dialog.afterClosed().subscribe({
         next: (data) => {
@@ -188,7 +192,8 @@ export class CustomerListComponent implements OnInit{
   deleteCustomer(id: any){
     if (this.authService.isAdmin()) {
       const successDeletedMessage = this.translateService.instant("customerDeletedMessage");
-      this.customerService.deleteCustomer(id).subscribe(
+      const customer = new DeleteCustomerRequest(id);
+      this.customerService.deleteCustomer(customer).subscribe(
         {
           next: (result) =>{
             this.toastr.success(successDeletedMessage)
@@ -214,10 +219,11 @@ export class CustomerListComponent implements OnInit{
   
   onSearchInputChange(searchKeyword: string) {
     if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      const keyword = new SearchCustomerRequest(searchKeyword);
       setTimeout(() => 
-        this.customerService.search(searchKeyword).subscribe({
+        this.customerService.search(keyword).subscribe({
           next: (result) => {
-            this.tableData = result;
+            this.tableData = result.data;
           },
           error: (err) => {
             console.log(err);

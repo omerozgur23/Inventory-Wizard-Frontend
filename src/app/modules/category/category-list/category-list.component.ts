@@ -10,6 +10,10 @@ import { UpdateCategoryRequest } from '../dto/updateCategoryRequest';
 import { TranslateService } from '@ngx-translate/core';
 import { GenericService } from '../../../core/service/generic.service';
 import { AuthService } from '../../../core/service/auth.service';
+import { DeleteCategoryRequest } from '../dto/deleteCategoryRequest';
+import { SearchCategoryRequest } from '../dto/searchCategoryRequest';
+import { PaginationRequest } from '../dto/paginationRequest';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-category-list',
@@ -20,7 +24,7 @@ export class CategoryListComponent implements OnInit {
   tableData: any[] = [];
   columns: TableColumn[] = [
     { label: "categoryTableCategoryCode", field: 'shortId' },
-    { label: 'categoryTableCategoryName', field: 'name' }, 
+    { label: 'categoryTableCategoryName', field: 'categoryName' }, 
   ];
 
   tableTitle = 'categoryTableTitle'
@@ -49,7 +53,7 @@ export class CategoryListComponent implements OnInit {
   }
 
   loadCategory() {
-    this.categoryService.getCategoriesByPage(this.currentPage, this.itemPerPage).subscribe({
+    this.categoryService.getCategoriesByPage(new PaginationRequest(this.currentPage, this.itemPerPage)).subscribe({
       next: (result) => {
         this.tableData = this.genericService.uuidSplit(result.data)
         this.totalShelvesCount = result.count;
@@ -134,7 +138,7 @@ export class CategoryListComponent implements OnInit {
 
       dialog.componentInstance.title='updateCategoryTitle';
       dialog.componentInstance.inputLabels=['categoryTableCategoryName'];
-      dialog.componentInstance.addInput(item.name);
+      dialog.componentInstance.addInput(item.categoryName, [Validators.required, Validators.minLength(2)]);
 
       dialog.afterClosed().subscribe({
         next: (data) => {
@@ -168,7 +172,8 @@ export class CategoryListComponent implements OnInit {
   deleteCategory(id: any){
     if (this.authService.isAdmin()) {
       const successDeletedMessage = this.translateService.instant('categoryDeletedMessage');
-      this.categoryService.deleteCategory(id).subscribe(
+      const category = new DeleteCategoryRequest(id);
+      this.categoryService.deleteCategory(category).subscribe(
         {
           next: (result) =>{
             this.toastr.success(successDeletedMessage)
@@ -194,10 +199,11 @@ export class CategoryListComponent implements OnInit {
 
   onSearchInputChange(searchKeyword: string) {
     if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      const keyword = new SearchCategoryRequest(searchKeyword);
       setTimeout(() => 
-        this.categoryService.search(searchKeyword).subscribe({
+        this.categoryService.search(keyword).subscribe({
           next: (result) => {
-            this.tableData = this.genericService.uuidSplit(result);
+            this.tableData = this.genericService.uuidSplit(result.data);
           },
           error: (err) => {
             console.log(err);

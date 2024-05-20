@@ -7,6 +7,9 @@ import { GenericService } from '../../../core/service/generic.service';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { InvoiceService } from '../../invoice/service/invoice.service';
 import { AuthService } from '../../../core/service/auth.service';
+import { SearchOrderRequest } from '../dto/searchOrderRequest';
+import { PaginationRequest } from '../../category/dto/paginationRequest';
+import { CreateInvoiceRequest } from '../../invoice/dto/createInvoiceRequest';
 
 @Component({
   selector: 'app-order-list',
@@ -18,10 +21,10 @@ export class OrderListComponent implements OnInit{
   columns: TableColumn[] = [
     { label: 'orderTableOrderCode', field: 'shortId' },
     { label: 'orderTableCustomer', field: 'customerCompanyName' },
-    { label: 'orderTableEmployee', field: 'employeeFirstName' },
+    { label: 'orderTableEmployee', field: 'employeeFullName' },
     { label: 'orderTableDate', field: 'orderDate' },
     { label: 'orderTableTotalPrice', field: 'orderPrice' },
-    { label: 'orderTableStatus', field: 'orderStatus' },
+    { label: 'orderTableStatus', field: 'status' },
     { label: 'orderTableInvoiceGenerated', field: 'invoiceGenerated' },
   ];
 
@@ -58,12 +61,13 @@ export class OrderListComponent implements OnInit{
   }
 
   loadOrder() {
-    this.orderService.getOrdersByPage(this.currentPage, this.itemPerPage).subscribe({
+    this.orderService.getOrdersByPage(new PaginationRequest(this.currentPage, this.itemPerPage)).subscribe({
       next: (result) => {
         this.tableData = this.genericService.uuidSplit(result.data);
         this.tableData.forEach(item => {
-          item.orderStatus = item.orderStatus ? this.isStatusTrue : this.isStatusFalse;
+          // item.status = item.status ? this.isStatusTrue : this.isStatusFalse;
           item.invoiceGenerated = item.invoiceGenerated ? this.isStatusTrue : this.isStatusFalse;
+          item.employeeFullName = `${item.employeeFirstName} ${item.employeeLastName}`;
         })
         this.totalOrderCount = result.count;
         this.totalPages = Math.ceil(this.totalOrderCount / this.itemPerPage) 
@@ -116,10 +120,16 @@ export class OrderListComponent implements OnInit{
   
   onSearchInputChange(searchKeyword: string) {
     if (searchKeyword.trim() !== '' && searchKeyword !== undefined && searchKeyword !== null) {
+      const keyword = new SearchOrderRequest(searchKeyword);
       setTimeout(() => 
-        this.orderService.search(searchKeyword).subscribe({
+        this.orderService.search(keyword).subscribe({
           next: (result) => {
-            this.tableData = this.genericService.uuidSplit(result);
+            this.tableData = this.genericService.uuidSplit(result.data);
+            this.tableData.forEach(item => {
+              // item.status = item.status ? this.isStatusTrue : this.isStatusFalse;
+              item.invoiceGenerated = item.invoiceGenerated ? this.isStatusTrue : this.isStatusFalse;
+              item.employeeFullName = `${item.employeeFirstName} ${item.employeeLastName}`;
+            })
           },
           error: (err) => {
             console.log(err);
@@ -140,7 +150,7 @@ export class OrderListComponent implements OnInit{
   createInvoice(id: any){
     if (this.authService.isAdmin() || this.authService.isWarehouseSupervisor()) {
       const successCreatedMessage = this.translateService.instant('invoiceCreatedMessage');
-      this.invoiceService.createInvoice(id).subscribe(
+      this.invoiceService.createInvoice(new CreateInvoiceRequest(id)).subscribe(
         {
           next: (result) =>{
             this.toastr.success(successCreatedMessage)
