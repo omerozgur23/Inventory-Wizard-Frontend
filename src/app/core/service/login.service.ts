@@ -25,7 +25,6 @@ export class LoginService {
       this.token = storedToken;
       this.loggedIn = true;
       this.email = localStorage.getItem('email') || '';
-      this.password = localStorage.getItem('password') || '';
       this.roles = JSON.parse(localStorage.getItem('roles') || '[]');
     }
   }
@@ -50,7 +49,6 @@ export class LoginService {
   saveSessionData(): void {
     localStorage.setItem("token", this.token);
         localStorage.setItem("email", this.email);
-        localStorage.setItem("password", this.password);
         localStorage.setItem('roles', JSON.stringify(this.roles));
   }
 

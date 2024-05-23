@@ -3,6 +3,7 @@
     "categories": "Kategoriler",
     "products": "Ürünler",
     "productSale": "Ürün Satışı",
+    "createInvoice": "Fatura Oluştur",
     "orders": "Siparişler",
     "customers": "Müşteriler",
     "suppliers": "Tedarikçiler",
@@ -34,6 +35,7 @@
     "completeOrderButton": "Tamamla",
     "goHomeButton": "Anasayfaya Dön",
     "signInButton": "Giriş",
+    "openInvoicePdfButton": "Fatura Görüntüle",
 
     "deleteButtonTitle": "Sil",
     "updateButtonTitle": "Güncelle",
