@@ -145,6 +145,9 @@ export class OrderListComponent implements OnInit{
   id = '';
   setSelectedOrder(orderId: string) {
     this.id = orderId;
+    this.router.navigate(['/home/order/invoice'], { queryParams: { id: orderId } })
+    console.log("order id: ", this.id);
+    
   }
 
   createInvoice(id: any){
