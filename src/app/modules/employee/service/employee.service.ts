@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GetEmployeeResponse } from '../dto/getEmployeeResponse';
 import { Observable } from 'rxjs';
@@ -42,7 +42,6 @@ export class EmployeeService {
   }
 
   search(keyword: SearchEmployeeRequest): Observable<GetEmployeeResponse> {
-    // const params = new HttpParams().set('keyword', keyword);
     return this.httpClient.post<GetEmployeeResponse>(`/user/search`, keyword);
   }
 

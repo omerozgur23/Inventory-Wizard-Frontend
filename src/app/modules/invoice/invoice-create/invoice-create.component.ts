@@ -1,31 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { ProductService } from '../../product/service/product.service';
-import { CustomerService } from '../../customer/service/customer.service';
-import { forkJoin } from 'rxjs';
 import { OrderService } from '../../order/service/order.service';
 import { ActivatedRoute } from '@angular/router';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
+import { CreateInvoiceRequest } from '../dto/createInvoiceRequest';
+import { InvoiceService } from '../service/invoice.service';
+import { GenericService } from '../../../core/service/generic.service';
+import { GetOrderByIdRequest } from '../../order/dto/getOrderByIdRequest';
 
-class Product{
-  name?: string;
-  price = 0;
-  qty = 0;
-}
-class Invoice{
-  customerName?: string;
-  address?: string;
-  contactNo?: number;
-  email?: string;
-  
-  products: Product[] = [];
-  additionalDetails?: string;
-
-  constructor(){
-    // Initially one empty product row we will show 
-    this.products.push(new Product());
-  }
-}
 
 @Component({
   selector: 'app-invoice-create',
@@ -34,34 +19,92 @@ class Invoice{
 })
 export class InvoiceCreateComponent implements OnInit{
 
+  productList: any[] = [];
+  selectedCustomer: any;
+  createInvoiceForm!: FormGroup;
+  orderId: any;
+  
   constructor(
-    private productService: ProductService,
-    private customerService: CustomerService,
+    private fb: FormBuilder,
+    private toastr: ToastrService,
+    private genericService: GenericService,
+    private translateService: TranslateService,
+    private route: ActivatedRoute,
     private orderService: OrderService,
-    private route: ActivatedRoute
-  ){ (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs; }
+    private invoiceService: InvoiceService,
+  ) {}
 
-  productList: any = [];
-  customerList: any = [];
-  invoice = new Invoice();
-
-  ngOnInit(): void {
+  ngOnInit(): void{
     this.route.queryParams.subscribe({
       next: (result) => {
-        const orderId = result['id'];
-        if (orderId) {
-          this.getOrderDetails(orderId);
+        this.orderId = result['id'];
+        if (this.orderId) {
+          this.getOrderDetails(this.orderId);
+          this.getCustomerFromOrder(this.orderId)
         }
       },
       error: (err) => {
         console.log(err);
       }
     });
-    this.customerService.getAllCustomer().subscribe({
-      next: (result) => {
-        this.customerList = result.data
-      }
-    })
+
+    this.createInvoiceForm = this.fb.group({
+      orderId: '',
+      productItems: this.fb.array([this.createProductGroup()]),
+    });
+  }
+
+  get productItems(): FormArray {
+    return this.createInvoiceForm.get('productItems') as FormArray;
+  }
+
+  createProductGroup(): FormGroup {
+    return this.fb.group({
+      productId: '',
+      count: 0
+    });
+  }
+  
+  addProduct(): void {
+    this.productItems.push(this.createProductGroup());
+  }
+
+  removeProduct(index: number): void {
+    this.productItems.removeAt(index);
+  }
+
+  submit(): void {
+    const successSaleMessage = this.translateService.instant("invoiceCreatedMessage");
+    if (this.createInvoiceForm.valid) {
+      const orderId = this.orderId;
+      const createInvoiceRequest: CreateInvoiceRequest = {
+        orderId,
+        productItems: this.createInvoiceForm.value.productItems
+      };
+      this.invoiceService.createInvoice(createInvoiceRequest).subscribe({
+        next: (result) => {
+          this.toastr.success(successSaleMessage);
+          this.generatePDF('download');
+          this.resetProductList();
+        },
+        error: (err) => {
+          console.error(err);
+          this.genericService.showError("errorMessage");
+        }
+      });
+    } else {
+      this.genericService.showError("productSaleFormValid");
+    }
+  }
+
+  resetProductList(): void {
+    while (this.productItems.length > 1) {
+      this.productItems.removeAt(1);
+    }
+    this.createInvoiceForm.reset({
+      orderId: '',
+      productItems: [this.createProductGroup()]
+    });
   }
 
   itemPerPage = 15;
@@ -69,9 +112,7 @@ export class InvoiceCreateComponent implements OnInit{
   getOrderDetails(orderId: string) {
     this.orderService.getOrderDetails(orderId, this.currentPage, this.itemPerPage).subscribe({
       next: (result) => {
-        this.productList = result.data;
-        console.log(this.productList);
-        
+        this.productList = result.data;        
       },
       error: (err) => {
         console.error('Error fetching order details:', err);
@@ -79,8 +120,31 @@ export class InvoiceCreateComponent implements OnInit{
     });
   }
 
+  getCustomerFromOrder(orderId: string) {
+    const request = new GetOrderByIdRequest(orderId);
+    this.orderService.getById(request).subscribe({
+      next: (result) => {
+        this.selectedCustomer = result
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
   generatePDF(action = 'open') {
-    let docDefinition = {
+    const productRows = this.productItems.controls.map(control => {
+      const product = control.value;
+      const productDetail = this.productList.find(p => p.productId === product.productId);
+      const productName = productDetail?.productName || '';
+      const unitPrice = productDetail?.unitPrice || 0;
+      const totalPrice = unitPrice * product.count;
+      return [productName, product.count, unitPrice, totalPrice];
+    });
+
+    const totalAmount = productRows.reduce((sum, row) => sum + row[3], 0);
+
+    const docDefinition = {
       content: [
         {
           text: 'INVENTORY WIZARD LTD ŞTİ',
@@ -104,20 +168,20 @@ export class InvoiceCreateComponent implements OnInit{
           columns: [
             [
               {
-                text: this.invoice.customerName,
-                bold:true
+                text: this.selectedCustomer.companyName,
+                bold: true
               },
-              { text: this.invoice.address },
-              { text: this.invoice.email },
-              { text: this.invoice.contactNo }
+              { text: this.selectedCustomer.address },
+              { text: this.selectedCustomer.contactEmail },
+              { text: this.selectedCustomer.contactPhone }
             ],
             [
               {
                 text: `Date: ${new Date().toLocaleString()}`,
                 alignment: 'right'
               },
-              { 
-                text: `Bill No : ${((Math.random() *1000).toFixed(0))}`,
+              {
+                text: `Bill No : ${((Math.random() * 1000).toFixed(0))}`,
                 alignment: 'right'
               }
             ]
@@ -132,9 +196,9 @@ export class InvoiceCreateComponent implements OnInit{
             headerRows: 1,
             widths: ['*', 'auto', 'auto', 'auto'],
             body: [
-              ['Product', 'Price', 'Quantity', 'Amount'],
-              ...this.invoice.products.map(p => ([p.name, p.price, p.qty, (p.price * p.qty).toFixed(2)])),
-              [{text: 'Total Amount', colSpan: 3}, {}, {}, this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2)]
+              ['Product Name', 'Count', 'Unit Price', 'Total Price'],
+              ...productRows,
+              [{ text: 'Total Amount', colSpan: 3, alignment: 'right' }, {}, {}, totalAmount]
             ]
           }
         },
@@ -143,13 +207,9 @@ export class InvoiceCreateComponent implements OnInit{
           style: 'sectionHeader'
         },
         {
-            text: this.invoice.additionalDetails,
-            margin: [0, 0 ,0, 15]          
-        },
-        {
           columns: [
-            [{ qr: `${this.invoice.customerName}`, fit: '50' }],
-            [{ text: 'Signature', alignment: 'right', italics: true}],
+            [{ qr: `${this.selectedCustomer.companyName}`, fit: '50' }],
+            [{ text: 'Signature', alignment: 'right', italics: true }],
           ]
         },
         {
@@ -157,11 +217,11 @@ export class InvoiceCreateComponent implements OnInit{
           style: 'sectionHeader'
         },
         {
-            ul: [
-              'Order can be return in max 10 days.',
-              'Warrenty of the product will be subject to the manufacturer terms and conditions.',
-              'This is system generated invoice.',
-            ],
+          ul: [
+            'Order can be returned within max 10 days.',
+            'Warranty of the product will be subject to the manufacturer terms and conditions.',
+            'This is a system generated invoice.',
+          ],
         }
       ],
       styles: {
@@ -169,22 +229,15 @@ export class InvoiceCreateComponent implements OnInit{
           bold: true,
           decoration: 'underline',
           fontSize: 14,
-          margin: [0, 15,0, 15]          
+          margin: [0, 15, 0, 15]
         }
       }
     };
 
-    if(action==='download'){
+    if (action === 'download') {
       pdfMake.createPdf(docDefinition as any).download();
-    }else if(action === 'print'){
-      pdfMake.createPdf(docDefinition as any).print();      
-    }else{
-      pdfMake.createPdf(docDefinition as any).open();      
+    } else {
+      pdfMake.createPdf(docDefinition as any).open();
     }
-
-  }
-
-  addProduct(){
-    this.invoice.products.push(new Product());
   }
 }

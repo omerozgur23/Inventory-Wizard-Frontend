@@ -11,7 +11,6 @@ import { AcceptProductModalComponent } from './components/accept-product-modal/a
 import { TranslateModule } from '@ngx-translate/core';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ReportTableComponent } from './components/report-table/report-table.component';
-import { CreateInvoiceModalComponent } from './components/create-invoice-modal/create-invoice-modal.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { PasswordModule } from 'primeng/password';
 
@@ -24,7 +23,6 @@ import { PasswordModule } from 'primeng/password';
     AcceptProductModalComponent,
     NavbarComponent,
     ReportTableComponent,
-    CreateInvoiceModalComponent,
   ],
   imports: [
     CommonModule,
@@ -42,7 +40,6 @@ import { PasswordModule } from 'primeng/password';
     UpdateModalComponent,
     NavbarComponent,
     ReportTableComponent,
-    CreateInvoiceModalComponent,
   ]
 })
 export class SharedModule { }

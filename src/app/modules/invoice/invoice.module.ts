@@ -6,7 +6,8 @@ import { InvoiceComponent } from './invoice/invoice.component';
 import { SharedModule } from '../../shared/shared.module';
 import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.component';
 import { InvoiceCreateComponent } from './invoice-create/invoice-create.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -20,6 +21,8 @@ import { FormsModule } from '@angular/forms';
     InvoiceRoutingModule,
     SharedModule,
     FormsModule,
+    ReactiveFormsModule,
+    TranslateModule
   ],
   exports: [
     InvoiceCreateComponent,

@@ -3,6 +3,7 @@
     "categories": "Categories",
     "products": "Products",
     "productSale": "Product Sale",
+    "createInvoice": "Create Invoice",
     "orders": "Orders",
     "customers": "Customers",
     "suppliers": "Suppliers",
@@ -34,6 +35,7 @@
     "completeOrderButton": "Complete",
     "goHomeButton": "Go Home",
     "signInButton": "Sign In",
+    "openInvoicePdfButton": "View Invoice",
 
     "deleteButtonTitle": "Delete",
     "updateButtonTitle": "Update",
