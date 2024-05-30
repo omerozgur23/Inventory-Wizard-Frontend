@@ -69,7 +69,6 @@ export class InvoiceComponent implements OnInit{
         this.tableData = this.genericService.uuidSplit(result.data);
         this.tableData.forEach(item => {
           item.orderId = '#' + item.orderId.split('-')[0];
-          // item.status = item.status ? this.isStatusTrue : this.isStatusFalse;
         })
         this.totalInvoicesCount = result.count;
         this.totalPages = Math.ceil(this.totalInvoicesCount / this.itemPerPage) 
@@ -94,7 +93,6 @@ export class InvoiceComponent implements OnInit{
             this.tableData = this.genericService.uuidSplit(result.data);
             this.tableData.forEach(item => {
               item.orderId = '#' + item.orderId.split('-')[0];
-              // item.status = item.status ? this.isStatusTrue : this.isStatusFalse;
             })
           },
           error: (err) => {

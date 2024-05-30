@@ -31,14 +31,6 @@
             </ng-template>
           </p-dropdown>
         </div>
-        <!-- <label for="customerId">
-          {{ "productSaleDropdownCustomer" | translate }}
-        </label>
-        <select formControlName="customerId" class="form-select my-2 mb-3">
-          <option *ngFor="let item of customerList" [value]="item.id">
-            {{ item.companyName }}
-          </option>
-        </select> -->
       </div>
       <div class="column">
         <div class="card flex justify-content-center">
@@ -69,14 +61,6 @@
             </ng-template>
           </p-dropdown>
         </div>
-        <!-- <label for="userId">
-          {{ "productSaleDropdownEmployee" | translate }}
-        </label>
-        <select formControlName="userId" class="form-select my-2 mb-3">
-          <option *ngFor="let item of employeeList" [value]="item.id">
-            {{ item.firstName + " " + item.lastName }}
-          </option>
-        </select> -->
       </div>
     </div>
     <div class="row" formArrayName="productItems">
@@ -85,34 +69,6 @@
         [formGroupName]="i"
       >
         <div class="column">
-          <!-- <div class="card flex justify-content-center">
-            <p-dropdown
-              [style]="{ width: '100%' }"
-              [class]="'custom-class'"
-              formControlName="productId"
-              [options]="productList"
-              [(ngModel)]="selectedProduct"
-              optionLabel="productName"
-              [filter]="true"
-              filterBy="productName"
-              [showClear]="true"
-              placeholder="Select a Product"
-              appendTo="body"
-            >
-              <ng-template pTemplate="selectedItem" let-selectedOption>
-                <div class="flex align-items-center">
-                  <div>
-                    {{ selectedOption.productName }}
-                  </div>
-                </div>
-              </ng-template>
-              <ng-template let-product pTemplate="item">
-                <div class="flex align-items-center">
-                  <div>{{ product.productName }}</div>
-                </div>
-              </ng-template>
-            </p-dropdown>
-          </div> -->
           <label for="productId">
             {{ "productSaleDropdownProduct" | translate }}
           </label>

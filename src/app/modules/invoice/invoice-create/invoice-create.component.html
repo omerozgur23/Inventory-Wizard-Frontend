@@ -1,0 +1,98 @@
+<app-navbar (refreshEvent)="ngOnInit()"></app-navbar>
+
+<div class="container">
+  <h1>{{ "createInvoice" | translate }}</h1>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card flex justify-content-center">
+        @if (selectedCustomer) {
+        <input
+          class="form-control"
+          [value]="selectedCustomer.companyName"
+          disabled
+        />
+        }
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card flex justify-content-center">
+        @if (selectedCustomer) {
+        <input
+          class="form-control"
+          type="text"
+          [value]="selectedCustomer.contactEmail"
+        />
+        }
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card flex justify-content-center">
+        @if (selectedCustomer) {
+        <input
+          class="form-control"
+          type="text"
+          [value]="selectedCustomer.address"
+        />
+        }
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card flex justify-content-center">
+        @if (selectedCustomer) {
+        <input
+          class="form-control"
+          type="text"
+          [value]="selectedCustomer.contactPhone"
+        />
+        }
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="createInvoiceForm" (ngSubmit)="submit()">
+    <div class="row" formArrayName="productItems">
+      <div
+        *ngFor="let productGroup of productItems.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <div class="column">
+          <label for="productId">
+            {{ "productSaleDropdownProduct" | translate }}
+          </label>
+          <select formControlName="productId" class="form-select my-2 mb-3">
+            @for (item of productList; track $index) { @if (item.quantity > 0) {
+            <option [value]="item.productId">
+              {{ item.productName + " - " + "Sipariş Adedi: " + item.quantity }}
+            </option>
+            } }
+          </select>
+        </div>
+        <div class="column">
+          <label for="txtCount" class="form-label">
+            {{ "productSaleInputQuantity" | translate }}
+          </label>
+          <input
+            formControlName="count"
+            type="number"
+            class="form-control"
+            id="txtCount"
+            aria-describedby="count"
+          />
+        </div>
+
+        <div class="column">
+          <button type="button" (click)="removeProduct(i)">
+            {{ "removeProductButton" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <button type="button" (click)="addProduct()">
+      {{ "addProductButton" | translate }}
+    </button>
+    <button type="submit">{{ "completeOrderButton" | translate }}</button>
+    <button type="button" class="" (click)="generatePDF()">
+      {{ "openInvoicePdfButton" | translate }}
+    </button>
+  </form>
+</div>

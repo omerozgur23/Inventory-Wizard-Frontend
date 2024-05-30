@@ -1,10 +1,12 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GetOrderResponse } from '../dto/getOrderResponse';
 import { GetOrderDetailsResponse } from '../dto/getOrderDetailsResponse';
 import { SearchOrderRequest } from '../dto/searchOrderRequest';
 import { PaginationRequest } from '../../category/dto/paginationRequest';
+import { GetCustomerResponse } from '../../customer/dto/getCustomerResponse';
+import { GetOrderByIdRequest } from '../dto/getOrderByIdRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,10 @@ export class OrderService {
 
   search(keyword: SearchOrderRequest): Observable<GetOrderResponse> {
     return this.httpClient.post<GetOrderResponse>(`/orders/search`, keyword );
+  }
+
+  getById(id: GetOrderByIdRequest): Observable<GetCustomerResponse> {
+    return this.httpClient.post<GetCustomerResponse>('/orders/getbyid', id);
   }
 
 }

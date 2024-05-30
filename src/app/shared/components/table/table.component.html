@@ -59,11 +59,7 @@
             </td>
             } @if (showCreateInvoiceButton) {
             <td scope="row">
-              <button
-                data-bs-toggle="modal"
-                data-bs-target="#invoiceModal"
-                (click)="navigateCreateInvoice(item)"
-              >
+              <button (click)="navigateCreateInvoice(item)">
                 <img
                   [title]="'createInvioceButtonTitle' | translate"
                   src="/assets/img/invoice.svg"

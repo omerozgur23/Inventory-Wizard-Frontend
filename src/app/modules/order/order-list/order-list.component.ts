@@ -5,11 +5,9 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { GenericService } from '../../../core/service/generic.service';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { InvoiceService } from '../../invoice/service/invoice.service';
 import { AuthService } from '../../../core/service/auth.service';
 import { SearchOrderRequest } from '../dto/searchOrderRequest';
 import { PaginationRequest } from '../../category/dto/paginationRequest';
-import { CreateInvoiceRequest } from '../../invoice/dto/createInvoiceRequest';
 
 @Component({
   selector: 'app-order-list',
@@ -42,7 +40,6 @@ export class OrderListComponent implements OnInit{
     private router: Router,
     private genericService: GenericService,
     private translateService: TranslateService,
-    private invoiceService: InvoiceService,
     private authService: AuthService,
   ) {
     this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -65,7 +62,6 @@ export class OrderListComponent implements OnInit{
       next: (result) => {
         this.tableData = this.genericService.uuidSplit(result.data);
         this.tableData.forEach(item => {
-          // item.status = item.status ? this.isStatusTrue : this.isStatusFalse;
           item.invoiceGenerated = item.invoiceGenerated ? this.isStatusTrue : this.isStatusFalse;
           item.employeeFullName = `${item.employeeFirstName} ${item.employeeLastName}`;
         })
@@ -126,7 +122,6 @@ export class OrderListComponent implements OnInit{
           next: (result) => {
             this.tableData = this.genericService.uuidSplit(result.data);
             this.tableData.forEach(item => {
-              // item.status = item.status ? this.isStatusTrue : this.isStatusFalse;
               item.invoiceGenerated = item.invoiceGenerated ? this.isStatusTrue : this.isStatusFalse;
               item.employeeFullName = `${item.employeeFirstName} ${item.employeeLastName}`;
             })
@@ -145,27 +140,11 @@ export class OrderListComponent implements OnInit{
   id = '';
   setSelectedOrder(orderId: string) {
     this.id = orderId;
+    const selectedOrder = this.tableData.find(order => order.id === orderId);
+  if (selectedOrder.invoiceGenerated == 'Inactive' && selectedOrder.status == 'ACTIVE') {
+    this.router.navigate(['/home/order/invoice'], { queryParams: { id: orderId } });
+  } else {
+    this.genericService.showError("createdInvoiceInfoMessage");
   }
-
-  createInvoice(id: any){
-    if (this.authService.isAdmin() || this.authService.isWarehouseSupervisor()) {
-      const successCreatedMessage = this.translateService.instant('invoiceCreatedMessage');
-      this.invoiceService.createInvoice(new CreateInvoiceRequest(id)).subscribe(
-        {
-          next: (result) =>{
-            this.toastr.success(successCreatedMessage)
-            this.loadOrder();
-          },
-          error: (err) => {
-            console.log(err);
-            this.genericService.showError("errorMessage");
-          }
-        }
-      );
-    }
-    else {
-      this.genericService.showAuthError("authorizationError");
-    }
   }
-
 }
